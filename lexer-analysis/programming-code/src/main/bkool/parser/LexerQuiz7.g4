@@ -1,5 +1,4 @@
-/// LexerQuiz7
-grammar BKOOL;
+grammar LexerQuiz7;
 
 @lexer::header {
 from lexererr import *
