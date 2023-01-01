@@ -71,18 +71,39 @@ class LexerSuite(unittest.TestCase):
     #                     "'0.001''',<EOF>", 301))
 
     # quiz 4
-    def test_20(self):
-        self.assertTrue(TestLexer.test("duy.tran2903",
-                        "duy.tran2903,<EOF>", 401))
+    # def test_20(self):
+    #     self.assertTrue(TestLexer.test("duy.tran2903",
+    #                     "duy.tran2903,<EOF>", 401))
+    #
+    # def test_21(self):
+    #     self.assertTrue(TestLexer.test("duy.tran.3_12",
+    #                     "duy.tran.3_12,<EOF>", 402))
+    #
+    # def test_22(self):
+    #     self.assertTrue(TestLexer.test("duy.tran2903.",
+    #                     "duy.tran2903,Error Token .", 403))
+    #
+    # def test_23(self):
+    #     self.assertTrue(TestLexer.test("duy2.tran2903",
+    #                     "Error Token d", 404))
 
-    def test_21(self):
-        self.assertTrue(TestLexer.test("duy.tran.3_12",
-                        "duy.tran.3_12,<EOF>", 402))
+    # quiz 5
+    def test_24(self):
+        self.assertTrue(TestLexer.test("192.168.0.1",
+                        "192.168.0.1,<EOF>", 501))
 
-    def test_22(self):
-        self.assertTrue(TestLexer.test("duy.tran2903.",
-                        "duy.tran2903,Error Token .", 403))
+    def test_25(self):
+        self.assertTrue(TestLexer.test("192.168.01.1",
+                        "Error Token 1", 502))
 
-    def test_23(self):
-        self.assertTrue(TestLexer.test("duy2.tran2903",
-                        "Error Token d", 404))
+    def test_26(self):
+        self.assertTrue(TestLexer.test("152.101.227.0",
+                        "152.101.227.0,<EOF>", 503))
+
+    def test_27(self):
+        self.assertTrue(TestLexer.test("1168.93.28.1",
+                        "Error Token 1", 504))
+
+    def test_28(self):
+        self.assertTrue(TestLexer.test("2.1687.0.2",
+                        "Error Token 2", 505))
