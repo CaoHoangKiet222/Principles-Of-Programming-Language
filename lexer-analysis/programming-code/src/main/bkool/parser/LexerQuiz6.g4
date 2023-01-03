@@ -1,4 +1,4 @@
-grammar LexerQuiz6;
+lexer grammar LexerQuiz6;
 
 @lexer::header {
 from lexererr import *
@@ -7,8 +7,6 @@ from lexererr import *
 options{
 	language=Python3;
 }
-
-program : ;
 
 /// an action is executed after a rule has been matched
 /// also can define RULE: X {} | Y {};

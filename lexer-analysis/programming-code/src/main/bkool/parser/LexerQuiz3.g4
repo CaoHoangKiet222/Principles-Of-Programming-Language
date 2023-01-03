@@ -1,4 +1,4 @@
-grammar BKOOL;
+lexer grammar LexerQuiz3;
 
 @lexer::header {
 from lexererr import *
@@ -7,8 +7,6 @@ from lexererr import *
 options{
 	language=Python3;
 }
-
-program : ;
 
 STRING_INIT
   : SINGLE_QUOTE CHAR+ SINGLE_QUOTE

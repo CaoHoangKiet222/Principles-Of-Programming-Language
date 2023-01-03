@@ -1,4 +1,4 @@
-grammar LexerQuiz4;
+lexer grammar LexerQuiz4;
 
 @lexer::header {
 from lexererr import *
@@ -7,8 +7,6 @@ from lexererr import *
 options{
 	language=Python3;
 }
-
-program : ;
 
 BKNetID_INIT
   : FIRST_NAME DOT LAST_NAME OPTIONAL_STR

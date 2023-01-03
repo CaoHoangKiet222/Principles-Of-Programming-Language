@@ -1,4 +1,4 @@
-grammar LexerQuiz1;
+lexer grammar LexerQuiz1;
 
 @lexer::header {
 from lexererr import *
@@ -7,8 +7,6 @@ from lexererr import *
 options{
 	language=Python3;
 }
-
-program : ;
 
 ERROR_FIRST_CHAR 
   : [0-9]

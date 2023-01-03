@@ -1,4 +1,4 @@
-grammar LexerQuiz5;
+lexer grammar LexerQuiz5;
 
 @lexer::header {
 from lexererr import *
@@ -7,8 +7,6 @@ from lexererr import *
 options{
 	language=Python3;
 }
-
-program : ;
 
 IPv4_INIT
   :  X DOT X DOT X DOT X

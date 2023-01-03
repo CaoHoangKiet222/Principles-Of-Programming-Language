@@ -1,4 +1,4 @@
-grammar LexerQuiz7;
+lexer grammar LexerQuiz7;
 
 @lexer::header {
 from lexererr import *
@@ -7,8 +7,6 @@ from lexererr import *
 options{
 	language=Python3;
 }
-
-program : ;
 
 SHEXA_INIT
   : SHEXA

@@ -1,4 +1,4 @@
-grammar LexerQuiz2;
+lexer grammar LexerQuiz2;
 
 @lexer::header {
 from lexererr import *
@@ -7,8 +7,6 @@ from lexererr import *
 options{
 	language=Python3;
 }
-
-program : ;
 
 FLOATING_POINT_INIT 
   : POINT_FLOAT | EXPONENT_FLOAT
