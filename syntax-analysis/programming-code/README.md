@@ -14,7 +14,7 @@ Set environment variable ANTLR_JAR to the file antlr-4.9.2-complete.jar in your 
 
 ```sh
 python3 run.py gen
-python3 run.py test LexerSuite
+python3 run.py test ParserSuite
 ```
 
-Create testcases by uncomment testcases in files `LexerSuite.py` and import file from `LexerQuiz<num>.g4` into `BKOOL.g4` respectively
+Create testcases by uncomment testcases in files `ParserSuite.py` and import file from `ParserQuiz<num>.g4` into `BKOOL.g4` respectively
