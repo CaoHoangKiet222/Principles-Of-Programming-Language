@@ -1,0 +1,3 @@
+int a, b,c;
+                float foo(int a; float c, d) body
+                float goo (float a, b) body

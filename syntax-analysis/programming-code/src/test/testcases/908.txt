@@ -1,0 +1,3 @@
+float foo() body
+                int foo() body
+                float foo(int a) body

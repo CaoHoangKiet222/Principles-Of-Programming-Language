@@ -1,0 +1,14 @@
+T__0=1
+TYPE=2
+ID=3
+COMMA=4
+SEMICOLON=5
+LB=6
+RB=7
+WS=8
+ERROR_CHAR=9
+'body'=1
+','=4
+';'=5
+'('=6
+')'=7
