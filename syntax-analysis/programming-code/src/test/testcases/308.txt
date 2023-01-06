@@ -1,0 +1,10 @@
+int a, b,c;
+float foo(int a; float c, d) {
+   int e = expr;
+   e = expr ;
+   c = expr ;
+   return expr;
+}
+float goo(float a, b) {
+   return expr;
+}

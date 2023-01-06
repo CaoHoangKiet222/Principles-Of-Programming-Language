@@ -1,0 +1,3 @@
+float goo (float a, b) {
+   return foo(1, a, b) + 1;
+}

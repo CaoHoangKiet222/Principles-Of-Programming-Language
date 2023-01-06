@@ -8,7 +8,7 @@ options {
 	language=Python3;
 }
 
-program : decl
+program : decl EOF
   ;
 
 decl

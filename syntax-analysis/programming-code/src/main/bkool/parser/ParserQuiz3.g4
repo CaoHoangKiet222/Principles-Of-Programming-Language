@@ -1,4 +1,4 @@
-grammar ParserQuiz2;
+grammar ParserQuiz3;
 
 @lexer::header {
 from lexererr import *
@@ -26,7 +26,37 @@ funcdecl
   ;
 
 body
-  : 'body'
+  : LCB body_stats RCB
+  ;
+
+body_stats
+  : (vardecl | stats) body_stats
+  | (vardecl | stats)
+  ;
+
+stats
+  : (assign_stat | call_stat | return_stat) SEMICOLON
+  ;
+
+assign_stat
+  : ID EQUAL expr
+  ;
+
+call_stat
+  : ID LB call_stat_exprs RB
+  ;
+
+call_stat_exprs
+  : expr COMMA call_stat_exprs
+  | expr
+  ;
+
+return_stat
+  : RETURN expr
+  ;
+
+expr
+  : 'expr'
   ;
 
 identifiers
@@ -47,8 +77,8 @@ TYPE
   : (INT | FLOAT)
   ;
 
-ID
-  : [a-zA-Z_] [a-zA-Z0-9_]*
+RETURN
+  : 'return'
   ;
 
 INT
@@ -57,6 +87,14 @@ INT
 
 FLOAT
   : 'float'
+  ;
+
+ID
+  : [a-zA-Z_] [a-zA-Z0-9_]*
+  ;
+
+EQUAL
+  : '='
   ;
 
 COMMA
@@ -73,6 +111,14 @@ LB
 
 RB
   : ')'
+  ;
+
+LCB
+  : '{'
+  ;
+
+RCB
+  : '}'
   ;
 
 WS

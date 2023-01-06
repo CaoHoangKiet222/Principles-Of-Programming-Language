@@ -1,0 +1,7 @@
+int a, b,c;
+float foo(int a; float c, d) {
+   int e ;
+   e = expr ;
+   c = expr ;
+   return expr
+}

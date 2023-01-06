@@ -1,0 +1,11 @@
+programming-code/src/external/.DS_Store
+programming-code/src/.DS_Store
+programming-code/src/lib/.DS_Store
+programming-code/src/lib/*.class
+programming-code/src/main/.DS_Store
+programming-code/src/main/bkool/*/__pycache__/
+programming-code/src/main/bkool/*/.DS_Store
+programming-code/src/main/bkool/*/.antlr/
+programming-code/src/test/__pycache__/
+programming-code/src/test/.DS_Store
+programming-code/target/*

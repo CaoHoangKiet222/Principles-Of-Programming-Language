@@ -1,6 +1,6 @@
 grammar BKOOL;
 
-import ParserQuiz2;
+import ParserQuiz4;
 
 options{
 	language=Python3;

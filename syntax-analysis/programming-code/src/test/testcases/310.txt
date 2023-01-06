@@ -1,0 +1,6 @@
+float goo (float a, b) {
+    foo(expr, expr, expr);
+    return expr;
+}
+
+c = expr;
