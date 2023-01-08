@@ -117,3 +117,61 @@ class LexerSuite(unittest.TestCase):
         input = "11e8 0.37E-3 123e+41 1_2_8e-42"
         expect = "11e8,0.37E-3,123e+41,128e-42,<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 122))
+
+    # Test String Literals
+    def test_23(self):
+        input = "\"This is a string containing tab \t\""
+        expect = "This is a string containing tab \t,<EOF>"
+        self.assertTrue(TestLexer.test(input, expect, 123))
+
+    def test_24(self):
+        input = "\"He asked me: \\\"Where is John?\\\"\""
+        expect = "He asked me: \\\"Where is John?\\\",<EOF>"
+        self.assertTrue(TestLexer.test(input, expect, 124))
+
+    def test_25(self):
+        input = "\"He asked me: \'\"Where is John?\'\"\""
+        expect = "He asked me: \'\"Where is John?\'\",<EOF>"
+        self.assertTrue(TestLexer.test(input, expect, 125))
+
+    # Test Unclosed String Literals
+    def test_26(self):
+        input = "\"a"
+        expect = "Unclosed String: a"
+        self.assertTrue(TestLexer.test(input, expect, 126))
+
+    def test_27(self):
+        input = "\"abc \\n \\f 's def"
+        expect = "Unclosed String: abc \\n \\f 's def"
+        self.assertTrue(TestLexer.test(input, expect, 127))
+
+    def test_28(self):
+        input = "\"x \\b y"
+        expect = "Unclosed String: x \\b y"
+        self.assertTrue(TestLexer.test(input, expect, 128))
+
+    def test_29(self):
+        input = "\"It is an unclosed \\n string"
+        expect = "Unclosed String: It is an unclosed \\n string"
+        self.assertTrue(TestLexer.test(input, expect, 129))
+
+    def test_30(self):
+        input = "\"This is a \\t string \\n containing tab \" \"He asked \\n me: '\"Where '\"is'\" John?'\"\" \"I am not closed"
+        expect = "This is a \\t string \\n containing tab ,He asked \\n me: '\"Where '\"is'\" John?'\",Unclosed String: I am not closed"
+        self.assertTrue(TestLexer.test(input, expect, 130))
+
+    # Test Illegal ESC
+    def test_31(self):
+        input = "\"Escape sequence \'\"Here it is \\k\'\"\""
+        expect = "Illegal Escape In String: Escape sequence \'\"Here it is \k"
+        self.assertTrue(TestLexer.test(input, expect, 131))
+
+    def test_32(self):
+        input = "\"\\x\""
+        expect = "Illegal Escape In String: \\x"
+        self.assertTrue(TestLexer.test(input, expect, 132))
+
+    def test_33(self):
+        input = "\"\\\\ I am a \\\\ \\\' 21-year-old man \\a\""
+        expect = "Illegal Escape In String: \\\\ I am a \\\\ \\\' 21-year-old man \\a"
+        self.assertTrue(TestLexer.test(input, expect, 133))

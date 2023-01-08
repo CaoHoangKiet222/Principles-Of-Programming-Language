@@ -11,15 +11,60 @@ options{
 
 program:  EOF ;
 
-/* arraylit_exprs 
-  : expr COMMA arraylit_exprs
-  | expr
+// ================= Declarations =================
+// Variable declarations
+vardecl 
+  : id_list COLON non_auto_type_decl ASSIGN expr_list? SEMI
+  | id_list COLON auto_type ASSIGN expr_list SEMI
   ;
 
-expr : 'expr'
+id_list returns [size]
+  : ID {size += 1} COMMA id_list
+  | ID {size = 0}
   ;
 
-*/
+type_decl 
+  : (int_type | float_type | boolean_type | string_type | array_type | auto_type)
+  ;
+
+non_auto_type_decl
+  : (int_type | float_type | boolean_type | string_type | array_type)
+  ;
+
+// Parameters declarations
+paramsdecl : OUT? ID COLON type_decl
+
+
+// ================= Automic Types ===================
+int_type : INTEGER
+  ;
+
+float_type : FLOAT
+  ;
+
+boolean_type : BOOLEAN
+  ;
+
+string_type : STRING
+  ;
+
+array_type : ARRAY dimensions OF element_type
+  ;
+
+dimensions 
+  : INT_LIT COMMA dimensions
+  | INT_LIT
+  ;
+
+element_type 
+  : (int_type | float_type | boolean_type | string_type)
+  ;
+
+void_type : VOID
+  ;
+
+auto_type : AUTO
+  ;
 
 // ================= Literals ===================
 INT_LIT : ([1-9] [0-9]* ('_' [0-9]+)* | '0') 
@@ -67,18 +112,28 @@ STRING_LIT : '"' (ESC | STR_CHAR)* '"'
   ;
 
 fragment ESC
-  : '\\' ('b'|'f'|'r'|'n'|'t'|'\''|'\\')
+  : '\\' ('b' | 'f' | 'r' | 'n' | 't' | '\'' | '\\' | '"')
+  | '\'"'
+  ;
+
+fragment ESC_ERR
+  : '\\' ~[bfrnt'\\]
   ;
 
 fragment STR_CHAR
-  : ~[\\\n]
+  : ~[\\\n"]
   ;
 
-/* ARRAY_LIT : '{' arraylit_exprs '}'
+array_lit : '{' expr_list '}'
   ;
-*/
 
+expr_list
+  : expr COMMA expr_list
+  | expr
+  ;
 
+expr : 'expr'
+  ;
 
 // ================= Keywords ====================
 AUTO : 'auto'
@@ -87,7 +142,7 @@ AUTO : 'auto'
 BREAK : 'break'
   ;
 
-BOOL : 'bool'
+BOOLEAN : 'boolean'
   ;
 
 DO : 'do'
@@ -105,13 +160,16 @@ FUNCTION : 'function'
 FOR : 'for'
   ;
 
-FLOAT_KQ : 'float'
+FLOAT : 'float'
   ;
 
 FALSE : 'false'
   ;
 
-INTEGER_KQ : 'integer'
+INTEGER : 'integer'
+  ;
+
+INT : 'int'
   ;
 
 RETURN : 'return'
@@ -141,6 +199,9 @@ OF : 'of'
 INHERIT : 'inherit'
   ;
 
+ARRAY : 'array'
+  ;
+
 // ================= Seperators =====================
 LP : '('
   ;
@@ -161,6 +222,18 @@ RSB : ']'
   ;
 
 COMMA : ','
+  ;
+
+DOT : '.'
+  ;
+
+SEMI : ';'
+  ;
+
+COLON : ':'
+  ;
+
+ASSIGN : '='
   ;
 
 // ================= Arithmetic Operators ====================
@@ -229,14 +302,6 @@ SINGLE_LINE_COMMENT
 
 WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines
 
-
-ERROR_CHAR
-  : .
-    {
-      raise ErrorToken(self.text)
-    }
-  ;
-
 UNCLOSE_STRING
   : '"' (STR_CHAR | ESC)* (EOF | '\n')
     {
@@ -248,4 +313,16 @@ UNCLOSE_STRING
     }
   ;
 
-ILLEGAL_ESCAPE: .;
+ILLEGAL_ESCAPE
+  : '"' (STR_CHAR | ESC)* ESC_ERR
+    {
+      raise IllegalEscape(self.text[1:])
+    }
+  ;
+
+ERROR_CHAR
+  : .
+    {
+      raise ErrorToken(self.text)
+    }
+  ;
