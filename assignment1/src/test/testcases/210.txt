@@ -1,0 +1,4 @@
+
+fact : function int (n : int) body
+main : function void () body
+inc : function void (out n : array[2, 3] of int, delta : int) body

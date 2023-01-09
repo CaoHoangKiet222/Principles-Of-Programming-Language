@@ -5,22 +5,92 @@ grammar MT22;
 from lexererr import *
 }
 
+@parser::members {
+@property
+def size_id(self):
+    try:
+        return self._size_id
+    except AttributeError:
+        self._size_id = 0
+        return self._size_id
+
+@property
+def size_expr(self):
+    try:
+        return self._size_expr
+    except AttributeError:
+        self._size_expr = 0
+        return self._size_expr
+
+@size_id.setter
+def size_id(self, value):
+    self._size_id = value
+
+@size_expr.setter
+def size_expr(self, value):
+    self._size_expr = value
+}
+
 options{
 	language=Python3;
 }
 
-program:  EOF ;
+program: expr_list EOF;
 
-// ================= Declarations =================
-// Variable declarations
-vardecl 
-  : id_list COLON non_auto_type_decl ASSIGN expr_list? SEMI
-  | id_list COLON auto_type ASSIGN expr_list SEMI
+program_init
+  : (vardecl | funcdecl) program_init
+  | (vardecl | funcdecl)
   ;
 
-id_list returns [size]
-  : ID {size += 1} COMMA id_list
-  | ID {size = 0}
+// ================= Declarations =================
+
+// Function declarations
+
+funcdecl
+  : ID COLON FUNCTION return_type LP param_list RP (INHERIT ID)? body
+  ;
+
+return_type
+  : (int_type | float_type | boolean_type | string_type | array_type | auto_type | void_type)
+  ;
+
+param_list
+  : param COMMA param_list
+  | param
+  ;
+
+param 
+  : OUT? ID COLON type_decl
+  |
+  ;
+
+body : 'body'
+  ;
+
+// Variable declarations
+
+vardecl 
+  : (({assign = False} id_list COLON non_auto_type_decl 
+      ((ASSIGN expr_list_for_valdecl) {assign = True})? SEMI)
+{
+if assign == True and self.size_id != self.size_expr:
+  print("SOMETHING WENT WRONG!!!")
+}
+
+  | (id_list COLON auto_type ASSIGN expr_list_for_valdecl SEMI)
+{
+if self.size_id != self.size_expr:
+  print("SOMETHING WENT WRONG!!!")
+}) 
+{
+self.size_id = 0
+self.size_expr = 0
+}
+  ;
+
+id_list
+  : ID {self.size_id += 1} COMMA id_list
+  | ID {self.size_id += 1}
   ;
 
 type_decl 
@@ -31,12 +101,10 @@ non_auto_type_decl
   : (int_type | float_type | boolean_type | string_type | array_type)
   ;
 
-// Parameters declarations
-paramsdecl : OUT? ID COLON type_decl
-
-
 // ================= Automic Types ===================
-int_type : INTEGER
+
+int_type 
+  : INTEGER | INT
   ;
 
 float_type : FLOAT
@@ -48,7 +116,8 @@ boolean_type : BOOLEAN
 string_type : STRING
   ;
 
-array_type : ARRAY dimensions OF element_type
+array_type 
+  : ARRAY LSB dimensions RSB OF element_type
   ;
 
 dimensions 
@@ -57,7 +126,7 @@ dimensions
   ;
 
 element_type 
-  : (int_type | float_type | boolean_type | string_type)
+  : int_type | float_type | boolean_type | string_type
   ;
 
 void_type : VOID
@@ -67,6 +136,7 @@ auto_type : AUTO
   ;
 
 // ================= Literals ===================
+
 INT_LIT : ([1-9] [0-9]* ('_' [0-9]+)* | '0') 
     {
       self.text = self.text.replace('_', '')
@@ -124,7 +194,28 @@ fragment STR_CHAR
   : ~[\\\n"]
   ;
 
-array_lit : '{' expr_list '}'
+array_lit : LCB expr_list RCB
+  ;
+
+// ================= Statements =================
+stats 
+  : () SEMI
+  ;
+
+assign_stat 
+  : ID ASSIGN expr 
+  ;
+
+if_stat
+  : IF LP expr RP ()? (ELSE )?
+  ;
+
+// ================= Expressions ================
+
+/* use for define vardecl*/
+expr_list_for_valdecl
+  : expr {self.size_expr += 1} COMMA expr_list_for_valdecl
+  | expr {self.size_expr += 1}
   ;
 
 expr_list
@@ -132,17 +223,84 @@ expr_list
   | expr
   ;
 
-expr : 'expr'
+expr 
+  : expr SCOPE_OP expr1 // string type
+  | expr1
+  ;
+
+expr1 
+  : expr2 (EQUAL | NOT_EQ | GREATER_THAN | LESS_THAN | GT_EQ | LT_EQ) expr2 // boolean, int, float type
+  | expr2
+  ;
+
+expr2
+  : expr2 (AND | OR) expr3 // boolean type
+  | expr3
+  ;
+
+expr3
+  : expr3 (ADD | MINUS) expr4 // int, float type
+  | expr4
+  ;
+
+expr4
+  : expr4 (MUL | DIV | MOD) expr5 // int, float type
+  | expr5
+  ;
+
+expr5
+  : NOT expr5 // boolean type
+  | expr6
+  ;
+
+expr6
+  : MINUS expr6 // int, float type, use for SIGN
+  | expr7
+  ;
+
+expr7
+  : expr7 index_op // array type
+  | expr8
+  ;
+
+expr8
+  : operands
+  | LP expr RP
+  ;
+
+operands 
+  : (INT_LIT | FLOAT_LIT | BOOLEAN_LIT | STRING_LIT | array_lit)
+  | ID
+  ;
+
+index_op
+  : LSB expr_list RSB
   ;
 
 // ================= Keywords ====================
+
 AUTO : 'auto'
   ;
 
-BREAK : 'break'
+BOOLEAN : 'boolean'
   ;
 
-BOOLEAN : 'boolean'
+INTEGER : 'integer'
+  ;
+
+INT : 'int'
+  ;
+
+FLOAT : 'float'
+  ;
+
+STRING : 'string'
+  ;
+
+ARRAY : 'array'
+  ;
+
+BREAK : 'break'
   ;
 
 DO : 'do'
@@ -160,22 +318,10 @@ FUNCTION : 'function'
 FOR : 'for'
   ;
 
-FLOAT : 'float'
-  ;
-
 FALSE : 'false'
   ;
 
-INTEGER : 'integer'
-  ;
-
-INT : 'int'
-  ;
-
 RETURN : 'return'
-  ;
-
-STRING : 'string'
   ;
 
 TRUE : 'true'
@@ -199,10 +345,8 @@ OF : 'of'
 INHERIT : 'inherit'
   ;
 
-ARRAY : 'array'
-  ;
-
 // ================= Seperators =====================
+
 LP : '('
   ;
 
@@ -237,6 +381,7 @@ ASSIGN : '='
   ;
 
 // ================= Arithmetic Operators ====================
+
 ADD : '+'
   ; 
   
@@ -253,6 +398,7 @@ MOD : '%'
   ; 
 
 // ================= Logical Operators ====================
+
 NOT : '!'
   ;
 
@@ -262,12 +408,12 @@ AND : '&&'
 OR : '||'
   ;
 
-// ================= Comparison Operators ====================
+// ============ Comparison Operators ==============
 
 NOT_EQ : '!='
   ;
 
-EQUALS : '=='
+EQUAL : '=='
   ;
 
 LESS_THAN : '<'
@@ -282,10 +428,9 @@ GT_EQ : '>='
 LT_EQ : '<='
   ;
 
-// ================= Scope Resolution Operators ==============
+// ========= Scope Resolution Operators =============
 SCOPE_OP : '::'
   ;
-
 
 // ================= Identifiers ====================
 ID : [a-zA-Z_] [a-zA-Z0-9_]*

@@ -1,1 +1,2 @@
-main: function void () {}
+
+a,b,c,d: string;
