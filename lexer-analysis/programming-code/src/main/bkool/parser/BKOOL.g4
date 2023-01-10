@@ -7,4 +7,4 @@ options{
 	language=Python3;
 }
 
-program : ;
+program : EOF;
