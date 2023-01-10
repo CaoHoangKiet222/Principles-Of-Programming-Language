@@ -1,4 +1,15 @@
 
-fact : function int (n : int) body
-main : function void () body
-inc : function void (out n : array[2, 3] of int, delta : int) body
+        x : int = 65;
+        fact : function int (n : int) {
+            if (n == 0) return 1;
+            else return n*fact(n-1);
+        }
+        main : function void () {
+            delta : int = fact(3);
+            inc (x, delta);
+            printint(x);
+        }
+        inc : function void (out n: int, delta : int) {
+            n = n + delta;
+        }
+    

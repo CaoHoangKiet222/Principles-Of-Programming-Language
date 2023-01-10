@@ -35,7 +35,7 @@ options{
 	language=Python3;
 }
 
-program: expr_list EOF;
+program: program_init EOF;
 
 program_init
   : (vardecl | funcdecl) program_init
@@ -47,7 +47,7 @@ program_init
 // Function declarations
 
 funcdecl
-  : ID COLON FUNCTION return_type LP param_list RP (INHERIT ID)? body
+  : func_name COLON FUNCTION return_type LP param_list RP (INHERIT ID)? body
   ;
 
 return_type
@@ -64,7 +64,7 @@ param
   |
   ;
 
-body : 'body'
+body : block_stat
   ;
 
 // Variable declarations
@@ -101,7 +101,7 @@ non_auto_type_decl
   : (int_type | float_type | boolean_type | string_type | array_type)
   ;
 
-// ================= Automic Types ===================
+// ============== Automic Types ==================
 
 int_type 
   : INTEGER | INT
@@ -176,8 +176,7 @@ BOOLEAN_LIT : TRUE | FALSE
 
 STRING_LIT : '"' (ESC | STR_CHAR)* '"'
     {
-      content = str(self.text) 
-      self.text = content[1:-1]
+      self.text = self.text[1:-1]
     }
   ;
 
@@ -198,16 +197,91 @@ array_lit : LCB expr_list RCB
   ;
 
 // ================= Statements =================
-stats 
-  : () SEMI
+stat
+  : assign_stat
+  | if_stat
+  | for_stat
+  | while_stat
+  | do_while_stat
+  | break_stat
+  | continue_stat
+  | return_stat
+  | call_stat
+  | block_stat
   ;
 
 assign_stat 
-  : ID ASSIGN expr 
+  : (scalar_var | ID index_op) ASSIGN expr SEMI
   ;
 
 if_stat
-  : IF LP expr RP ()? (ELSE )?
+  :  if_part else_part?
+  ;
+
+if_part
+  : IF LP expr RP stat
+  ;
+
+else_part
+  : ELSE stat
+  ;
+
+for_stat
+  : FOR LP scalar_var ASSIGN init_expr COMMA condition_expr COMMA update_expr RP stat
+  ;
+
+scalar_var : ID
+  ;
+
+init_expr : expr
+  ;
+
+condition_expr : expr
+  ;
+
+update_expr : expr
+  ;
+
+while_stat
+  : WHILE LP expr RP stat
+  ;
+
+do_while_stat
+  : DO block_stat WHILE LP expr RP SEMI
+  ;
+
+break_stat
+  : BREAK SEMI
+  ;
+
+continue_stat
+  : CONTINUE SEMI
+  ;
+
+return_stat
+  : RETURN expr SEMI
+  ;
+
+call_stat
+  : func_name LP call_stat_exprs RP SEMI
+  ;
+
+func_name
+  : ID
+  ;
+
+call_stat_exprs
+  : expr COMMA call_stat_exprs
+  | expr
+  ;
+
+block_stat
+  : LCB body_block_stat RCB
+  ;
+
+body_block_stat
+  : (vardecl | stat) body_block_stat
+  | (vardecl | stat)
   ;
 
 // ================= Expressions ================
@@ -268,8 +342,13 @@ expr8
   | LP expr RP
   ;
 
+func_call
+  : func_name LP call_stat_exprs RP
+  ;
+
 operands 
   : (INT_LIT | FLOAT_LIT | BOOLEAN_LIT | STRING_LIT | array_lit)
+  | func_call
   | ID
   ;
 
@@ -345,7 +424,7 @@ OF : 'of'
 INHERIT : 'inherit'
   ;
 
-// ================= Seperators =====================
+// ================= Seperators ===================
 
 LP : '('
   ;
@@ -380,7 +459,7 @@ COLON : ':'
 ASSIGN : '='
   ;
 
-// ================= Arithmetic Operators ====================
+// =========== Arithmetic Operators ================
 
 ADD : '+'
   ; 
@@ -397,7 +476,7 @@ DIV : '/'
 MOD : '%'
   ; 
 
-// ================= Logical Operators ====================
+// ============= Logical Operators =================
 
 NOT : '!'
   ;
@@ -408,7 +487,7 @@ AND : '&&'
 OR : '||'
   ;
 
-// ============ Comparison Operators ==============
+// ============ Comparison Operators ===============
 
 NOT_EQ : '!='
   ;

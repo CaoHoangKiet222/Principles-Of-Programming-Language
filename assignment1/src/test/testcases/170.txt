@@ -1,0 +1,7 @@
+
+        if (a == 3) {
+            print("hello");
+        } else {
+            foo(a);
+        }
+        

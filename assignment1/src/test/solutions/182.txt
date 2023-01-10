@@ -1,0 +1,1 @@
+s,:,string,;,hello,:,function,void,(,),{,s,=,hello,},<EOF>

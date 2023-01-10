@@ -1,0 +1,1 @@
+powerFunc,:,function,int,(,base,:,int,,,power,:,int,),{,if,(,power,==,0,),return,1,;,else,return,(,base,*,powerFunc,(,base,,,power,-,1,),),;,},mod,:,function,int,(,num,:,array,[,5,],of,int,,,a,:,int,),{,res,,,i,:,int,=,0,,,-,1,;,for,(,i,=,0,;,i,<,5,;,i,+,1,),res,=,(,res,*,10,+,num,[,i,],-,0,),%,a,;,return,res,;,},<EOF>

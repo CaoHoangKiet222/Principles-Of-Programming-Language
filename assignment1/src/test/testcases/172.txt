@@ -1,0 +1,7 @@
+
+        int a = 0;
+        do {
+            writeInt(a);
+            a++;
+        }
+        while (a != 3);

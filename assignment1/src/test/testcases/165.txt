@@ -1,0 +1,5 @@
+
+        hello : function void () {
+            print();
+        }
+        

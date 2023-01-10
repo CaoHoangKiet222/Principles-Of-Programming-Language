@@ -1,0 +1,6 @@
+
+        int a = 0;
+        while (a != 3) {
+            process(a, "Ok");
+            a++;
+        }

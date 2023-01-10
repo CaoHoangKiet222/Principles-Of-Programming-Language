@@ -1,0 +1,3 @@
+
+        a, b, c : string = "abc", "xyz", "ooo";
+        

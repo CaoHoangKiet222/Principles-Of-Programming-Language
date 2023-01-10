@@ -1,0 +1,1 @@
+main,:,function,void,(,),{,delta,:,int,=,fact,(,3,),;,inc,(,x,,,delta,),;,printint,(,x,),;,},<EOF>
