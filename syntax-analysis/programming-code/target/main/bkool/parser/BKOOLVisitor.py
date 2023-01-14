@@ -24,63 +24,68 @@ class BKOOLVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by BKOOLParser#funcdecl.
-    def visitFuncdecl(self, ctx:BKOOLParser.FuncdeclContext):
+    # Visit a parse tree produced by BKOOLParser#id_list.
+    def visitId_list(self, ctx:BKOOLParser.Id_listContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by BKOOLParser#body.
-    def visitBody(self, ctx:BKOOLParser.BodyContext):
+    # Visit a parse tree produced by BKOOLParser#non_auto_type_decl.
+    def visitNon_auto_type_decl(self, ctx:BKOOLParser.Non_auto_type_declContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by BKOOLParser#body_stats.
-    def visitBody_stats(self, ctx:BKOOLParser.Body_statsContext):
+    # Visit a parse tree produced by BKOOLParser#int_type.
+    def visitInt_type(self, ctx:BKOOLParser.Int_typeContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by BKOOLParser#stats.
-    def visitStats(self, ctx:BKOOLParser.StatsContext):
+    # Visit a parse tree produced by BKOOLParser#float_type.
+    def visitFloat_type(self, ctx:BKOOLParser.Float_typeContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by BKOOLParser#assign_stat.
-    def visitAssign_stat(self, ctx:BKOOLParser.Assign_statContext):
+    # Visit a parse tree produced by BKOOLParser#boolean_type.
+    def visitBoolean_type(self, ctx:BKOOLParser.Boolean_typeContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by BKOOLParser#call_stat.
-    def visitCall_stat(self, ctx:BKOOLParser.Call_statContext):
+    # Visit a parse tree produced by BKOOLParser#string_type.
+    def visitString_type(self, ctx:BKOOLParser.String_typeContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by BKOOLParser#call_stat_exprs.
-    def visitCall_stat_exprs(self, ctx:BKOOLParser.Call_stat_exprsContext):
+    # Visit a parse tree produced by BKOOLParser#array_type.
+    def visitArray_type(self, ctx:BKOOLParser.Array_typeContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by BKOOLParser#return_stat.
-    def visitReturn_stat(self, ctx:BKOOLParser.Return_statContext):
+    # Visit a parse tree produced by BKOOLParser#dimensions.
+    def visitDimensions(self, ctx:BKOOLParser.DimensionsContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by BKOOLParser#element_type.
+    def visitElement_type(self, ctx:BKOOLParser.Element_typeContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by BKOOLParser#void_type.
+    def visitVoid_type(self, ctx:BKOOLParser.Void_typeContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by BKOOLParser#auto_type.
+    def visitAuto_type(self, ctx:BKOOLParser.Auto_typeContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by BKOOLParser#expr_list.
+    def visitExpr_list(self, ctx:BKOOLParser.Expr_listContext):
         return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by BKOOLParser#expr.
     def visitExpr(self, ctx:BKOOLParser.ExprContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by BKOOLParser#identifiers.
-    def visitIdentifiers(self, ctx:BKOOLParser.IdentifiersContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by BKOOLParser#func_args.
-    def visitFunc_args(self, ctx:BKOOLParser.Func_argsContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by BKOOLParser#func_name.
-    def visitFunc_name(self, ctx:BKOOLParser.Func_nameContext):
         return self.visitChildren(ctx)
 
 

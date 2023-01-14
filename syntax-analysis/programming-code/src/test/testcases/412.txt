@@ -1,0 +1,5 @@
+
+a, b : integer = expr, expr;
+a,b,c,d: string = expr, expr;
+a,b,c : auto = expr, expr;
+a,   b,   c   : array [2, 3] of int = expr, expr;
