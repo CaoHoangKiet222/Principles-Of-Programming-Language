@@ -1,2 +1,3 @@
 
-a,   b,   c   : auto;
+    a,   b,   c   : auto = "hello_a" , "hello_b", "hello_c" ;
+    

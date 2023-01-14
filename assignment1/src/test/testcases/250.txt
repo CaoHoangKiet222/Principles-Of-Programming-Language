@@ -1,0 +1,7 @@
+
+        gcdRecursion: function int(p: int, q: int) {
+          if (q == 0)
+            return p;
+          return gcdRecursion(q, p % q);
+        }
+    

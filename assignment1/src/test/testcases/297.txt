@@ -1,0 +1,9 @@
+
+        symmetry: function boolean(head: ar[100] of int, tail: arr[100] of int, size: int) {
+          for (i = 0, i < size / 2, i+1) {
+            if (head[i] != tail[i])
+              return false;
+          }
+          return true;
+        }
+    

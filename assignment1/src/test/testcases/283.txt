@@ -1,0 +1,18 @@
+
+        Recursive: function void (nums: array[100] of int, size: int, index: int , count: int, sum: int , minjump: int) {
+          if (sum >= size) {
+            if (minjump > count)
+              minjump = count;
+          } else {
+            for (i = 1, i <= nums[index], i + 1) {
+              Recursive(nums, index + i, count + 1, sum + i, minjump);
+            }
+          }
+        }
+
+        jump: function int(nums: array[100] of int, size: int) {
+          minjump: int = size - 1;
+          Recursive(nums, 0, 0, 0, minjump);
+          return minjump;
+        }
+    

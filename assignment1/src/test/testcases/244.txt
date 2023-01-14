@@ -1,0 +1,13 @@
+
+        checkElementsUniqueness: function boolean (arr: array[100] of int, n: int) {
+          if ((n > 1000) || (n < 0))
+            return false;
+          for (i = 0, i < n - 1, i+1) {
+            for (j = i + 1, j < n, j+1) {
+              if (arr[i] == arr[j])
+                return false;
+            }
+          }
+          return true;
+        }
+    

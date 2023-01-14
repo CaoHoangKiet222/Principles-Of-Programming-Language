@@ -1,0 +1,20 @@
+
+        less_zero: boolean = false;
+        c: int = 0;
+
+        printPattern: function void(n: int) {
+          if (n <= 0) {
+            less_zero = true;
+          }
+
+          if (less_zero) {
+            c = c - 1;
+            if (c == -1)
+              return;
+            printPattern(n + 5);
+          } else {
+            c = c + 1;
+            printPattern(n - 5);
+          }
+        }
+    

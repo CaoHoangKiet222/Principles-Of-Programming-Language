@@ -1,0 +1,20 @@
+
+        PARENT: function int(i: int) { return (i - 1) / 2; }
+
+        LEFT:  function int(i: int) { return (2 * i + 1); }
+
+        RIGHT: function int(i: int) { return (2 * i + 2); }
+
+        reheapUp: function void (maxHeap: array [] of int, numberOfElements: int, index: int)
+        {
+            if (index >= numberOfElements) {
+                return;
+            }
+            if (index && maxHeap[PARENT(index)] < maxHeap[index]) {
+                temp: int = maxHeap[index];
+                maxHeap[index] = maxHeap[PARENT(index)];
+                maxHeap[PARENT(index)] = temp;
+                reheapUp(maxHeap, numberOfElements, PARENT(index));
+            }
+        }
+    

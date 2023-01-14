@@ -1,0 +1,3 @@
+
+         1moduloDivision: function int (seed: int, mod: int) { return seed % mod; }
+    

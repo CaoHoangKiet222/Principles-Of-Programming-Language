@@ -1,0 +1,14 @@
+
+        completeNum: function boolean(N: int) {
+          sum: int = 0;
+          for (i = 1, i < N, i + 1) {
+            if (N % i == 0) {
+              sum = sum + i;
+            }
+          }
+          if (sum == N) {
+            return true;
+          }
+          return false;
+        }
+    

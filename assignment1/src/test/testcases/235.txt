@@ -1,0 +1,5 @@
+
+      lengthOfLastWord: function int() inherit {
+        return 0;
+      }
+    

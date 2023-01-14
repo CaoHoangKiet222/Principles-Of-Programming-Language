@@ -1,0 +1,8 @@
+
+        checkDuplicate: function boolean(ar: array[100] of int, size: int) {
+          if (size <= 1)
+            return true;
+
+          // return checkDuplicate(less, less_size);
+        }
+    

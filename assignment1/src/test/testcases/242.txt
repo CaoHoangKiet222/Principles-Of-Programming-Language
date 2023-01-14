@@ -1,0 +1,11 @@
+
+        findMin: function auto(vals: array[100] of int, numEls: int) {
+          min: int = vals[0];
+          for (i = 1, i < numEls, i+1) {
+            if (vals[i] < min) {
+              min = vals[i];
+            }
+          }
+          return min;
+        }
+    

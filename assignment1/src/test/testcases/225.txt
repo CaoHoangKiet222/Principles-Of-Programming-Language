@@ -1,0 +1,13 @@
+
+        Checkzero: function boolean(nums: array[100] of int, size: int) {
+          found: boolean = false;
+          for (i = 0, i < size && !found, i + 1) {
+            if (nums[i] == 0)
+              found = true;
+          }
+          if (found)
+            return true;
+          else
+            return false;
+        }
+    

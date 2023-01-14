@@ -1,2 +1,3 @@
 
-a,   b,   c   : auto = expr , expr , expr;
+    a,b,c,d: string;
+    

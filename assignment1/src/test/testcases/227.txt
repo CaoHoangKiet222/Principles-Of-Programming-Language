@@ -1,0 +1,13 @@
+
+        reverseStr: function string(str: string, size: int) {
+            for (i = 0, i < size / 2, i+1) {
+                x : string = str[i];
+                str[i] = str[size - i - 1];
+                str[size - i - 1] = x;
+            }
+            return str;
+        }
+        main : function void () {
+            reverse_string("Hello World!", 12);
+        }
+    

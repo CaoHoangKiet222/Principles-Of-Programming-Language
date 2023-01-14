@@ -1,0 +1,16 @@
+
+        binarySearch: function int(arr: array[1000] of int, left: int, right: int, x: int) {
+          /* if {right >= left} {
+            mid:int = left + (right - left) / 2;
+            if {arr[mid] == x}
+              return mid;
+
+            if (arr[mid] > x]
+              return binarySearch(arr, left, mid - 1, x);
+
+            return binarySearch(arr, mid + 1, right, x);
+          } */
+
+          return -1;
+        }
+    

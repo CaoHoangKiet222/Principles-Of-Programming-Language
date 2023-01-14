@@ -1,0 +1,9 @@
+
+        factorial: function auto(N: int) {
+          result: int = 1;
+          for (i = 1, i <= N, i+1) {
+            result = result * i;
+          }
+          return result;
+        }
+    

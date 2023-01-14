@@ -1,0 +1,3 @@
+
+    a, b, c : array [2] of boolean = {false, true}, {true}, {false};
+    

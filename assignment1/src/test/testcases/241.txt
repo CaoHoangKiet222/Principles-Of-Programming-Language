@@ -1,0 +1,11 @@
+
+        findMax: function auto(vals: array[100] of int, numEls: int) {
+          max: int = vals[0];
+          for (i = 1, i < numEls, i+1) {
+            if (vals[i] > max) {
+              max = vals[i];
+            }
+          }
+          return max;
+        }
+    

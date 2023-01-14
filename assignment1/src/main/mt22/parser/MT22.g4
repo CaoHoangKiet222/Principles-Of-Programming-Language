@@ -38,8 +38,8 @@ options{
 program: program_init EOF;
 
 program_init
-  : (vardecl | funcdecl) program_init
-  | (vardecl | funcdecl)
+  : (vardecl | funcdecl | stat) program_init
+  | (vardecl | funcdecl | stat)
   ;
 
 // ================= Declarations =================
@@ -193,7 +193,7 @@ fragment STR_CHAR
   : ~[\\\n"]
   ;
 
-array_lit : LCB expr_list RCB
+array_lit : LCB expr_list? RCB
   ;
 
 // ================= Statements =================
@@ -227,7 +227,7 @@ else_part
   ;
 
 for_stat
-  : FOR LP scalar_var ASSIGN init_expr COMMA condition_expr COMMA update_expr RP stat
+  : FOR LP (scalar_var ASSIGN init_expr)? COMMA condition_expr? COMMA update_expr? RP stat
   ;
 
 scalar_var : ID
@@ -259,11 +259,11 @@ continue_stat
   ;
 
 return_stat
-  : RETURN expr SEMI
+  : RETURN expr? SEMI
   ;
 
 call_stat
-  : func_name LP call_stat_exprs RP SEMI
+  : func_name LP call_stat_exprs? RP SEMI
   ;
 
 func_name
@@ -276,7 +276,7 @@ call_stat_exprs
   ;
 
 block_stat
-  : LCB body_block_stat RCB
+  : LCB body_block_stat? RCB
   ;
 
 body_block_stat
@@ -343,7 +343,7 @@ expr8
   ;
 
 func_call
-  : func_name LP call_stat_exprs RP
+  : func_name LP call_stat_exprs? RP
   ;
 
 operands 
