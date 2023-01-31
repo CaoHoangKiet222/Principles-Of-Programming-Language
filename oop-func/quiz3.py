@@ -52,7 +52,7 @@ class PrintPrefix:
         return str(ctx.value)
 
 
-class PostPrefix:
+class PrintPostfix:
     def visit(self, ctx):
         return ctx.accept(self)
 
@@ -111,7 +111,7 @@ x4 = UnExp("-", x1)
 x5 = BinExp(x4, "+", BinExp(IntLit(4), "*", x2))
 v1 = Eval()
 v2 = PrintPrefix()
-v3 = PostPrefix()
+v3 = PrintPostfix()
 
 print(v1.visit(x1))
 print(v2.visit(x1))
