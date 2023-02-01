@@ -4,7 +4,7 @@ import subprocess
 import unittest
 from antlr4 import *
 
-for path in ['./test/', './main/bkool/parser/', './main/bkool/utils/', './main/bkool/astgen/', './main/bkool/checker/', './main/bkool/codegen/']:
+for path in ['./test/', './main/bkool/parser/']:
     sys.path.append(path)
 # ANTLR_JAR = os.environ.get('ANTLR_JAR')
 ANTLR_JAR = "./lib/antlr-4.9.2-complete.jar"
@@ -29,9 +29,6 @@ def main(argv):
             sys.path.append(TARGET_DIR + "/" + GENERATE_DIR)
         if len(argv) < 2:
             printUsage()
-        elif argv[1] == 'LexerSuite':
-            from LexerSuite import LexerSuite
-            getAndTest(LexerSuite)
         elif argv[1] == 'ParserSuite':
             from ParserSuite import ParserSuite
             getAndTest(ParserSuite)
@@ -61,7 +58,6 @@ def test(suite):
 
 def printUsage():
     print("python3 run.py gen")
-    print("python3 run.py test LexerSuite")
     print("python3 run.py test ParserSuite")
 
 
