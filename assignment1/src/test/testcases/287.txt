@@ -1,7 +1,7 @@
 
-        binarySearch: function int(arr: array[1000] of int, left: int, right: int, x: int) {
+        binarySearch: function integer(arr: array[1000] of integer, left: integer, right: integer, x: integer) {
           if {right >= left} {
-            mid:int = left + (right - left) / 2;
+            mid:integer = left + (right - left) / 2;
             if {arr[mid] == x}
               return mid;
 

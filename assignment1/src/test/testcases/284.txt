@@ -1,7 +1,7 @@
 
-        Recursive: function void (nums: array[100] of int, size: int, index: int , count: int, sum: int , minjump: int) {
+        Recursive: function void (nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) {
         };
 
-        jump: function int(nums: array[100] of int, size: int) {
+        jump: function integer(nums: array[100] of integer, size: integer) {
         };
     

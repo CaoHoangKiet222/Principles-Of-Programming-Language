@@ -1,11 +1,13 @@
 
-        for (i = 1, i < 100, i+1) {
-            j : int = 0;
-            while (j) {
-                if (i + j >= 20) {
-                    ;
-                } else {
-                 ;
+        main: function void() {
+            for (i = 1, i < 100, i+1) {
+                j : integer = 0;
+                while (j) {
+                    if (i + j >= 20) {
+                        ;
+                    } else {
+                     ;
+                    }
                 }
             }
         }

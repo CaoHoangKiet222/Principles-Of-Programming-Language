@@ -1,1 +1,1 @@
-inc,:,function,void,(,out,n,:,int,,,delta,:,int,),{,n,=,n,+,delta,;,},<EOF>
+inc,:,function,void,(,out,n,:,integer,,,delta,:,integer,),{,n,=,n,+,delta,;,},<EOF>

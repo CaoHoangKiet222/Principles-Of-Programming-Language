@@ -1,5 +1,5 @@
 
-      lengthOfLastWord: function int() inherit {
+      lengthOfLastWord: function integer() inherit {
         return 0;
       }
     

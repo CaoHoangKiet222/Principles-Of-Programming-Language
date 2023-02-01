@@ -1,5 +1,5 @@
 
-        Checkzero: function boolean(nums: array[100] of int, size: int) {
+        Checkzero: function boolean(nums: array[100] of integer, size: integer) {
           found: boolean = false;
           for (i = 0, i < size && !found, i + 1) {
             if (nums[i] == 0)

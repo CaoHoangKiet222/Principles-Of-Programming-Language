@@ -1,2 +1,2 @@
 
-        int y = a|b;
+        integer y = a|b;

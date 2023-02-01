@@ -1,5 +1,5 @@
 
-        inc : function void (out n: int, delta : int) {
+        inc : function void (out n: integer, delta : integer) {
             n = n + delta;
         }
         

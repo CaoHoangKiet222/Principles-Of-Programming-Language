@@ -1,5 +1,5 @@
 
-        gcdIteration: function int(p: int, q: int) {
+        gcdIteration: function integer(p: integer, q: integer) {
           while (p * q != 0) {
             if (p > q) {
               p = p % q;

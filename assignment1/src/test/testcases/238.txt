@@ -1,5 +1,5 @@
 
-        max_two_nums: function auto (a: int, b: int) { 
+        max_two_nums: function auto (a: integer, b: integer) { 
             if (a > b) {
                 return a;
             }

@@ -65,7 +65,7 @@ class LexerSuite(unittest.TestCase):
         expect = "_0a12,<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 112))
 
-    # # # Test Int Literals # # #
+    # # # Test integer Literals # # #
     def test_13(self):
         input = "0 12 321 20342324"
         expect = "0,12,321,20342324,<EOF>"
@@ -296,40 +296,40 @@ class LexerSuite(unittest.TestCase):
 
     def test_57(self):
         input = """
-        fact : function int (n : int) {
+        fact : function integer (n : integer) {
             if (n == 0) return 1;
             else return n*fact(n-1);
         }
         """
-        expect = "fact,:,function,int,(,n,:,int,),{,if,(,n,==,0,),return,1,;,else,return,n,*,fact,(,n,-,1,),;,},<EOF>"
+        expect = "fact,:,function,integer,(,n,:,integer,),{,if,(,n,==,0,),return,1,;,else,return,n,*,fact,(,n,-,1,),;,},<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 157))
 
     def test_58(self):
         input = """
         main : function void () {
-            delta : int = fact(3);
+            delta : integer = fact(3);
             inc (x, delta);
             printint(x);
         }
         """
-        expect = "main,:,function,void,(,),{,delta,:,int,=,fact,(,3,),;,inc,(,x,,,delta,),;,printint,(,x,),;,},<EOF>"
+        expect = "main,:,function,void,(,),{,delta,:,integer,=,fact,(,3,),;,inc,(,x,,,delta,),;,printint,(,x,),;,},<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 158))
 
     def test_59(self):
         input = """
-        inc : function void (out n: int, delta : int) {
+        inc : function void (out n: integer, delta : integer) {
             n = n + delta;
         }
         """
-        expect = "inc,:,function,void,(,out,n,:,int,,,delta,:,int,),{,n,=,n,+,delta,;,},<EOF>"
+        expect = "inc,:,function,void,(,out,n,:,integer,,,delta,:,integer,),{,n,=,n,+,delta,;,},<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 159))
 
     # # # Test variable declaration # # #
     def test_60(self):
         input = """
-        a, b, c : array [2, 3] of int;
+        a, b, c : array [2, 3] of integer;
         """
-        expect = "a,,,b,,,c,:,array,[,2,,,3,],of,int,;,<EOF>"
+        expect = "a,,,b,,,c,:,array,[,2,,,3,],of,integer,;,<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 160))
 
     def test_61(self):
@@ -349,16 +349,16 @@ class LexerSuite(unittest.TestCase):
     # # # Test Parameters # # #
     def test_63(self):
         input = """
-        out x : int
+        out x : integer
         """
-        expect = "out,x,:,int,<EOF>"
+        expect = "out,x,:,integer,<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 163))
 
     def test_64(self):
         input = """
-        x : int, y : string, z : array [2, 3] of integer
+        x : integer, y : string, z : array [2, 3] of integer
         """
-        expect = "x,:,int,,,y,:,string,,,z,:,array,[,2,,,3,],of,integer,<EOF>"
+        expect = "x,:,integer,,,y,:,string,,,z,:,array,[,2,,,3,],of,integer,<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 164))
 
     # # # Test Function declarations # # #
@@ -425,25 +425,25 @@ class LexerSuite(unittest.TestCase):
 
     def test_72(self):
         input = """
-        int a = 0;
+        integer a = 0;
         do {
             writeInt(a);
             a++;
         }
         while (a != 3);
 """
-        expect = "int,a,=,0,;,do,{,writeInt,(,a,),;,a,+,+,;,},while,(,a,!=,3,),;,<EOF>"
+        expect = "integer,a,=,0,;,do,{,writeInt,(,a,),;,a,+,+,;,},while,(,a,!=,3,),;,<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 172))
 
     def test_73(self):
         input = """
-        int a = 0;
+        integer a = 0;
         while (a != 3) {
             process(a, "Ok");
             a++;
         }
 """
-        expect = "int,a,=,0,;,while,(,a,!=,3,),{,process,(,a,,,Ok,),;,a,+,+,;,},<EOF>"
+        expect = "integer,a,=,0,;,while,(,a,!=,3,),{,process,(,a,,,Ok,),;,a,+,+,;,},<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 173))
 
     def test_74(self):
@@ -498,27 +498,27 @@ class LexerSuite(unittest.TestCase):
     def test_79(self):
         input = """
         {
-            r, s: int;
+            r, s: integer;
             r = 2.0;
-            a, b: array [5] of int;
+            a, b: array [5] of integer;
             s = r * r * myPI;
             a[0] = s;
         }
 """
-        expect = "{,r,,,s,:,int,;,r,=,2.0,;,a,,,b,:,array,[,5,],of,int,;,s,=,r,*,r,*,myPI,;,a,[,0,],=,s,;,},<EOF>"
+        expect = "{,r,,,s,:,integer,;,r,=,2.0,;,a,,,b,:,array,[,5,],of,integer,;,s,=,r,*,r,*,myPI,;,a,[,0,],=,s,;,},<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 179))
 
     def test_80(self):
         input = """
         {
-            r, s: int;
+            r, s: integer;
             r = 2.0;
-            a, b: array [5] of int;
+            a, b: array [5] of integer;
             s = r * r * myPI;
             a[0] = s;
         }
 """
-        expect = "{,r,,,s,:,int,;,r,=,2.0,;,a,,,b,:,array,[,5,],of,int,;,s,=,r,*,r,*,myPI,;,a,[,0,],=,s,;,},<EOF>"
+        expect = "{,r,,,s,:,integer,;,r,=,2.0,;,a,,,b,:,array,[,5,],of,integer,;,s,=,r,*,r,*,myPI,;,a,[,0,],=,s,;,},<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 180))
 
     # # # Test mix # # #
@@ -544,15 +544,15 @@ class LexerSuite(unittest.TestCase):
 
     def test_83(self):
         input = """
-         powerFunc : function int (base : int, power : int) {
+         powerFunc : function integer (base : integer, power : integer) {
           if (power == 0)
             return 1;
           else
             return (base * powerFunc(base, power - 1));
         }
 
-        mod: function int (num: array [5] of int , a: int) {
-          res, i : int  = 0, -1;
+        mod: function integer (num: array [5] of integer , a: integer) {
+          res, i : integer  = 0, -1;
 
           for (i = 0; i < 5; i+1)
             res = (res * 10 + num[i] - "0") % a;
@@ -560,18 +560,18 @@ class LexerSuite(unittest.TestCase):
           return res;
         }
 """
-        expect = "powerFunc,:,function,int,(,base,:,int,,,power,:,int,),{,if,(,power,==,0,),return,1,;,else,return,(,base,*,powerFunc,(,base,,,power,-,1,),),;,},mod,:,function,int,(,num,:,array,[,5,],of,int,,,a,:,int,),{,res,,,i,:,int,=,0,,,-,1,;,for,(,i,=,0,;,i,<,5,;,i,+,1,),res,=,(,res,*,10,+,num,[,i,],-,0,),%,a,;,return,res,;,},<EOF>"
+        expect = "powerFunc,:,function,integer,(,base,:,integer,,,power,:,integer,),{,if,(,power,==,0,),return,1,;,else,return,(,base,*,powerFunc,(,base,,,power,-,1,),),;,},mod,:,function,integer,(,num,:,array,[,5,],of,integer,,,a,:,integer,),{,res,,,i,:,integer,=,0,,,-,1,;,for,(,i,=,0,;,i,<,5,;,i,+,1,),res,=,(,res,*,10,+,num,[,i,],-,0,),%,a,;,return,res,;,},<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 183))
 
     def test_84(self):
         input = r"""
-    int foo();
+    integer foo();
         while false{
             hard_work();
                 if true then break;
             }
 """
-        expect = r"""int,foo,(,),;,while,false,{,hard_work,(,),;,if,true,then,break,;,},<EOF>"""
+        expect = r"""integer,foo,(,),;,while,false,{,hard_work,(,),;,if,true,then,break,;,},<EOF>"""
         self.assertTrue(TestLexer.test(input, expect, 184))
 
     def test_85(self):
@@ -585,9 +585,9 @@ class LexerSuite(unittest.TestCase):
 
     def test_86(self):
         input = """
-        int y = a|b;
+        integer y = a|b;
 """
-        expect = "int,y,=,a,Error Token |"
+        expect = "integer,y,=,a,Error Token |"
         self.assertTrue(TestLexer.test(input, expect, 186))
 
     def test_87(self):

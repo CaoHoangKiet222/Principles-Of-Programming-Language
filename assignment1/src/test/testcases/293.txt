@@ -1,5 +1,5 @@
 
-        checkElements: function boolean (arr: array[100] of int, n: int) {
+        checkElements: function boolean (arr: array[100] of integer, n: integer) {
           if ((n > 1000) || (n < 0))
             return false;
           for (i = 0, i < n - 1, i+1) {

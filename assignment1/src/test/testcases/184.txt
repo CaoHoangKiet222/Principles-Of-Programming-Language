@@ -1,5 +1,5 @@
 
-    int foo();
+    integer foo();
         while false{
             hard_work();
                 if true then break;

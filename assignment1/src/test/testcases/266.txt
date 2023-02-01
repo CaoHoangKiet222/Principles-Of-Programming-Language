@@ -1,7 +1,7 @@
 
-        PARENT: function int(i: int) { return (i - 1) / 2; }
+        PARENT: function integer(i: integer) { return (i - 1) / 2; }
 
-        LEFT: function int(i: int) { return (2 * i + 1); }
+        LEFT: function integer(i: integer) { return (2 * i + 1); }
 
-        RIGHT: function int(i: int) { return (2 * i + 2); }
+        RIGHT: function integer(i: integer) { return (2 * i + 2); }
     

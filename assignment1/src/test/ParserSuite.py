@@ -48,28 +48,28 @@ class ParserSuite(unittest.TestCase):
 
     def test_7(self):
         input = """
-    a, b, c : int = 20_342_324, -2000, 1_234;
+    a, b, c : integer = 20_342_324, -2000, 1_234;
     """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 207))
 
     def test_8(self):
         input = """
-    a,   b,   c   : array [2, 3] of int;
+    a,   b,   c   : array [2, 3] of integer;
     """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 208))
 
     def test_9(self):
         input = """
-    a,   b,   c   : array [2, 3] of int = {{1, 2, 3}, {0, 5, 6}}, {{}, {}}, {{2, 3}, {}};
+    a,   b,   c   : array [2, 3] of integer = {{1, 2, 3}, {0, 5, 6}}, {{}, {}}, {{2, 3}, {}};
     """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 209))
 
     def test_10(self):
         input = """
-    a,   b,   c   : array [2] of int = {1, 2}, {}, {3000, 2000};
+    a,   b,   c   : array [2] of integer = {1, 2}, {}, {3000, 2000};
     """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 210))
@@ -102,28 +102,26 @@ class ParserSuite(unittest.TestCase):
         expect = "Error on line 2 col 12: boolean"
         self.assertTrue(TestParser.test(input, expect, 214))
 
-    # # # Test Statements # # #
     def test_15(self):
         input = """
-        a, b, c : int = -1, 0, 3;
-        y, z : int = 1, 1;
-        x : array [0, 100] of int;
-        for (i = 1, i < 100, i+1) {
-            a = b + c;
-            x[0, i] = y % z;
-        }
+        a, b, c : integer = -1, 0, 3;
+        y, z : integer = 1, 1;
+        x : array [0, 100] of integer;
     """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 215))
 
+    # # # Test Function Declarations # # #
     def test_16(self):
         input = """
-        x : array [0, 100] of int;
-        for (i = 1, i < 100, i+1) {
-            if (i % 2 == 0) {
-                x[i, 0] = i;
-            } else {
-                x[0, i] = i + 1;
+        x : array [0, 100] of integer;
+        main: function void(out x: array[0, 100] of integer) {
+            for (i = 1, i < 100, i+1) {
+                if (i % 2 == 0) {
+                    x[i, 0] = i;
+                } else {
+                    x[0, i] = i + 1;
+                }
             }
         }
     """
@@ -132,11 +130,13 @@ class ParserSuite(unittest.TestCase):
 
     def test_17(self):
         input = """
-        x :  int = 1;
-        for (i = 1, i < 100, i+1) {
-            for (j = 1, j < 200, j+1) {
-                if (i + j >= 2) {
-                    foo(2, x + 1);
+        x :  integer = 1;
+        main: function void(out x: integer) {
+            for (i = 1, i < 100, i+1) {
+                for (j = 1, j < 200, j+1) {
+                    if (i + j >= 2) {
+                        foo(2, x + 1);
+                    }
                 }
             }
         }
@@ -146,12 +146,14 @@ class ParserSuite(unittest.TestCase):
 
     def test_18(self):
         input = """
-        for (i = 1, i < 100, i+1) {
-            for (j = 1, j < 200, j+1) {
-                if (i + j >= 2) {
-                    break;
-                } else {
-                    continue;
+        main: function void() {
+            for (i = 1, i < 100, i+1) {
+                for (j = 1, j < 200, j+1) {
+                    if (i + j >= 2) {
+                        break;
+                    } else {
+                        continue;
+                    }
                 }
             }
         }
@@ -161,13 +163,15 @@ class ParserSuite(unittest.TestCase):
 
     def test_19(self):
         input = """
-        for (i = 1, i < 100, i+1) {
-            j : int = 0;
-            while (j < 200) {
-                if (i + j >= 20) {
-                    break;
-                } else {
-                 j = j + 1;
+        main: function void() {
+            for (i = 1, i < 100, i+1) {
+                j : integer = 0;
+                while (j < 200) {
+                    if (i + j >= 20) {
+                        break;
+                    } else {
+                     j = j + 1;
+                    }
                 }
             }
         }
@@ -177,10 +181,12 @@ class ParserSuite(unittest.TestCase):
 
     def test_20(self):
         input = """
-        for (i = 1, i < 100, i+1) {
-            j : int = 0;
-            while (j < 200) {j = j+1;}
-            while (i != 20) {}
+        main: function void() {
+            for (i = 1, i < 100, i+1) {
+                j : integer = 0;
+                while (j < 200) {j = j+1;}
+                while (i != 20) {}
+            }
         }
     """
         expect = "successful"
@@ -188,29 +194,32 @@ class ParserSuite(unittest.TestCase):
 
     def test_21(self):
         input = """
-        for (i = 1 i < 100 i+1) {
-            j : int = 0;
-            while (j < 200) {j = j+1;}
-            while (i != 20) {}
+        main: function void() {
+            for (i = 1 i < 100 i+1) {
+                j : integer = 0;
+                while (j < 200) {j = j+1;}
+                while (i != 20) {}
+            }
         }
     """
-        expect = "Error on line 2 col 19: i"
+        expect = "Error on line 3 col 23: i"
         self.assertTrue(TestParser.test(input, expect, 221))
 
     def test_22(self):
         input = """
-        x : int = 1;
-        for (i = 1, i < 100, i+1) {
-            foo(x + 1, foo(i + 1, foo(x + 2, 1)));
+        main: function void() {
+            x : integer = 1;
+            for (i = 1, i < 100, i+1) {
+                foo(x + 1, foo(i + 1, foo(x + 2, 1)));
+            }
         }
     """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 222))
 
-    # # # Test Function Declarations # # #
     def test_23(self):
         input = """
-    containStr: function boolean (S1: string , S2: string, sizeS1: int, sizeS2: int) {
+    containStr: function boolean (S1: string , S2: string, sizeS1: integer, sizeS2: integer) {
       b : array[1000] of boolean;
       for (i = 0, i < sizeS2, i + 1) {
         found: boolean = false;
@@ -229,7 +238,7 @@ class ParserSuite(unittest.TestCase):
       return true;
     }
 
-    minStr: function string (S1: string , S2: string, sizeS1: int, sizeS2: int) {
+    minStr: function string (S1: string , S2: string, sizeS1: integer, sizeS2: integer) {
       result : string = "";
       for (i = 0, i <= sizeS2 - sizeS1, i + 1) {
         result = S1::S2;
@@ -245,8 +254,8 @@ class ParserSuite(unittest.TestCase):
 
     def test_24(self):
         input = """
-        Check: function boolean (nums: array[100] of int, size: int) {
-          count: int  = 0;
+        Check: function boolean (nums: array[100] of integer, size: integer) {
+          count: integer  = 0;
           for (i = 0, i < size, i + 1) {
             if (nums[i] < 0)
               count = count + 1;
@@ -262,7 +271,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_25(self):
         input = """
-        Checkzero: function boolean(nums: array[100] of int, size: int) {
+        Checkzero: function boolean(nums: array[100] of integer, size: integer) {
           found: boolean = false;
           for (i = 0, i < size && !found, i + 1) {
             if (nums[i] == 0)
@@ -279,7 +288,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_26(self):
         input = """
-        Recursive: function void (nums: array[100] of int, size: int, index: int , count: int, sum: int , minjump: int) {
+        Recursive: function void (nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) {
           if (sum >= size) {
             if (minjump > count)
               minjump = count;
@@ -295,7 +304,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_27(self):
         input = """
-        reverseStr: function string(str: string, size: int) {
+        reverseStr: function string(str: string, size: integer) {
             for (i = 0, i < size / 2, i+1) {
                 x : string = str[i];
                 str[i] = str[size - i - 1];
@@ -312,8 +321,8 @@ class ParserSuite(unittest.TestCase):
 
     def test_28(self):
         input = """
-        jump: function int(nums: array[100] of int, size: int) {
-          minjump: int = size - 1;
+        jump: function integer(nums: array[100] of integer, size: integer) {
+          minjump: integer = size - 1;
           Recursive(nums, 0, 0, 0, minjump);
           return minjump;
         }
@@ -323,8 +332,8 @@ class ParserSuite(unittest.TestCase):
 
     def test_29(self):
         input = """
-        jump1: function int(nums: array[100] of int, size: int) {
-          curend, curfarthest, jumps: int = 0, 0, 0;
+        jump1: function integer(nums: array[100] of integer, size: integer) {
+          curend, curfarthest, jumps: integer = 0, 0, 0;
           for (i = 0, i < size - 1, i + 1) {
             curfarthest = max(curfarthest, i + nums[i]);
             if (i == curend) {
@@ -340,12 +349,12 @@ class ParserSuite(unittest.TestCase):
 
     def test_30(self):
         input = """
-      search: function int(nums: array[100] of int, size: int, target: int) {
-        left, right: int = 0, size - 1;
-        index: int = -1;
+      search: function integer(nums: array[100] of integer, size: integer, target: integer) {
+        left, right: integer = 0, size - 1;
+        index: integer = -1;
         found: boolean = false;
         while (left <= right && !found) {
-          mid: int = (left + right) / 2;
+          mid: integer = (left + right) / 2;
           if (nums[mid] == target) {
             found = true;
             index = mid;
@@ -376,11 +385,11 @@ class ParserSuite(unittest.TestCase):
 
     def test_31(self):
         input = """
-      lengthOfLastWord: function int(s: array[100] of string, size: int) {
-        count: int = 0;
+      lengthOfLastWord: function integer(s: array[100] of string, size: integer) {
+        count: integer = 0;
         if (size == 0)
           return 0;
-        i: int = size - 1;
+        i: integer = size - 1;
         while ((s[i] == " ") && i >= 0) {
           i = i - 1;
         }
@@ -396,11 +405,11 @@ class ParserSuite(unittest.TestCase):
 
     def test_32(self):
         input = """
-      lengthOfLastWord: function int(s: array[100] of string, size: int) {
-        count: int = 0;
+      lengthOfLastWord: function integer(s: array[100] of string, size: integer) {
+        count: integer = 0;
         if (size == 0)
           return 0
-        i: int = size - 1;
+        i: integer = size - 1;
         while ((s[i] == " ") && i >= 0) {
           i = i - 1;
         }
@@ -416,12 +425,12 @@ class ParserSuite(unittest.TestCase):
 
     def test_33(self):
         input = """
-      lengthOfLastWord: function int(s: array[100] of string, size: int) {
-        count: int = 0;
+      lengthOfLastWord: function integer(s: array[100] of string, size: integer) {
+        count: integer = 0;
         if (size == 0)
           return 0;
 
-        i: int = size - 1,
+        i: integer = size - 1,
         while ((s[i] == " ") && i >= 0) {
           i = i - 1;
         }
@@ -437,7 +446,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_34(self):
         input = """
-      lengthOfLastWord: function int() inherit helloWorld {
+      lengthOfLastWord: function integer() inherit helloWorld {
         return 0;
       }
     """
@@ -446,11 +455,11 @@ class ParserSuite(unittest.TestCase):
 
     def test_35(self):
         input = """
-      lengthOfLastWord: function int() inherit {
+      lengthOfLastWord: function integer() inherit {
         return 0;
       }
     """
-        expect = "Error on line 2 col 47: {"
+        expect = "Error on line 2 col 51: {"
         self.assertTrue(TestParser.test(input, expect, 235))
 
     def test_36(self):
@@ -464,8 +473,8 @@ class ParserSuite(unittest.TestCase):
 
     def test_37(self):
         input = """
-        completeNum: function boolean(N: int) {
-          sum: int = 0;
+        completeNum: function boolean(N: integer) {
+          sum: integer = 0;
           for (i = 1, i < N, i + 1) {
             if (N % i == 0) {
               sum = sum + i;
@@ -482,7 +491,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_38(self):
         input = """
-        max_two_nums: function auto (a: int, b: int) { 
+        max_two_nums: function auto (a: integer, b: integer) { 
             if (a > b) {
                 return a;
             }
@@ -494,7 +503,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_39(self):
         input = """
-        min_two_nums: function auto (a: int, b: int) { 
+        min_two_nums: function auto (a: integer, b: integer) { 
             if (a < b) {
                 return a;
             }
@@ -506,8 +515,8 @@ class ParserSuite(unittest.TestCase):
 
     def test_40(self):
         input = """
-        factorial: function auto(N: int) {
-          result: int = 1;
+        factorial: function auto(N: integer) {
+          result: integer = 1;
           for (i = 1, i <= N, i+1) {
             result = result * i;
           }
@@ -519,8 +528,8 @@ class ParserSuite(unittest.TestCase):
 
     def test_41(self):
         input = """
-        findMax: function auto(vals: array[100] of int, numEls: int) {
-          max: int = vals[0];
+        findMax: function auto(vals: array[100] of integer, numEls: integer) {
+          max: integer = vals[0];
           for (i = 1, i < numEls, i+1) {
             if (vals[i] > max) {
               max = vals[i];
@@ -534,8 +543,8 @@ class ParserSuite(unittest.TestCase):
 
     def test_42(self):
         input = """
-        findMin: function auto(vals: array[100] of int, numEls: int) {
-          min: int = vals[0];
+        findMin: function auto(vals: array[100] of integer, numEls: integer) {
+          min: integer = vals[0];
           for (i = 1, i < numEls, i+1) {
             if (vals[i] < min) {
               min = vals[i];
@@ -549,7 +558,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_43(self):
         input = """
-        isPalindrome: function boolean(str: array[100] of string, strSize: int) {
+        isPalindrome: function boolean(str: array[100] of string, strSize: integer) {
           for (i = 0, i < strSize / 2, i+1) {
             if (str[i] != str[strSize-i-1]) {
               return false;
@@ -563,7 +572,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_44(self):
         input = """
-        checkElementsUniqueness: function boolean (arr: array[100] of int, n: int) {
+        checkElementsUniqueness: function boolean (arr: array[100] of integer, n: integer) {
           if ((n > 1000) || (n < 0))
             return false;
           for (i = 0, i < n - 1, i+1) {
@@ -580,7 +589,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_45(self):
         input = """
-        checkElementsUniqueness: function boolean (arr: array[100] of int, n: int) {
+        checkElementsUniqueness: function boolean (arr: array[100] of integer, n: integer) {
           if ((n > 1000) || (n < 0))
             return false;
           for (i = 0, i < n - 1, i+1) {
@@ -597,11 +606,11 @@ class ParserSuite(unittest.TestCase):
 
     def test_46(self):
         input = """
-        checkDuplicate: function boolean(ar: array[100] of int, size: int) {
+        checkDuplicate: function boolean(ar: array[100] of integer, size: integer) {
           if (size <= 1)
             return true;
-          less, greater: array[1000] of int;
-          greater_size, less_size: int  = 0, 0;
+          less, greater: array[1000] of integer;
+          greater_size, less_size: integer  = 0, 0;
 
           for (i = 1, i < size, i+1) {
             if (ar[i] == ar[0]) {
@@ -626,11 +635,11 @@ class ParserSuite(unittest.TestCase):
 
     def test_47(self):
         input = """
-        checkDuplicate: function boolean(ar: array[100] of int, size: int) {
+        checkDuplicate: function boolean(ar: array[100] of integer, size: integer) {
           if (size <= 1)
             return true;
-          less, greater: array[1000] of int;
-          greater_size, less_size: int  = 0, 0;
+          less, greater: array[1000] of integer;
+          greater_size, less_size: integer  = 0, 0;
 
           for (i = 1, i < size, i+1) {
             if (ar[i] == ar[0]) {
@@ -655,11 +664,11 @@ class ParserSuite(unittest.TestCase):
 
     def test_48(self):
         input = """
-        checkDuplicate: function boolean(ar: array[100] of int, size: int) {
+        checkDuplicate: function boolean(ar: array[100] of integer, size: integer) {
           if (size <= 1)
             return true;
-          less, greater: array[1000] of int;
-          greater_size, less_size: int  = 0, 0;
+          less, greater: array[1000] of integer;
+          greater_size, less_size: integer  = 0, 0;
 
           for (i = 1, i < size, i+1) {
             if (ar[i] == ar[0]) {
@@ -683,7 +692,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_49(self):
         input = """
-        gcdIteration: function int(p: int, q: int) {
+        gcdIteration: function integer(p: integer, q: integer) {
           while (p * q != 0) {
             if (p > q) {
               p = p % q;
@@ -699,7 +708,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_50(self):
         input = """
-        gcdRecursion: function int(p: int, q: int) {
+        gcdRecursion: function integer(p: integer, q: integer) {
           if (q == 0)
             return p;
           return gcdRecursion(q, p % q);
@@ -710,7 +719,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_51(self):
         input = """
-        recursiveSearch: function int(out n: int, m: int, arr: array[100] of int, index: int) {
+        recursiveSearch: function integer(out n: integer, m: integer, arr: array[100] of integer, index: integer) {
           index = index + 1;
           if (index > n) {
             return -1;
@@ -732,9 +741,9 @@ class ParserSuite(unittest.TestCase):
     def test_52(self):
         input = """
         less_zero: boolean = false;
-        c: int = 0;
+        c: integer = 0;
 
-        printPattern: function void(n: int) {
+        printegerPattern: function void(n: integer) {
           if (n <= 0) {
             less_zero = true;
           }
@@ -743,10 +752,10 @@ class ParserSuite(unittest.TestCase):
             c = c - 1;
             if (c == -1)
               return;
-            printPattern(n + 5);
+            printegerPattern(n + 5);
           } else {
             c = c + 1;
-            printPattern(n - 5);
+            printegerPattern(n - 5);
           }
         }
     """
@@ -756,9 +765,9 @@ class ParserSuite(unittest.TestCase):
     def test_53(self):
         input = """
         less_zero: boolean = false;
-        c: int = 0;
+        c: integer = 0;
 
-        printPattern: function void(n: int) {
+        printegerPattern: function void(n: integer) {
           if (n <= 0) {
             less_zero = true;
           }
@@ -767,10 +776,10 @@ class ParserSuite(unittest.TestCase):
             c = c - 1
             if (c == -1)
               return;
-            printPattern(n + 5);
+            printegerPattern(n + 5);
           } else {
             c = c + 1
-            printPattern(n - 5);
+            printegerPattern(n - 5);
           }
         }
     """
@@ -779,7 +788,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_54(self):
         input = """
-        isSymmetry: function boolean(head: array[100] of int, tail: array[100] of int, size: int) {
+        isSymmetry: function boolean(head: array[100] of integer, tail: array[100] of integer, size: integer) {
           for (i = 0, i < size / 2, i+1) {
             if (head[i] != tail[i])
               return false;
@@ -792,7 +801,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_55(self):
         input = """
-        isSymmetry: function boolean(head: array[100] of int, tail: array[100] of int, size: int) {
+        isSymmetry: function boolean(head: array[100] of integer, tail: array[100] of integer, size: integer) {
           for (i = 0, i < size / 2, i+1) {
             if (head[i] != tail[i])
               return false;
@@ -805,7 +814,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_56(self):
         input = """
-        isSymmetry: function auto(head: array[100] of int, tail: array[100] of int, size: int) {
+        isSymmetry: function auto(head: array[100] of integer, tail: array[100] of integer, size: integer) {
           for (i = 0, i < size / 2, i+1) {
             if (head[i] != tail[i])
               false;
@@ -818,7 +827,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_57(self):
         input = """
-        isSymmetry: function auto(head: array[100] of int, tail: array[100] of int, size: int) {
+        isSymmetry: function auto(head: array[100] of integer, tail: array[100] of integer, size: integer) {
           for (i = 0, i < size / 2, i+1) {
             if (head[i] != tail[i])
               false;
@@ -831,8 +840,8 @@ class ParserSuite(unittest.TestCase):
 
     def test_58(self):
         input = """
-        countWaysUtil: function int(x: int, num: int) {
-          val: int = (x - num*num);
+        countWaysUtil: function integer(x: integer, num: integer) {
+          val: integer = (x - num*num);
           if (val == 0)
             return 1;
           if (val < 0)
@@ -846,8 +855,8 @@ class ParserSuite(unittest.TestCase):
 
     def test_59(self):
         input = """
-        countWaysUtil: function int(x: int, num: int) {
-          val: int = (x - num*num);
+        countWaysUtil: function integer(x: integer, num: integer) {
+          val: integer = (x - num*num);
           if (val == 0)
             return 1;
           if (val < 0)
@@ -861,8 +870,8 @@ class ParserSuite(unittest.TestCase):
 
     def test_60(self):
         input = """
-        countWaysUtil: function int(x: int, num: int) {
-          val: int = (x - num*num);
+        countWaysUtil: function integer(x: integer, num: integer) {
+          val: integer = (x - num*num);
           if (val == 0)
             return 1;
           if (val < 0)
@@ -877,9 +886,9 @@ class ParserSuite(unittest.TestCase):
     # # # Test mix # # #
     def test_61(self):
         input = """
-        a, b, c : int = -1, 0, 3;
-        y, z : int = 1, 1;
-        x : array [0, ] of int;
+        a, b, c : integer = -1, 0, 3;
+        y, z : integer = 1, 1;
+        x : array [0, ] of integer;
         for (,,) {
             a = b + c;
             x[0, i] = y % z;
@@ -890,92 +899,100 @@ class ParserSuite(unittest.TestCase):
 
     def test_62(self):
         input = """
-        x : array [0, 100] of int;
-        for (i = 1, i < 100, i+1) {
-            if (i % 2 == 0) {
-                x[i, 0] = i;
-            } ese {
-                x[0, i] = i + 1;
+        x : array [0, 100] of integer;
+        main: function void() {
+            for (i = 1, i < 100, i+1) {
+                if (i % 2 == 0) {
+                    x[i, 0] = i;
+                } ese {
+                    x[0, i] = i + 1;
+                }
             }
         }
     """
-        expect = "Error on line 6 col 18: {"
+        expect = "Error on line 7 col 22: {"
         self.assertTrue(TestParser.test(input, expect, 262))
 
     def test_63(self):
         input = """
-        for (i = 1, i < 100, i+1) {
-            j : int = 0;
-            while () {
-                if (i + j >= 20) {
-                    break;
-                } else {
-                 j = j + 1;
+        main: function void() {
+            for (i = 1, i < 100, i+1) {
+                j : integer = 0;
+                while () {
+                    if (i + j >= 20) {
+                        break;
+                    } else {
+                     j = j + 1;
+                    }
                 }
             }
         }
     """
-        expect = "Error on line 4 col 19: )"
+        expect = "Error on line 5 col 23: )"
         self.assertTrue(TestParser.test(input, expect, 263))
 
     def test_64(self):
         input = """
-        for (i = 1, i < 100, i+1) {
-            j : int = 0;
-            while (j) {
-                if () {
-                    break;
-                } else {
-                 j = j + 1;
+        main: function void() {
+            for (i = 1, i < 100, i+1) {
+                j : integer = 0;
+                while (j) {
+                    if () {
+                        break;
+                    } else {
+                     j = j + 1;
+                    }
                 }
             }
         }
     """
-        expect = "Error on line 5 col 20: )"
+        expect = "Error on line 6 col 24: )"
         self.assertTrue(TestParser.test(input, expect, 264))
 
     def test_65(self):
         input = """
-        for (i = 1, i < 100, i+1) {
-            j : int = 0;
-            while (j) {
-                if (i + j >= 20) {
-                    ;
-                } else {
-                 ;
+        main: function void() {
+            for (i = 1, i < 100, i+1) {
+                j : integer = 0;
+                while (j) {
+                    if (i + j >= 20) {
+                        ;
+                    } else {
+                     ;
+                    }
                 }
             }
         }
     """
-        expect = "Error on line 6 col 20: ;"
+        expect = "Error on line 7 col 24: ;"
         self.assertTrue(TestParser.test(input, expect, 265))
 
     def test_66(self):
         input = """
-        PARENT: function int(i: int) { return (i - 1) / 2; }
+        PARENT: function integer(i: integer) { return (i - 1) / 2; }
 
-        LEFT: function int(i: int) { return (2 * i + 1); }
+        LEFT: function integer(i: integer) { return (2 * i + 1); }
 
-        RIGHT: function int(i: int) { return (2 * i + 2); }
+        RIGHT: function integer(i: integer) { return (2 * i + 2); }
     """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 266))
 
     def test_67(self):
         input = """
-        PARENT: function int(i: int) { return (i - 1) / 2; }
+        PARENT: function integer(i: integer) { return (i - 1) / 2; }
 
-        LEFT: function int(i: int) { return (2 * i + 1); }
+        LEFT: function integer(i: integer) { return (2 * i + 1); }
 
-        RIGHT: function int(i: int) { return (2 * i + 2); }
+        RIGHT: function integer(i: integer) { return (2 * i + 2); }
 
-        reheapUp: function void (maxHeap: array [100] of int, numberOfElements: int, index: int)
+        reheapUp: function void (maxHeap: array [100] of integer, numberOfElements: integer, index: integer)
         {
             if (index >= numberOfElements) {
                 return;
             }
             if (index && maxHeap[PARENT(index)] < maxHeap[index]) {
-                temp: int = maxHeap[index];
+                temp: integer = maxHeap[index];
                 maxHeap[index] = maxHeap[PARENT(index)];
                 maxHeap[PARENT(index)] = temp;
                 reheapUp(maxHeap, numberOfElements, PARENT(index));
@@ -987,43 +1004,43 @@ class ParserSuite(unittest.TestCase):
 
     def test_68(self):
         input = """
-        PARENT: function int(i: int) { return (i - 1) / 2; }
+        PARENT: function integer(i: integer) { return (i - 1) / 2; }
 
-        LEFT: int(i: int) { return (2 * i + 1); }
+        LEFT: integer(i: integer) { return (2 * i + 1); }
 
-        RIGHT: int(i: int) { return (2 * i + 2); }
+        RIGHT: integer(i: integer) { return (2 * i + 2); }
 
-        reheapUp: function void (maxHeap: array [100] of int, numberOfElements: int, index: int)
+        reheapUp: function void (maxHeap: array [100] of integer, numberOfElements: integer, index: integer)
         {
             if (index >= numberOfElements) {
                 return;
             }
             if (index && maxHeap[PARENT(index)] < maxHeap[index]) {
-                temp: int = maxHeap[index];
+                temp: integer = maxHeap[index];
                 maxHeap[index] = maxHeap[PARENT(index)];
                 maxHeap[PARENT(index)] = temp;
                 reheapUp(maxHeap, numberOfElements, PARENT(index));
             }
         }
     """
-        expect = "Error on line 4 col 17: ("
+        expect = "Error on line 4 col 21: ("
         self.assertTrue(TestParser.test(input, expect, 268))
 
     def test_69(self):
         input = """
-        PARENT: function int(i: int) { return (i - 1) / 2; }
+        PARENT: function integer(i: integer) { return (i - 1) / 2; }
 
-        LEFT:  function int(i: int) { return (2 * i + 1); }
+        LEFT:  function integer(i: integer) { return (2 * i + 1); }
 
-        RIGHT: function int(i: int) { return (2 * i + 2); }
+        RIGHT: function integer(i: integer) { return (2 * i + 2); }
 
-        reheapUp: function void (maxHeap: array [] of int, numberOfElements: int, index: int)
+        reheapUp: function void (maxHeap: array [] of integer, numberOfElements: integer, index: integer)
         {
             if (index >= numberOfElements) {
                 return;
             }
             if (index && maxHeap[PARENT(index)] < maxHeap[index]) {
-                temp: int = maxHeap[index];
+                temp: integer = maxHeap[index];
                 maxHeap[index] = maxHeap[PARENT(index)];
                 maxHeap[PARENT(index)] = temp;
                 reheapUp(maxHeap, numberOfElements, PARENT(index));
@@ -1035,19 +1052,19 @@ class ParserSuite(unittest.TestCase):
 
     def test_70(self):
         input = """
-        PARENT: function int(i: int) { return (i - 1) / 2; }
+        PARENT: function integer(i: integer) { return (i - 1) / 2; }
 
-        LEFT:  function int(i: int) { return (2 * i + 1); }
+        LEFT:  function integer(i: integer) { return (2 * i + 1); }
 
-        RIGHT: function int(i: int) { return (2 * i + 2); }
+        RIGHT: function integer(i: integer) { return (2 * i + 2); }
 
-        reheapUp: function void (maxHeap: array [100] of int, numberOfElements: int, index: int)
+        reheapUp: function void (maxHeap: array [100] of integer, numberOfElements: integer, index: integer)
         {
             if (index >= numberOfElements) {
                 return;
             }
             if (index && maxHeap[PARENT(index)] < maxHeap[index]) {
-                temp: int = maxHeap[index];
+                temp: integer = maxHeap[index];
                 maxHeap[index] = maxHeap[PARENT(index)];
                 maxHeap[PARENT(index)] = temp;
                 reheapUp(maxHeap, numberOfElements, PARENT(index));
@@ -1059,21 +1076,21 @@ class ParserSuite(unittest.TestCase):
 
     def test_71(self):
         input = """
-        PARENT: function int(i: int) { return (i - 1) / 2; }
+        PARENT: function integer(i: integer) { return (i - 1) / 2; }
 
-        LEFT:  function int(i: int) { return (2 * i + 1); }
+        LEFT:  function integer(i: integer) { return (2 * i + 1); }
 
-        RIGHT: function int(i: int) { return (2 * i + 2); }
+        RIGHT: function integer(i: integer) { return (2 * i + 2); }
 
-        reheapDown: function void(maxHeap: array [100] of int, numberOfElements: int, index: int)
+        reheapDown: function void(maxHeap: array [100] of integer, numberOfElements: integer, index: integer)
         {
             if (index >= numberOfElements) {
                 return;
             }
-                left: int = LEFT(index);
-                right: int = RIGHT(index);
+                left: integer = LEFT(index);
+                right: integer = RIGHT(index);
          
-                largest: int = index;
+                largest: integer = index;
          
                 if (left < numberOfElements && (maxHeap[left] > maxHeap[index])) {
                     largest = left;
@@ -1085,7 +1102,7 @@ class ParserSuite(unittest.TestCase):
          
                 if (largest != index)
                 {
-                    temp:int  = maxHeap[index];
+                    temp:integer  = maxHeap[index];
                     maxHeap[index] = maxHeap[largest];
                     maxHeap[largest] = temp;
                     reheapDown(maxHeap, numberOfElements, largest);
@@ -1097,21 +1114,21 @@ class ParserSuite(unittest.TestCase):
 
     def test_72(self):
         input = """
-        PARENT: function int(i: int) { return (i - 1) / 2; }
+        PARENT: function integer(i: integer) { return (i - 1) / 2; }
 
-        LEFT:  function int(i: int) { return (2 * i + 1); }
+        LEFT:  function integer(i: integer) { return (2 * i + 1); }
 
-        RIGHT: function int(i: int) { return (2 * i + 2); }
+        RIGHT: function integer(i: integer) { return (2 * i + 2); }
 
-        reheapDown: function void(maxHeap: array [100] of int, numberOfElements: int, index: int)
+        reheapDown: function void(maxHeap: array [100] of integer, numberOfElements: integer, index: integer)
         {
             if (index >= numberOfElements) {
                 return;
             }
-            left: int = LEFT(index);
-            right: int = RIGHT(index);
+            left: integer = LEFT(index);
+            right: integer = RIGHT(index);
      
-            largest: int = index;
+            largest: integer = index;
      
             if (left <  && (maxHeap[left] > maxHeap[index])) {
                 largest = left;
@@ -1123,7 +1140,7 @@ class ParserSuite(unittest.TestCase):
      
             if (largest != index)
             {
-                temp:int  = maxHeap[index];
+                temp:integer  = maxHeap[index];
                 maxHeap[index] = maxHeap[largest];
                 maxHeap[largest] = temp;
                 reheapDown(maxHeap, numberOfElements, largest);
@@ -1135,21 +1152,21 @@ class ParserSuite(unittest.TestCase):
 
     def test_73(self):
         input = """
-        PARENT: function int(i: int) { return (i - 1) / 2; }
+        PARENT: function integer(i: integer) { return (i - 1) / 2; }
 
-        LEFT:  function int(i: int) { return (2 * i + 1); }
+        LEFT:  function integer(i: integer) { return (2 * i + 1); }
 
-        RIGHT: function int(i: int) { return (2 * i + 2); }
+        RIGHT: function integer(i: integer) { return (2 * i + 2); }
 
-        reheapDown: function void(maxHeap: array [100] of int, numberOfElements: int, index: int)
+        reheapDown: function void(maxHeap: array [100] of integer, numberOfElements: integer, index: integer)
         {
             if (index >= numberOfElements) {
                 return;
             }
-            left: int = LEFT(index);
-            right: int = RIGHT(index);
+            left: integer = LEFT(index);
+            right: integer = RIGHT(index);
      
-            largest: int = index;
+            largest: integer = index;
      
             if (left < numberOfElements && (maxHeap[left] > maxHeap[index])) {
                 largest = left;
@@ -1173,21 +1190,21 @@ class ParserSuite(unittest.TestCase):
 
     def test_74(self):
         input = """
-        PARENT: function int(i: int) { return (i - 1) / 2; }
+        PARENT: function integer(i: integer) { return (i - 1) / 2; }
 
-        LEFT:  function int(i: int) { return (2 * i + 1); }
+        LEFT:  function integer(i: integer) { return (2 * i + 1); }
 
-        RIGHT: function int(i: int) { return (2 * i + 2); }
+        RIGHT: function integer(i: integer) { return (2 * i + 2); }
 
-        reheapDown: void(maxHeap: array [100] of int, numberOfElements: int, index: int)
+        reheapDown: void(maxHeap: array [100] of integer, numberOfElements: integer, index: integer)
         {
             if (index >= numberOfElements) {
                 return;
             }
-            left: int = LEFT(index);
-            right: int = RIGHT(index);
+            left: integer = LEFT(index);
+            right: integer = RIGHT(index);
      
-            largest: int = index;
+            largest: integer = index;
      
             if (left < numberOfElements && (maxHeap[left] > maxHeap[index])) {
                 largest = left;
@@ -1211,7 +1228,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_75(self):
         input = """
-      buildMaxHeap: function void(arr: array[100] of int, numOfEl: int) {
+      buildMaxHeap: function void(arr: array[100] of integer, numOfEl: integer) {
         for (i = numOfEl / 2 - 1, i >= 0, i-1) {
           heapify(arr, numOfEl, i);
         }
@@ -1222,57 +1239,59 @@ class ParserSuite(unittest.TestCase):
 
     def test_76(self):
         input = """
-      buildMaxHeap: function void(arr: array[100] of int, int numOfEl) {
+      buildMaxHeap: function void(arr: array[100] of integer, integer numOfEl) {
         for (i = numOfEl / 2 - 1, i >= 0, i-1) {
           heapify(arr, numOfEl, i);
         }
       }
     """
-        expect = "Error on line 2 col 58: int"
+        expect = "Error on line 2 col 62: integer"
         self.assertTrue(TestParser.test(input, expect, 276))
 
     def test_77(self):
         input = """
-         moduloDivision: function int(seed: int, mod: int) { return seed % mod; }
+         moduloDivision: function integer(seed: integer, mod: integer) { return seed % mod; }
     """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 277))
 
     def test_78(self):
         input = """
-         moduloDivision: function int {seed: int, mod: int} { return seed % mod; }
+         moduloDivision: function integer {seed: integer, mod: integer} { return seed % mod; }
     """
-        expect = "Error on line 2 col 38: {"
+        expect = "Error on line 2 col 42: {"
         self.assertTrue(TestParser.test(input, expect, 278))
 
     def test_79(self):
         input = """
-         moduloDivision: function int (seed: int, mod: int) ( return seed % mod; )
+         moduloDivision: function integer (seed: integer, mod: integer) ( return seed % mod; )
     """
-        expect = "Error on line 2 col 60: ("
+        expect = "Error on line 2 col 72: ("
         self.assertTrue(TestParser.test(input, expect, 279))
 
     def test_80(self):
         input = """
-         1moduloDivision: function int (seed: int, mod: int) { return seed % mod; }
+         1moduloDivision: function integer (seed: integer, mod: integer) { return seed % mod; }
     """
         expect = "Error on line 2 col 9: 1"
         self.assertTrue(TestParser.test(input, expect, 280))
 
     def test_81(self):
         input = """
-        for {i = 1, i < 100, i+1} {
-            j : int = 0;
-            while (j < 200) {j = j+1;}
-            while (i != 20) {}
+        main: function void() {
+            for {i = 1, i < 100, i+1} {
+                j : integer = 0;
+                while (j < 200) {j = j+1;}
+                while (i != 20) {}
+            }
         }
     """
-        expect = "Error on line 2 col 12: {"
+        expect = "Error on line 3 col 16: {"
         self.assertTrue(TestParser.test(input, expect, 281))
 
     def test_82(self):
         input = """
-        Recursive: function void (nums: array[100] of int, size: int, index: int , count: int, sum: int , minjump: int) {
+        Recursive: function void (nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) {
           if (sum >= size) {
             if (minjump > count)
               minjump = count;
@@ -1288,7 +1307,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_83(self):
         input = """
-        Recursive: function void (nums: array[100] of int, size: int, index: int , count: int, sum: int , minjump: int) {
+        Recursive: function void (nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) {
           if (sum >= size) {
             if (minjump > count)
               minjump = count;
@@ -1299,8 +1318,8 @@ class ParserSuite(unittest.TestCase):
           }
         }
 
-        jump: function int(nums: array[100] of int, size: int) {
-          minjump: int = size - 1;
+        jump: function integer(nums: array[100] of integer, size: integer) {
+          minjump: integer = size - 1;
           Recursive(nums, 0, 0, 0, minjump);
           return minjump;
         }
@@ -1310,10 +1329,10 @@ class ParserSuite(unittest.TestCase):
 
     def test_84(self):
         input = """
-        Recursive: function void (nums: array[100] of int, size: int, index: int , count: int, sum: int , minjump: int) {
+        Recursive: function void (nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) {
         };
 
-        jump: function int(nums: array[100] of int, size: int) {
+        jump: function integer(nums: array[100] of integer, size: integer) {
         };
     """
         expect = "Error on line 3 col 9: ;"
@@ -1321,20 +1340,20 @@ class ParserSuite(unittest.TestCase):
 
     def test_85(self):
         input = """
-        Recursive: function void (nums: array[100] of int; size: int; index: int ; count: int; sum: int , minjump: int) {
+        Recursive: function void (nums: array[100] of integer; size: integer; index: integer ; count: integer; sum: integer , minjump: integer) {
         };
 
-        jump: function int(nums: array[100] of int, size: int) {
+        jump: function integer(nums: array[100] of integer, size: integer) {
         };
     """
-        expect = "Error on line 2 col 57: ;"
+        expect = "Error on line 2 col 61: ;"
         self.assertTrue(TestParser.test(input, expect, 285))
 
     def test_86(self):
         input = """
-        binarySearch: function int(arr: array[1000] of int, left: int, right: int, x: int) {
+        binarySearch: function integer(arr: array[1000] of integer, left: integer, right: integer, x: integer) {
           if (right >= left) {
-            mid:int = left + (right - left) / 2;
+            mid:integer = left + (right - left) / 2;
             if (arr[mid] == x)
               return mid;
 
@@ -1352,9 +1371,9 @@ class ParserSuite(unittest.TestCase):
 
     def test_87(self):
         input = """
-        binarySearch: function int(arr: array[1000] of int, left: int, right: int, x: int) {
+        binarySearch: function integer(arr: array[1000] of integer, left: integer, right: integer, x: integer) {
           if {right >= left} {
-            mid:int = left + (right - left) / 2;
+            mid:integer = left + (right - left) / 2;
             if {arr[mid] == x}
               return mid;
 
@@ -1372,9 +1391,9 @@ class ParserSuite(unittest.TestCase):
 
     def test_88(self):
         input = """
-        binarySearch: function int(arr: array[1000] of int, left: int, right: int, x: int) {
+        binarySearch: function integer(arr: array[1000] of integer, left: integer, right: integer, x: integer) {
           /* if {right >= left} {
-            mid:int = left + (right - left) / 2;
+            mid:integer = left + (right - left) / 2;
             if {arr[mid] == x}
               return mid;
 
@@ -1392,7 +1411,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_89(self):
         input = """
-        checkDuplicate: function boolean(ar: array[100] of int, size: int) {
+        checkDuplicate: function boolean(ar: array[100] of integer, size: integer) {
           if (size <= 1)
             return true;
 
@@ -1404,43 +1423,50 @@ class ParserSuite(unittest.TestCase):
 
     def test_90(self):
         input = """
-        // checkDuplicate: function boolean(ar: array[100] of int, size: int) {
+        // checkDuplicate: function boolean(ar: array[100] of integer, size: integer) {
           if (size <= 1)
             return true;
 
           return checkDuplicate(less, less_size);
         }
     """
-        expect = "Error on line 7 col 8: }"
+        expect = "Error on line 3 col 10: if"
         self.assertTrue(TestParser.test(input, expect, 290))
 
     def test_91(self):
         input = """
-        // checkDuplicate: function boolean(ar: array[100] of int, size: int) {
-          if (size <= 1)
-            return true;
-
-          return checkDuplicate(less, less_size);
+x: integer = 65;
+        fact: function integer (n: integer) {
+            if (n == 0) return 1;
+            else return n * fact(n - 1);
+        }
+        inc: function void(out n: integer, delta: integer) {
+            n = n + delta;
+        }
+        main: function void() {
+            delta: integer = fact(3);
+            inc(x, delta);
+            printegerIntegereger(x);
         }
     """
-        expect = "Error on line 7 col 8: }"
+        expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 291))
 
     def test_92(self):
         input = """
-        // /* checkDuplicate: function boolean(ar: array[100] of int, size: int) {
+        // /* checkDuplicate: function boolean(ar: array[100] of integer, size: integer) {
           if (size <= 1)
             return true;
 
           return checkDuplicate(less, less_size);
         */
     """
-        expect = "Error on line 7 col 8: *"
+        expect = "Error on line 3 col 10: if"
         self.assertTrue(TestParser.test(input, expect, 292))
 
     def test_93(self):
         input = """
-        checkElements: function boolean (arr: array[100] of int, n: int) {
+        checkElements: function boolean (arr: array[100] of integer, n: integer) {
           if ((n > 1000) || (n < 0))
             return false;
           for (i = 0, i < n - 1, i+1) {
@@ -1457,18 +1483,18 @@ class ParserSuite(unittest.TestCase):
 
     def test_94(self):
         input = """
-        gcdRecursion: function int(p: int; q: int) {
+        gcdRecursion: function integer(p: integer; q: integer) {
           if (q == 0)
             return p;
           return gcdRecursion(q, p % q);
         }
     """
-        expect = "Error on line 2 col 41: ;"
+        expect = "Error on line 2 col 49: ;"
         self.assertTrue(TestParser.test(input, expect, 294))
 
     def test_95(self):
         input = """
-        gcdRecursion: auto function (p: int, q: int) {
+        gcdRecursion: auto function (p: integer, q: integer) {
           if (q == 0)
             return p;
           return gcdRecursion(q, p % q);
@@ -1479,7 +1505,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_96(self):
         input = """
-        isSymmetry: function boolean(head: array[100] of int, tail: array[100] of int, size: int) {
+        isSymmetry: function boolean(head: array[100] of integer, tail: array[100] of integer, size: integer) {
           for (/*i = 0, i < size / 2, i+1*/) {
             if (head[i] != tail[i])
               return false;
@@ -1492,7 +1518,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_97(self):
         input = """
-        symmetry: function boolean(head: ar[100] of int, tail: arr[100] of int, size: int) {
+        symmetry: function boolean(head: ar[100] of integer, tail: arr[100] of integer, size: integer) {
           for (i = 0, i < size / 2, i+1) {
             if (head[i] != tail[i])
               return false;
@@ -1505,7 +1531,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_98(self):
         input = """
-        symmetry: function boolean(head: array[100] of int, tail: array[100] of int, size: int) {
+        symmetry: function boolean(head: array[100] of integer, tail: array[100] of integer, size: integer) {
           for (i = 0, /*i < size / 2*/, i+1) {
             if (head[i] != tail[i])
               return false;
@@ -1518,8 +1544,8 @@ class ParserSuite(unittest.TestCase):
 
     def test_99(self):
         input = """
-        countWaysUtil: function int(x: int, num: int) {
-          val: int = (x - num*num);
+        countWaysUtil: function integer(x: integer, num: integer) {
+          val: integer = (x - num*num);
           if (val == 0)
             return 1;
           if (val < 0)
@@ -1533,8 +1559,8 @@ class ParserSuite(unittest.TestCase):
 
     def test_100(self):
         input = """
-        countWaysUtil: function int(x: int, num: int) {
-          val: int = (x - num*);
+        countWaysUtil: function integer(x: integer, num: integer) {
+          val: integer = (x - num*);
           if (val == 0)
             return 1;
           if (val < 0)
@@ -1543,5 +1569,5 @@ class ParserSuite(unittest.TestCase):
           return countWaysUtil(val, num + 1);  //countWaysUtil(x, num + 1)
         }
     """
-        expect = "Error on line 3 col 30: )"
+        expect = "Error on line 3 col 34: )"
         self.assertTrue(TestParser.test(input, expect, 300))

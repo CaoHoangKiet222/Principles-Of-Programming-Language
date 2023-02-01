@@ -1,10 +1,10 @@
 
-      search: function int(nums: array[100] of int, size: int, target: int) {
-        left, right: int = 0, size - 1;
-        index: int = -1;
+      search: function integer(nums: array[100] of integer, size: integer, target: integer) {
+        left, right: integer = 0, size - 1;
+        index: integer = -1;
         found: boolean = false;
         while (left <= right && !found) {
-          mid: int = (left + right) / 2;
+          mid: integer = (left + right) / 2;
           if (nums[mid] == target) {
             found = true;
             index = mid;

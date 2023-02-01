@@ -1,1 +1,1 @@
-int,a,=,0,;,do,{,writeInt,(,a,),;,a,+,+,;,},while,(,a,!=,3,),;,<EOF>
+integer,a,=,0,;,do,{,writeInt,(,a,),;,a,+,+,;,},while,(,a,!=,3,),;,<EOF>

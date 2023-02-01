@@ -1,5 +1,5 @@
 
-      buildMaxHeap: function void(arr: array[100] of int, int numOfEl) {
+      buildMaxHeap: function void(arr: array[100] of integer, integer numOfEl) {
         for (i = numOfEl / 2 - 1, i >= 0, i-1) {
           heapify(arr, numOfEl, i);
         }

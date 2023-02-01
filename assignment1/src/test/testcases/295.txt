@@ -1,5 +1,5 @@
 
-        gcdRecursion: auto function (p: int, q: int) {
+        gcdRecursion: auto function (p: integer, q: integer) {
           if (q == 0)
             return p;
           return gcdRecursion(q, p % q);

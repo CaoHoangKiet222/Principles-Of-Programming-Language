@@ -1,10 +1,10 @@
 
-      lengthOfLastWord: function int(s: array[100] of string, size: int) {
-        count: int = 0;
+      lengthOfLastWord: function integer(s: array[100] of string, size: integer) {
+        count: integer = 0;
         if (size == 0)
           return 0;
 
-        i: int = size - 1,
+        i: integer = size - 1,
         while ((s[i] == " ") && i >= 0) {
           i = i - 1;
         }

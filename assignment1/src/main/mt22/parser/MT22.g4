@@ -35,11 +35,11 @@ options{
 	language=Python3;
 }
 
-program: program_init EOF;
+program: decls EOF;
 
-program_init
-  : (vardecl | funcdecl | stat) program_init
-  | (vardecl | funcdecl | stat)
+decls
+  : (vardecl | funcdecl) decls
+  | (vardecl | funcdecl)
   ;
 
 // ================= Declarations =================
@@ -104,7 +104,7 @@ non_auto_type_decl
 // ============== Automic Types ==================
 
 int_type 
-  : INTEGER | INT
+  : INTEGER
   ;
 
 float_type : FLOAT
@@ -365,9 +365,6 @@ BOOLEAN : 'boolean'
   ;
 
 INTEGER : 'integer'
-  ;
-
-INT : 'int'
   ;
 
 FLOAT : 'float'

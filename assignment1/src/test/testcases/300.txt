@@ -1,6 +1,6 @@
 
-        countWaysUtil: function int(x: int, num: int) {
-          val: int = (x - num*);
+        countWaysUtil: function integer(x: integer, num: integer) {
+          val: integer = (x - num*);
           if (val == 0)
             return 1;
           if (val < 0)

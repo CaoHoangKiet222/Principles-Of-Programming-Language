@@ -1,10 +1,12 @@
 
-        x : array [0, 100] of int;
-        for (i = 1, i < 100, i+1) {
-            if (i % 2 == 0) {
-                x[i, 0] = i;
-            } ese {
-                x[0, i] = i + 1;
+        x : array [0, 100] of integer;
+        main: function void() {
+            for (i = 1, i < 100, i+1) {
+                if (i % 2 == 0) {
+                    x[i, 0] = i;
+                } ese {
+                    x[0, i] = i + 1;
+                }
             }
         }
     

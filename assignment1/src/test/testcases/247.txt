@@ -1,9 +1,9 @@
 
-        checkDuplicate: function boolean(ar: array[100] of int, size: int) {
+        checkDuplicate: function boolean(ar: array[100] of integer, size: integer) {
           if (size <= 1)
             return true;
-          less, greater: array[1000] of int;
-          greater_size, less_size: int  = 0, 0;
+          less, greater: array[1000] of integer;
+          greater_size, less_size: integer  = 0, 0;
 
           for (i = 1, i < size, i+1) {
             if (ar[i] == ar[0]) {

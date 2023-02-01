@@ -1,1 +1,1 @@
-out,x,:,int,<EOF>
+out,x,:,integer,<EOF>

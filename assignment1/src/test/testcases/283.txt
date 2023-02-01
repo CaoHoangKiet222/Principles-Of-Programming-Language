@@ -1,5 +1,5 @@
 
-        Recursive: function void (nums: array[100] of int, size: int, index: int , count: int, sum: int , minjump: int) {
+        Recursive: function void (nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) {
           if (sum >= size) {
             if (minjump > count)
               minjump = count;
@@ -10,8 +10,8 @@
           }
         }
 
-        jump: function int(nums: array[100] of int, size: int) {
-          minjump: int = size - 1;
+        jump: function integer(nums: array[100] of integer, size: integer) {
+          minjump: integer = size - 1;
           Recursive(nums, 0, 0, 0, minjump);
           return minjump;
         }

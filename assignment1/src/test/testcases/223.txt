@@ -1,5 +1,5 @@
 
-    containStr: function boolean (S1: string , S2: string, sizeS1: int, sizeS2: int) {
+    containStr: function boolean (S1: string , S2: string, sizeS1: integer, sizeS2: integer) {
       b : array[1000] of boolean;
       for (i = 0, i < sizeS2, i + 1) {
         found: boolean = false;
@@ -18,7 +18,7 @@
       return true;
     }
 
-    minStr: function string (S1: string , S2: string, sizeS1: int, sizeS2: int) {
+    minStr: function string (S1: string , S2: string, sizeS1: integer, sizeS2: integer) {
       result : string = "";
       for (i = 0, i <= sizeS2 - sizeS1, i + 1) {
         result = S1::S2;

@@ -1,5 +1,5 @@
 
-        recursiveSearch: function int(out n: int, m: int, arr: array[100] of int, index: int) {
+        recursiveSearch: function integer(out n: integer, m: integer, arr: array[100] of integer, index: integer) {
           index = index + 1;
           if (index > n) {
             return -1;
