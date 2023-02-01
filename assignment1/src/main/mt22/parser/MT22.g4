@@ -38,8 +38,13 @@ options{
 program: decls EOF;
 
 decls
-  : (vardecl | funcdecl) decls
-  | (vardecl | funcdecl)
+  : decl decls
+  | decl
+  ;
+
+decl
+  : vardecl
+  | funcdecl
   ;
 
 // ================= Declarations =================
