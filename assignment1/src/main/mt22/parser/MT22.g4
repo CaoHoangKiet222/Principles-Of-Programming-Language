@@ -65,7 +65,7 @@ param_list
   ;
 
 param 
-  : OUT? ID COLON type_decl
+  : INHERIT? OUT? ID COLON type_decl
   |
   ;
 
