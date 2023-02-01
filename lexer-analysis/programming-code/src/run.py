@@ -7,10 +7,6 @@ from antlr4 import *
 for path in [
     "./test/",
     "./main/bkool/parser/",
-    "./main/bkool/utils/",
-    "./main/bkool/astgen/",
-    "./main/bkool/checker/",
-    "./main/bkool/codegen/",
 ]:
     sys.path.append(path)
 ANTLR_JAR = "./lib/antlr-4.9.2-complete.jar"
@@ -59,22 +55,6 @@ def main(argv):
             from LexerSuite import LexerSuite
 
             getAndTest(LexerSuite)
-        elif argv[1] == "ParserSuite":
-            from ParserSuite import ParserSuite
-
-            getAndTest(ParserSuite)
-        elif argv[1] == "ASTGenSuite":
-            from ASTGenSuite import ASTGenSuite
-
-            getAndTest(ASTGenSuite)
-        elif argv[1] == "CheckerSuite":
-            from CheckerSuite import CheckerSuite
-
-            getAndTest(CheckerSuite)
-        elif argv[1] == "CodeGenSuite":
-            from CodeGenSuite import CheckCodeGenSuite
-
-            getAndTest(CheckCodeGenSuite)
         else:
             printUsage()
     else:
@@ -103,10 +83,6 @@ def test(suite):
 def printUsage():
     print("python3 run.py gen")
     print("python3 run.py test LexerSuite")
-    print("python3 run.py test ParserSuite")
-    print("python3 run.py test ASTGenSuite")
-    print("python3 run.py test CheckerSuite")
-    print("python3 run.py test CodeGenSuite")
 
 
 if __name__ == "__main__":
