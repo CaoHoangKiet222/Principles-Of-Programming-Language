@@ -1,3 +1,4 @@
 
     a,   b,   c   : auto = 1 , 2 , 3;
+    a,   b,   c   : auto = 1 , 2;
     

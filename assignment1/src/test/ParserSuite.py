@@ -21,8 +21,9 @@ class ParserSuite(unittest.TestCase):
     def test_3(self):
         input = """
     a,   b,   c   : auto = 1 , 2 , 3;
+    a,   b,   c   : auto = 1 , 2;
     """
-        expect = "successful"
+        expect = "Error on line 3 col 32: ;"
         self.assertTrue(TestParser.test(input, expect, 203))
 
     def test_4(self):
@@ -1539,7 +1540,7 @@ x: integer = 65;
           return true;
         }
     """
-        expect = "successful"
+        expect = "Error on line 3 col 38: ,"
         self.assertTrue(TestParser.test(input, expect, 298))
 
     def test_99(self):
