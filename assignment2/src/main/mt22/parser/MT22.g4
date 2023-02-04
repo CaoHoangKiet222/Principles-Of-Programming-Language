@@ -45,9 +45,14 @@ decls
 decl
   : vardecl
   | funcdecl
+  | paramdecl
   ;
 
 // ================= Declarations =================
+
+// Parameters declarations
+paramdecl: param
+  ;
 
 // Function declarations
 
@@ -64,7 +69,7 @@ param_list
   | param
   ;
 
-param 
+param
   : INHERIT? OUT? ID COLON type_decl
   ;
 
@@ -257,16 +262,11 @@ return_stat
   ;
 
 call_stat
-  : func_name LP call_stat_exprs? RP SEMI
+  : func_name LP expr_list? RP SEMI
   ;
 
 func_name
   : ID
-  ;
-
-call_stat_exprs
-  : expr COMMA call_stat_exprs
-  | expr
   ;
 
 block_stat
@@ -337,7 +337,7 @@ expr8
   ;
 
 func_call
-  : func_name LP call_stat_exprs? RP
+  : func_name LP expr_list? RP
   ;
 
 operands 

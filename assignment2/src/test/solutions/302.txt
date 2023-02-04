@@ -1,7 +1,5 @@
 Program([
-	VarDecl(x, IntegerType, IntegerLit(1))
-	VarDecl(y, IntegerType, IntegerLit(2))
-	VarDecl(z, IntegerType, IntegerLit(3))
-	VarDecl(a, FloatType)
-	VarDecl(b, FloatType)
+	VarDecl(Id(x), IntegerType, IntegerLit(1))
+	VarDecl(Id(y), IntegerType, IntegerLit(2))
+	VarDecl(Id(z), IntegerType, IntegerLit(3))
 ])

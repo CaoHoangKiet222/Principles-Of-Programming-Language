@@ -26,9 +26,12 @@ class ASTGeneration(MT22Visitor):
             decls.extend(ctx.decls().accept(self))
         return decls
 
-    # decl: vardecl| funcdecl;
+    # decl: vardecl| funcdecl| paramdecl;
     def visitDecl(self, ctx: MT22Parser.DeclContext):
         return ctx.getChild(0).accept(self)
+
+    def visitParamdecl(self, ctx: MT22Parser.ParamdeclContext):
+        return ctx.param().accept(self)
 
     # funcdecl: func_name COLON FUNCTION return_type LP param_list? RP (INHERIT ID)? body;
     def visitFuncdecl(self, ctx: MT22Parser.FuncdeclContext):
@@ -49,7 +52,7 @@ class ASTGeneration(MT22Visitor):
 
     # param: INHERIT? OUT? ID COLON type_decl;
     def visitParam(self, ctx: MT22Parser.ParamContext):
-        return ParamDecl(ctx.ID().getText(), ctx.type_decl().accept(self), True if ctx.OUT() else False, True if ctx.INHERIT() else False)
+        return ParamDecl(Id(ctx.ID().getText()), ctx.type_decl().accept(self), True if ctx.OUT() else False, True if ctx.INHERIT() else False)
 
     # body: block_stat;
     def visitBody(self, ctx: MT22Parser.BodyContext):
@@ -67,8 +70,8 @@ class ASTGeneration(MT22Visitor):
         exprs = ctx.getChild(4).accept(self) if ctx.ASSIGN() else []
 
         if len(exprs) == 0:
-            return [VarDecl(id, typ) for id in ids]
-        return [VarDecl(id, typ, expr) for id, expr in zip(ids, exprs)]
+            return [VarDecl(Id(id), typ) for id in ids]
+        return [VarDecl(Id(id), typ, expr) for id, expr in zip(ids, exprs)]
 
     # id_list: ID COMMA id_list| ID;
     def visitId_list(self, ctx: MT22Parser.Id_listContext):
@@ -136,7 +139,8 @@ class ASTGeneration(MT22Visitor):
         if ctx.scalar_var():
             lhs = ctx.scalar_var().accept(self)
         if ctx.index_op():
-            lhs = ArrayCell(ctx.ID().getText(), ctx.index_op().accept(self))
+            lhs = ArrayCell(Id(ctx.ID().getText()),
+                            ctx.index_op().accept(self))
         rhs = ctx.expr().accept(self)
         return AssignStmt(lhs, rhs)
 
@@ -198,19 +202,15 @@ class ASTGeneration(MT22Visitor):
     def visitReturn_stat(self, ctx: MT22Parser.Return_statContext):
         return ReturnStmt(ctx.expr().accept(self) if ctx.expr() else None)
 
-    # call_stat: func_name LP call_stat_exprs? RP SEMI;
+    # call_stat : func_name LP expr_list? RP SEMI ;
     def visitCall_stat(self, ctx: MT22Parser.Call_statContext):
         name = ctx.func_name().accept(self)
-        args = ctx.call_stat_exprs().accept(self) if ctx.call_stat_exprs() else []
+        args = ctx.expr_list().accept(self) if ctx.expr_list() else []
         return CallStmt(name, args)
 
     # func_name: ID;
     def visitFunc_name(self, ctx: MT22Parser.Func_nameContext):
-        return ctx.ID().getText()
-
-    # call_stat_exprs: expr COMMA call_stat_exprs| expr;
-    def visitCall_stat_exprs(self, ctx: MT22Parser.Call_stat_exprsContext):
-        return [ctx.expr().accept(self), *ctx.call_stat_exprs().accept(self)] if ctx.COMMA() else [ctx.expr().accept(self)]
+        return Id(ctx.ID().getText())
 
     # block_stat: LCB body_block_stat? RCB;
     def visitBlock_stat(self, ctx: MT22Parser.Block_statContext):
@@ -219,7 +219,7 @@ class ASTGeneration(MT22Visitor):
 
     # body_block_stat: (vardecl | stat) body_block_stat| (vardecl | stat);
     def visitBody_block_stat(self, ctx: MT22Parser.Body_block_statContext):
-        return [ctx.getChild(0).accept(self), *ctx.body_block_stat().accept(self)] if ctx.body_block_stat() else ctx.getChild(0).accept(self)
+        return [ctx.getChild(0).accept(self), *ctx.body_block_stat().accept(self)] if ctx.body_block_stat() else [ctx.getChild(0).accept(self)]
 
     # expr_list_for_valdecl: expr COMMA expr_list_for_valdecl| expr;
     def visitExpr_list_for_valdecl(self, ctx: MT22Parser.Expr_list_for_valdeclContext):
@@ -303,9 +303,9 @@ class ASTGeneration(MT22Visitor):
     def visitExpr8(self, ctx: MT22Parser.Expr8Context):
         return ctx.expr().accept(self) if ctx.expr() else ctx.operands().accept(self)
 
-    # func_call: func_name LP call_stat_exprs? RP;
+    # func_call: func_name LP expr_list? RP;
     def visitFunc_call(self, ctx: MT22Parser.Func_callContext):
-        return FuncCall(ctx.func_name().accept(self), ctx.call_stat_exprs().accept(self) if ctx.call_stat_exprs() else [])
+        return FuncCall(ctx.func_name().accept(self), ctx.expr_list().accept(self) if ctx.expr_list() else [])
 
     # operands: (INT_LIT | FLOAT_LIT | BOOLEAN_LIT | STRING_LIT | array_lit)| func_call| ID;
     def visitOperands(self, ctx: MT22Parser.OperandsContext):
