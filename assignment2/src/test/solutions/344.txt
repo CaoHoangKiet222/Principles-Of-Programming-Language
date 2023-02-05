@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(countWaysUtil), IntegerType, [Param(Id(x), IntegerType), Param(Id(num), IntegerType)], None, BlockStmt([VarDecl(Id(val), IntegerType, BinExpr(-, Id(x), BinExpr(*, Id(num), Id(num)))), IfStmt(BinExpr(==, Id(val), IntegerLit(0)), ReturnStmt(IntegerLit(1))), IfStmt(BinExpr(<, Id(val), IntegerLit(0)), ReturnStmt(IntegerLit(0))), ReturnStmt(BinExpr(+, FuncCall(Id(countWaysUtil), [Id(val), BinExpr(+, Id(num), IntegerLit(1))]), FuncCall(Id(countWaysUtil), [Id(x), BinExpr(+, Id(num), IntegerLit(1))])))]))
+])

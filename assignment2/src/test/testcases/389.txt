@@ -1,0 +1,14 @@
+
+        checkElementsUniqueness: function boolean (arr: array[100] of integer, n: integer) {
+            // some code here
+        }
+        main : function void () {
+            nums: array[100] of integer = {100, 2, 3, 4};
+            nE: integer = 100;
+            if (checkElementsUniqueness(nums, nE) == true) {
+                print("element is unique");
+            } else {
+                print("element is not unique");
+            }
+        }
+    

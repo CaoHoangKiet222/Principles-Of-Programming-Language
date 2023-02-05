@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(gcdIteration), IntegerType, [Param(Id(p), IntegerType), Param(Id(q), IntegerType)], None, BlockStmt([WhileStmt(BinExpr(!=, BinExpr(*, Id(p), Id(q)), IntegerLit(0)), BlockStmt([IfStmt(BinExpr(>, Id(p), Id(q)), BlockStmt([AssignStmt(Id(p), BinExpr(%, Id(p), Id(q)))]), BlockStmt([AssignStmt(Id(q), BinExpr(%, Id(q), Id(p)))]))])), ReturnStmt(BinExpr(+, Id(p), Id(q)))]))
+])

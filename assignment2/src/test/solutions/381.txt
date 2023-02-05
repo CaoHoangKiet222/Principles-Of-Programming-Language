@@ -1,0 +1,4 @@
+Program([
+	FuncDecl(Id(completeNum), BooleanType, [Param(Id(N), IntegerType)], None, BlockStmt([]))
+	FuncDecl(Id(main), VoidType, [], None, BlockStmt([CallStmt(Id(completeNum), IntegerLit(10))]))
+])

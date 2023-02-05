@@ -1,0 +1,17 @@
+
+        recursiveSearch: function integer(out n: integer, m: integer, arr: array[100] of integer, index: integer) {
+          index = index + 1;
+          if (index > n) {
+            return -1;
+          }
+
+          if (arr[index - 1] == m) {
+            for (i = index - 1, i < n - 1, i+1) {
+              arr[i] = arr[i + 1];
+            }
+            n = n - 1;
+            return index - 1;
+          }
+          return recursiveSearch(n, m, arr, index);
+        }
+    

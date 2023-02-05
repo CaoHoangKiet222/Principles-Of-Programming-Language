@@ -1,0 +1,7 @@
+
+        swap: function void(x: integer,y: integer) {
+          k: integer = x;
+          x = y;
+          y = k;
+        }
+    

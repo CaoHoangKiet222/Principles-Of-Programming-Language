@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(findMax), AutoType, [Param(Id(vals), ArrayType([100], IntegerType)), Param(Id(numEls), IntegerType)], None, BlockStmt([VarDecl(Id(max), IntegerType, ArrayCell(Id(vals), [IntegerLit(0)])), ForStmt(AssignStmt(Id(i), IntegerLit(1)), BinExpr(<, Id(i), Id(numEls)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(>, ArrayCell(Id(vals), [Id(i)]), Id(max)), BlockStmt([AssignStmt(Id(max), ArrayCell(Id(vals), [Id(i)]))]))])), ReturnStmt(Id(max))]))
+])

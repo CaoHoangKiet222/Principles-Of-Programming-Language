@@ -1,0 +1,7 @@
+
+        reverseStr: function string(str: string, size: integer) {}
+        main : function void () {
+            s : string = "Hello World!";
+            reverseStr(s, 12);
+        }
+    

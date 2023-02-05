@@ -1,0 +1,8 @@
+
+        isPalindrome: function boolean(str: array[100] of string, strSize: integer) {}
+        main : function void () {
+            str: array[100] of string= {"", "2", "23423", "23432"};
+            nE: integer = 100;
+            isPalindrome(str, nE);
+        }
+    

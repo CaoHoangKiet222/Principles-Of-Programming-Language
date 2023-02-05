@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(min_waiting_time), IntegerType, [Param(Id(n), IntegerType), Param(Id(arrvalTime), ArrayType([100], IntegerType)), Param(Id(completeTime), ArrayType([100], IntegerType))], None, BlockStmt([CallStmt(Id(sort), Id(a), BinExpr(+, Id(a), Id(n)), FuncCall(Id(greater), [])), VarDecl(Id(minTime), IntegerType, IntegerLit(0)), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(n)), BinExpr(+, Id(i), Id(k)), AssignStmt(Id(minTime), BinExpr(+, Id(minTime), BinExpr(*, IntegerLit(2), ArrayCell(Id(a), [Id(i)]))))), ReturnStmt(Id(minTime))]))
+])

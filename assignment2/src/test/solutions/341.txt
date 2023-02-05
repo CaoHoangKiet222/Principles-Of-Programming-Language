@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(gcdRecursion), IntegerType, [Param(Id(p), IntegerType), Param(Id(q), IntegerType)], None, BlockStmt([IfStmt(BinExpr(==, Id(q), IntegerLit(0)), ReturnStmt(Id(p))), ReturnStmt(FuncCall(Id(gcdRecursion), [Id(q), BinExpr(%, Id(p), Id(q))]))]))
+])

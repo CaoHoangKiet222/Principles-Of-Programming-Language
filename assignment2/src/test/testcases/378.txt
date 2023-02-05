@@ -1,0 +1,7 @@
+
+        lengthOfLastWord: function integer(s: array[100] of string, size: integer) {}
+        main : function void () {
+            s : array[100] of string = {"Hello World!", "s1", "s2"};
+            lengthOfLastWord(s, 100);
+        }
+    

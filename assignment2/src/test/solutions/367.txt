@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(midSquare), IntegerType, [Param(Id(seed), IntegerType)], None, BlockStmt([VarDecl(Id(newSeed), IntegerType, FuncCall(Id(pow), [Id(seed), IntegerLit(2)])), VarDecl(Id(s), StringType, FuncCall(Id(to_string), [Id(newSeed)])), CallStmt(Id(erase), Id(s), BinExpr(-, BinExpr(+, FuncCall(Id(begin), []), FuncCall(Id(size), [Id(s)])), IntegerLit(2)), FuncCall(Id(end), [Id(s)])), ReturnStmt(FuncCall(Id(stoi), [FuncCall(Id(substr), [Id(s), BinExpr(-, FuncCall(Id(size), [Id(s)]), IntegerLit(4))])]))]))
+])

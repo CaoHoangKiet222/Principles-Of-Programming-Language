@@ -1,0 +1,10 @@
+
+        findMax: function auto(vals: array[100] of integer, numEls: integer) {}
+        findMin: function auto(vals: array[100] of integer, numEls: integer) {}
+        main : function void () {
+            nE: integer = 100;
+            nums: array[100] of integer = {100, 2, 3, 4};
+            print(findMax(nums, nE));
+            print(findMin(nums, nE));
+        }
+    

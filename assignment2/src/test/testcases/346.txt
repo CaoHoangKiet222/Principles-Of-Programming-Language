@@ -1,0 +1,7 @@
+
+        PARENT: function integer(i: integer) { return (i - 1) / 2; }
+
+        LEFT: function integer(i: integer) { return (2 * i + 1); }
+
+        RIGHT: function integer(i: integer) { return (2 * i + 2); }
+    

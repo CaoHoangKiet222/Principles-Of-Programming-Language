@@ -1,0 +1,11 @@
+
+        gcdRecursion: function integer(p: integer, q: integer) {
+          if (q == 0)
+            return p;
+          return gcdRecursion(q, p % q);
+        }
+        main : function void () {
+            p, q: integer = 100, 200;
+            print(gcdRecursion(p, q));
+        }
+    

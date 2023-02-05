@@ -1,0 +1,11 @@
+
+        rotation: function integer (key: integer, addressSize: integer) {
+          x: string = to_string(key);
+          temp: string = x[length(x) - 1];
+          for (i = length(x) - 1, i > 0, i-1) {
+            x[i] = x[i - 1];
+          }
+          x[0] = temp;
+          return foldShift(stoll(x), addressSize);
+        }
+    

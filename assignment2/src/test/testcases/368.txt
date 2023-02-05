@@ -1,0 +1,9 @@
+
+        digitExtraction: function integer(seed: integer, extractDigits: array[100] of integer, size: integer) {
+          s, strSeed: string = "", to_string(seed);
+          for (i = 0, i < size, i+1) {
+            s = s + strSeed[extractDigits[i]];
+          }
+          return stoi(s);
+        }
+    

@@ -1,0 +1,6 @@
+
+        max_two_nums: function auto (a: integer, b: integer) {}
+        main : function void () {
+            printInteger(max_two_nums(10, 20));
+        }
+    

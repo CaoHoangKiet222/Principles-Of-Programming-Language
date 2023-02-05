@@ -1,0 +1,4 @@
+Program([
+	FuncDecl(Id(isSymmetry), BooleanType, [Param(Id(head), ArrayType([100], IntegerType)), Param(Id(tail), ArrayType([100], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([]))
+	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(size), IntegerType, IntegerLit(100)), VarDecl(Id(head), ArrayType([100], IntegerType), ArrayLit([IntegerLit(100), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), VarDecl(Id(tail), ArrayType([100], IntegerType), ArrayLit([])), IfStmt(BinExpr(==, FuncCall(Id(isSymmetry), [Id(head), Id(tail), Id(size)]), BooleanLit(False)), BlockStmt([CallStmt(Id(print), StringLit(array is symmetric))]), BlockStmt([CallStmt(Id(print), StringLit(array is not symmetric))]))]))
+])

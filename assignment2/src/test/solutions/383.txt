@@ -1,0 +1,4 @@
+Program([
+	FuncDecl(Id(min_two_nums), AutoType, [Param(Id(a), IntegerType), Param(Id(b), IntegerType)], None, BlockStmt([]))
+	FuncDecl(Id(main), VoidType, [], None, BlockStmt([CallStmt(Id(printInteger), FuncCall(Id(min_two_nums), [IntegerLit(10), IntegerLit(20)]))]))
+])

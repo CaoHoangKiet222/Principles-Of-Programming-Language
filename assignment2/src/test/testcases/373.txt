@@ -1,0 +1,9 @@
+
+        main : function void () {
+            nE : integer = 0;
+            for (i = 0, i < nE, i + 1) 
+                if (nE == (10 + 5)) 
+                    return nE;
+                else i = i + 1;
+        }
+    

@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(rotation), IntegerType, [Param(Id(key), IntegerType), Param(Id(addressSize), IntegerType)], None, BlockStmt([VarDecl(Id(x), StringType, FuncCall(Id(to_string), [Id(key)])), VarDecl(Id(temp), StringType, ArrayCell(Id(x), [BinExpr(-, FuncCall(Id(length), [Id(x)]), IntegerLit(1))])), ForStmt(AssignStmt(Id(i), BinExpr(-, FuncCall(Id(length), [Id(x)]), IntegerLit(1))), BinExpr(>, Id(i), IntegerLit(0)), BinExpr(-, Id(i), IntegerLit(1)), BlockStmt([AssignStmt(ArrayCell(Id(x), [Id(i)]), ArrayCell(Id(x), [BinExpr(-, Id(i), IntegerLit(1))]))])), AssignStmt(ArrayCell(Id(x), [IntegerLit(0)]), Id(temp)), ReturnStmt(FuncCall(Id(foldShift), [FuncCall(Id(stoll), [Id(x)]), Id(addressSize)]))]))
+])

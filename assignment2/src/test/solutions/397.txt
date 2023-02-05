@@ -1,0 +1,5 @@
+Program([
+	FuncDecl(Id(buildMaxHeap), VoidType, [Param(Id(arr), ArrayType([100], IntegerType)), Param(Id(numOfEl), IntegerType)], None, BlockStmt([]))
+	FuncDecl(Id(heapSort), VoidType, [Param(Id(start), ArrayType([100], IntegerType)), Param(Id(numOfEl), IntegerType)], None, BlockStmt([CallStmt(Id(buildMaxHeap), Id(start), Id(numOfEl))]))
+	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(index), IntegerType, IntegerLit(1)), VarDecl(Id(maxHeap), ArrayType([100], IntegerType), ArrayLit([IntegerLit(1001), IntegerLit(20), IntegerLit(30), IntegerLit(40)])), CallStmt(Id(heapSort), Id(maxHeap), IntegerLit(100)), CallStmt(Id(print), Id(maxHeap))]))
+])

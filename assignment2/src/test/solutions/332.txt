@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(max_two_nums), AutoType, [Param(Id(a), IntegerType), Param(Id(b), IntegerType)], None, BlockStmt([IfStmt(BinExpr(>, Id(a), Id(b)), BlockStmt([ReturnStmt(Id(a))])), ReturnStmt(Id(b))]))
+])

@@ -1,0 +1,4 @@
+Program([
+	FuncDecl(Id(factorial), AutoType, [Param(Id(N), IntegerType)], None, BlockStmt([]))
+	FuncDecl(Id(main), VoidType, [], None, BlockStmt([CallStmt(Id(printFac), FuncCall(Id(factorial), [IntegerLit(20)]))]))
+])

@@ -1,0 +1,8 @@
+
+        checkzero: function boolean(nums: array[100] of integer, size: integer) {}
+        main : function void () {
+            nE : integer = 100;
+            nums: array[100] of integer = {1, 2, 3, 4};
+            checkzero(nums, nE);
+        }
+    

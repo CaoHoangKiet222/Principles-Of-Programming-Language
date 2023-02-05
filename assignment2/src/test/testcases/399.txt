@@ -1,0 +1,13 @@
+
+        swap: function void(out x: integer, out y: integer) {
+          k: integer = x;
+          x = y;
+          y = k;
+        }
+
+        main : function void () {
+            x, y: integer = 1, 3;
+            swap(x, y);
+            print((x + y) + "");
+        }
+    

@@ -1,0 +1,15 @@
+
+        PARENT: function integer(i: integer) {}
+
+        LEFT: function integer(i: integer) {}
+
+        RIGHT: function integer(i: integer) {}
+
+        reheapUp: function void (maxHeap: array [100] of integer, numberOfElements: integer, index: integer) {}
+
+        main : function void () {
+            index: integer = 1;
+            maxHeap: array[100] of integer = {100_1, 20, 30, 40};
+            reheapUp(maxHeap, 100, index);
+        }
+    

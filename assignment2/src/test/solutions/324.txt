@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(Recursive), VoidType, [Param(Id(nums), ArrayType([100], IntegerType)), Param(Id(size), IntegerType), Param(Id(index), IntegerType), Param(Id(count), IntegerType), Param(Id(sum), IntegerType), Param(Id(minjump), IntegerType)], None, BlockStmt([IfStmt(BinExpr(>=, Id(sum), Id(size)), BlockStmt([IfStmt(BinExpr(>, Id(minjump), Id(count)), AssignStmt(Id(minjump), Id(count)))]), BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(1)), BinExpr(<=, Id(i), ArrayCell(Id(nums), [Id(index)])), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([CallStmt(Id(Recursive), Id(nums), BinExpr(+, Id(index), Id(i)), BinExpr(+, Id(count), IntegerLit(1)), BinExpr(+, Id(sum), Id(i)), Id(minjump))]))]))]))
+])

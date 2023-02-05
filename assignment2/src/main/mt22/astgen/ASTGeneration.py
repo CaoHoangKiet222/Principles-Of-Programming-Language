@@ -48,7 +48,7 @@ class ASTGeneration(MT22Visitor):
 
     # param_list: param COMMA param_list| param;
     def visitParam_list(self, ctx: MT22Parser.Param_listContext):
-        return [ctx.param().accept(self), *ctx.param_list().accept(self)] if ctx.COMMA() else [ctx.param_list().accept(self)]
+        return [ctx.param().accept(self), *ctx.param_list().accept(self)] if ctx.COMMA() else [ctx.param().accept(self)]
 
     # param: INHERIT? OUT? ID COLON type_decl;
     def visitParam(self, ctx: MT22Parser.ParamContext):
@@ -70,12 +70,12 @@ class ASTGeneration(MT22Visitor):
         exprs = ctx.getChild(4).accept(self) if ctx.ASSIGN() else []
 
         if len(exprs) == 0:
-            return [VarDecl(Id(id), typ) for id in ids]
-        return [VarDecl(Id(id), typ, expr) for id, expr in zip(ids, exprs)]
+            return [VarDecl(id, typ) for id in ids]
+        return [VarDecl(id, typ, expr) for id, expr in zip(ids, exprs)]
 
     # id_list: ID COMMA id_list| ID;
     def visitId_list(self, ctx: MT22Parser.Id_listContext):
-        return [ctx.ID().getText(), *ctx.id_list().accept(self)] if ctx.id_list() else [ctx.ID().getText()]
+        return [Id(ctx.ID().getText()), *ctx.id_list().accept(self)] if ctx.id_list() else [Id(ctx.ID().getText())]
 
     # type_decl: non_auto_type_decl | auto_type;
     def visitType_decl(self, ctx: MT22Parser.Type_declContext):
@@ -109,7 +109,7 @@ class ASTGeneration(MT22Visitor):
 
     # dimensions: INT_LIT COMMA dimensions| INT_LIT;
     def visitDimensions(self, ctx: MT22Parser.DimensionsContext):
-        val = int(ctx.INT_LIT().getText())
+        val = ctx.INT_LIT().getText()
         return [val, *ctx.dimensions().accept(self)] if ctx.dimensions() else [val]
 
     # element_type: int_type | float_type | boolean_type | string_type;
@@ -126,7 +126,7 @@ class ASTGeneration(MT22Visitor):
 
     # array_lit: LCB expr_list? RCB;
     def visitArray_lit(self, ctx: MT22Parser.Array_litContext):
-        explist = ctx.expr_list().accept(self) if ctx.expr_list else []
+        explist = ctx.expr_list().accept(self) if ctx.expr_list() else []
         return ArrayLit(explist)
 
     # stat: assign_stat| if_stat| for_stat| while_stat| do_while_stat| break_stat | continue_stat| return_stat| call_stat| block_stat;
@@ -219,7 +219,15 @@ class ASTGeneration(MT22Visitor):
 
     # body_block_stat: (vardecl | stat) body_block_stat| (vardecl | stat);
     def visitBody_block_stat(self, ctx: MT22Parser.Body_block_statContext):
-        return [ctx.getChild(0).accept(self), *ctx.body_block_stat().accept(self)] if ctx.body_block_stat() else [ctx.getChild(0).accept(self)]
+        result = []
+        res = ctx.getChild(0).accept(self)
+        if self.check_if_array(res):
+            result.extend(res)
+        else:
+            result.append(res)
+        if ctx.body_block_stat():
+            result.extend(ctx.body_block_stat().accept(self))
+        return result
 
     # expr_list_for_valdecl: expr COMMA expr_list_for_valdecl| expr;
     def visitExpr_list_for_valdecl(self, ctx: MT22Parser.Expr_list_for_valdeclContext):
@@ -321,7 +329,7 @@ class ASTGeneration(MT22Visitor):
             return BooleanLit(True if ctx.getChild(0).getText() == 'True' else False)
         if ctx.STRING_LIT():
             return StringLit(ctx.getChild(0).getText())
-        return ctx.getChild(0).getText()
+        return Id(ctx.getChild(0).getText())
 
     # index_op: LSB expr_list RSB;
     def visitIndex_op(self, ctx: MT22Parser.Index_opContext):

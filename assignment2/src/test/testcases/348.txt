@@ -1,0 +1,34 @@
+
+        PARENT: function integer(i: integer) { return (i - 1) / 2; }
+
+        LEFT: function integer(i: integer) { return (2 * i + 1); }
+
+        RIGHT: function integer(i: integer) { return (2 * i + 2); }
+
+        reheapDown: function void(maxHeap: array [100] of integer, numberOfElements: integer, index: integer)
+        {
+            if (index >= numberOfElements) {
+                return;
+            }
+                left: integer = LEFT(index);
+                right: integer = RIGHT(index);
+         
+                largest: integer = index;
+         
+                if (left < numberOfElements && (maxHeap[left] > maxHeap[index])) {
+                    largest = left;
+                }
+         
+                if (right < numberOfElements && (maxHeap[right] > maxHeap[largest])) {
+                    largest = right;
+                }
+         
+                if (largest != index)
+                {
+                    temp:integer  = maxHeap[index];
+                    maxHeap[index] = maxHeap[largest];
+                    maxHeap[largest] = temp;
+                    reheapDown(maxHeap, numberOfElements, largest);
+                }
+        }
+    

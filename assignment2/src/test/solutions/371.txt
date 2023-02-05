@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(minStr), StringType, [Param(Id(S1), StringType), Param(Id(S2), StringType), Param(Id(sizeS1), IntegerType), Param(Id(sizeS2), IntegerType)], None, BlockStmt([VarDecl(Id(result), StringType, StringLit()), ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<=, Id(i), BinExpr(-, Id(sizeS2), Id(sizeS1))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([AssignStmt(Id(result), BinExpr(::, Id(S1), Id(S2))), IfStmt(FuncCall(Id(containStr), [Id(S1), Id(result)]), BlockStmt([ReturnStmt(Id(result))]))])), ReturnStmt(StringLit(Not found))]))
+])
