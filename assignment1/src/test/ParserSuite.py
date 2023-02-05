@@ -64,6 +64,7 @@ class ParserSuite(unittest.TestCase):
     def test_9(self):
         input = """
     a,   b,   c   : array [2, 3] of integer = {{1, 2, 3}, {0, 5, 6}}, {{}, {}}, {{2, 3}, {}};
+    a2, b2, c2   : array [2, 3] of float = {{1.33333, .5555, 189.00000}, {157., 1_2_3_4., 1_2_3_56.1234}}, {{}, {}}, {{1.34, 12e8}, {}};
     """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 209))
@@ -115,7 +116,6 @@ class ParserSuite(unittest.TestCase):
     # # # Test Function Declarations # # #
     def test_16(self):
         input = """
-        x : array [0, 100] of integer;
         main: function void(out x: array[0, 100] of integer) {
             for (i = 1, i < 100, i+1) {
                 if (i % 2 == 0) {
@@ -131,7 +131,6 @@ class ParserSuite(unittest.TestCase):
 
     def test_17(self):
         input = """
-        x :  integer = 1;
         main: function void(out x: integer) {
             for (i = 1, i < 100, i+1) {
                 for (j = 1, j < 200, j+1) {
@@ -447,6 +446,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_34(self):
         input = """
+      helloWorld: function integer() {return -1;}
       lengthOfLastWord: function integer() inherit helloWorld {
         return 0;
       }
@@ -465,6 +465,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_36(self):
         input = """
+      lengthOfFirstWord: function auto() {return "";}
       lengthOfLastWord: function auto() inherit lengthOfFirstWord {
         return "lengthOfLastWord";
       }
@@ -890,9 +891,11 @@ class ParserSuite(unittest.TestCase):
         a, b, c : integer = -1, 0, 3;
         y, z : integer = 1, 1;
         x : array [0, ] of integer;
-        for (,,) {
-            a = b + c;
-            x[0, i] = y % z;
+        main: function void() {
+            for (,,) {
+                a = b + c;
+                x[0, i] = y % z;
+            }
         }
     """
         expect = "Error on line 4 col 22: ]"
@@ -1436,7 +1439,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_91(self):
         input = """
-x: integer = 65;
+        x: integer = 65;
         fact: function integer (n: integer) {
             if (n == 0) return 1;
             else return n * fact(n - 1);

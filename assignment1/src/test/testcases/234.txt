@@ -1,4 +1,5 @@
 
+      helloWorld: function integer() {return -1;}
       lengthOfLastWord: function integer() inherit helloWorld {
         return 0;
       }
