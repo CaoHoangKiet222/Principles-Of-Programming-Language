@@ -1,4 +1,4 @@
-# Syntax Analysis
+# Static Checker
 
 ## Prequisites
 
@@ -13,8 +13,7 @@ Set environment variable ANTLR_JAR to the file antlr-4.9.2-complete.jar in your 
 > Test Syntax Analisis
 
 ```sh
-python3 run.py gen
-python3 run.py test ParserSuite
+python3 run.py test CheckerSuite
 ```
 
-Create testcases by uncomment testcases in files `ParserSuite.py` and import file from `ParserQuiz<num>.g4` into `BKOOL.g4` respectively
+Create testcases by uncomment testcases in files `CheckerSuite.py` and import file from `Quiz<num>.py` into `StaticCheck.py` respectively
