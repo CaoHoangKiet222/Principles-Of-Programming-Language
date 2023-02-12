@@ -1,0 +1,1 @@
+Program([VarDecl(a,IntType),ConstDecl(b,IntLit(3)),FuncDecl(c,[],[[],[<AST.IntLit object at 0x7f9e9703ac50>, <AST.Id object at 0x7f9e9703b550>, <AST.Id object at 0x7f9e9703b310>, <AST.Id object at 0x7f9e9703ae00>]])])

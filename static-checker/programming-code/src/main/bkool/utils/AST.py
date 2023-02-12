@@ -29,7 +29,6 @@ class Decl(AST):
 
 
 class FuncDecl(Decl):
-    # name: str
     # name:str,param:List[VarDecl],body:Tuple(List[Decl],List[Expr])
     def __init__(self, name, param, body):
         self.name = name

@@ -3,7 +3,7 @@ from Visitor import *
 from StaticError import *
 
 
-class Quiz2Checker(BaseVisitor):
+class Quiz3Checker(BaseVisitor):
     def visitProgram(self, ast, o):
         o = []
         for decl in ast.decl:
@@ -19,6 +19,17 @@ class Quiz2Checker(BaseVisitor):
         if ctx.name in o:
             raise RedeclaredConstant(ctx.name)
         o.append(ctx.name)
+
+    def visitFuncDecl(self, ctx: FuncDecl, o: object):
+        if ctx.name in o:
+            raise RedeclaredFunction(ctx.name)
+        o.append(ctx.name)
+
+        fo = []
+        for p in ctx.param:
+            self.visit(p, fo)
+        for b in ctx.body:
+            self.visit(b, fo)
 
     def visitIntType(self, ctx: IntType, o: object):
         pass

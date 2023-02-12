@@ -63,7 +63,7 @@ class RedeclaredVariable(StaticError):
         return "Redeclared Variable: " + str(self.n)
 
 
-class RedeclaredConst(StaticError):
+class RedeclaredConstant(StaticError):
     """k: Kind
        n: string: name of identifier """
 
@@ -71,7 +71,7 @@ class RedeclaredConst(StaticError):
         self.n = n
 
     def __str__(self):
-        return "Redeclared Const: " + str(self.n)
+        return "Redeclared Constant: " + str(self.n)
 
 
 class RedeclaredFunction(StaticError):
