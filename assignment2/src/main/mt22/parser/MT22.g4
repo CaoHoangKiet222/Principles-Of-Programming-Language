@@ -292,7 +292,7 @@ expr_list
   ;
 
 expr 
-  : expr SCOPE_OP expr1
+  : expr1 SCOPE_OP expr1
   | expr1
   ;
 

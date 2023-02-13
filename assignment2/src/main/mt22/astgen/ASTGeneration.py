@@ -241,10 +241,10 @@ class ASTGeneration(MT22Visitor):
     def visitExpr(self, ctx: MT22Parser.ExprContext):
         if ctx.SCOPE_OP():
             op = ctx.SCOPE_OP().getText()
-            left = ctx.expr().accept(self)
-            right = ctx.expr1().accept(self)
+            left = ctx.expr1(0).accept(self)
+            right = ctx.expr1(1).accept(self)
             return BinExpr(op, left, right)
-        return ctx.expr1().accept(self)
+        return ctx.expr1(0).accept(self)
 
     # expr1: expr2 (EQUAL | NOT_EQ | GREATER_THAN | LESS_THAN | GT_EQ | LT_EQ) expr2| expr2;
     def visitExpr1(self, ctx: MT22Parser.Expr1Context):

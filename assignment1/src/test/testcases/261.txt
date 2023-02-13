@@ -2,8 +2,10 @@
         a, b, c : integer = -1, 0, 3;
         y, z : integer = 1, 1;
         x : array [0, ] of integer;
-        for (,,) {
-            a = b + c;
-            x[0, i] = y % z;
+        main: function void() {
+            for (,,) {
+                a = b + c;
+                x[0, i] = y % z;
+            }
         }
     

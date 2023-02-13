@@ -1,5 +1,4 @@
 
-        x : array [0, 100] of integer;
         main: function void(out x: array[0, 100] of integer) {
             for (i = 1, i < 100, i+1) {
                 if (i % 2 == 0) {

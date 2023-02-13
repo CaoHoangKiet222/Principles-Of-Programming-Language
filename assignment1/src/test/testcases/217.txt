@@ -1,5 +1,4 @@
 
-        x :  integer = 1;
         main: function void(out x: integer) {
             for (i = 1, i < 100, i+1) {
                 for (j = 1, j < 200, j+1) {
