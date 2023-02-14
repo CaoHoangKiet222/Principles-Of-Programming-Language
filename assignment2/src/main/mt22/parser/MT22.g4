@@ -165,10 +165,6 @@ fragment EXPONENT
   : [eE] [+-]? [0-9]+
   ;
 
-fragment EXPONENT
-  : [eE] [+-]? [0-9]+
-  ;
-
 fragment INT_PART
   : INT_LIT 
   ;

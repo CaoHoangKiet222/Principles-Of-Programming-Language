@@ -81,10 +81,10 @@ class ASTGenSuite(unittest.TestCase):
 
     def test_7(self):
         input = """
-        a2, b2, c2   : array [2, 3] of float = {{1.33333, .5555, 189.00000}, {157., 1_2_3_4., 1_2_3_56.1234}}, {{}, {}}, {{1.34, 12e8}, {}};
+        a2, b2, c2   : array [2, 3] of float = {{1.33333, .5555e-1, 189.00000}, {157., 1_2_3_4., 1_2_3_56.1234}}, {{}, {}}, {{1.34, 12e8}, {}};
 """
         expect = """Program([
-	VarDecl(Id(a2), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([FloatLit(1.33333), FloatLit(.5555), FloatLit(189.00000)]), ArrayLit([FloatLit(157.), FloatLit(1234.), FloatLit(12356.1234)])]))
+	VarDecl(Id(a2), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([FloatLit(1.33333), FloatLit(.5555e-1), FloatLit(189.00000)]), ArrayLit([FloatLit(157.), FloatLit(1234.), FloatLit(12356.1234)])]))
 	VarDecl(Id(b2), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([]), ArrayLit([])]))
 	VarDecl(Id(c2), ArrayType([2, 3], FloatType), ArrayLit([ArrayLit([FloatLit(1.34), FloatLit(12e8)]), ArrayLit([])]))
 ])"""
