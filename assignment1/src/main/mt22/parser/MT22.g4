@@ -151,19 +151,14 @@ INT_LIT : ([1-9] [0-9]* ('_' [0-9]+)* | '0')
   ;
 
 FLOAT_LIT 
-  : (POINT_FLOAT | EXPONENT_FLOAT)
+  : (   
+      INT_PART FRACTION_PART EXPONENT? 
+      | INT_PART EXPONENT
+      | FRACTION_PART EXPONENT
+    )
     {
       self.text = self.text.replace('_', '')
     }
-  ;
-
-fragment POINT_FLOAT
-  : INT_PART? FRACTION_PART
-  | INT_PART '.'
-  ;
-
-fragment EXPONENT_FLOAT
-  : (POINT_FLOAT | INT_PART) EXPONENT
   ;
 
 fragment EXPONENT

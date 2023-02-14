@@ -720,7 +720,7 @@ Break, Continue, If, Elseif
         .05e05
         .05e-05
 """
-        expect = "12.,12.e05,12.e-05,12.05e05,12.05e-05,12.05,.05,.05e05,.05e-05,<EOF>"
+        expect = "12.,12.e05,12.e-05,12.05e05,12.05e-05,12.05,.,0,5,.05e05,.05e-05,<EOF>"
         self.assertTrue(TestLexer.test(input, expect, 199))
 
     def test_100(self):
