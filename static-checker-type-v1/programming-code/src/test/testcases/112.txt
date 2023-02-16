@@ -1,0 +1,1 @@
+Program([VarDecl(x,IntType),VarDecl(y,BoolType),BinOp("&&",BinOp(">",BinOp("-",IntLit(3),FloatLit(3.4)),UnOp("-",FloatLit(2.1))),UnOp("-",Id("y")))])
