@@ -1,0 +1,1 @@
+Program([VarDecl(x)],Assign(Id("x"),BinOp("*",BinOp("+",Id("x"),IntLit(3.4)),BinOp("-",Id("x"),FloatLit(2.1)))))

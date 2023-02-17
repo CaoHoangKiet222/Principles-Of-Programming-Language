@@ -1,0 +1,1 @@
+Program([VarDecl(x),VarDecl(y),VarDecl(z)],Assign(Id("x"),BinOp(">b",BinOp("&&",Id("x"),Id("y")),BinOp("||",BoolLit(False),BinOp(">",Id("z"),IntLit(3))))),Assign(Id("z"),Id("x")))

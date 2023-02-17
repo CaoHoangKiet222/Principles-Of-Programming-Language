@@ -1,0 +1,1 @@
+Program([VarDecl(x),VarDecl(y)],Assign(Id("x"),Id("y")))
