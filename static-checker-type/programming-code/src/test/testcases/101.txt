@@ -1,1 +1,0 @@
-BinOp("*",BinOp("+",IntLit(3),FloatLit(3.4)),BinOp(">",IntLit(3),FloatLit(2.1)))

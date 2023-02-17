@@ -1,1 +1,0 @@
-Program([VarDecl(b,IntType),FuncDecl(a,[VarDecl(m,FloatType),VarDecl(b,IntType),VarDecl(m,FloatType)],[ConstDecl(c,IntLit(3)),VarDecl(d,IntType)])])
