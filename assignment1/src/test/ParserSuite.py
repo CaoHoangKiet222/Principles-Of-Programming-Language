@@ -64,7 +64,7 @@ class ParserSuite(unittest.TestCase):
     def test_9(self):
         input = """
     a,   b,   c   : array [2, 3] of integer = {{1, 2, 3}, {0, 5, 6}}, {{}, {}}, {{2, 3}, {}};
-    a2, b2, c2   : array [2, 3] of float = {{1.33333, .5555, 189.00000}, {157., 1_2_3_4., 1_2_3_56.1234}}, {{}, {}}, {{1.34, 12e8}, {}};
+    a2, b2, c2   : array [2, 3] of float = {{1.33333, .5555e-2, 189.00000}, {157., 1_2_3_4., 1_2_3_56.1234}}, {{}, {}}, {{1.34, 12e8}, {}};
     """
         expect = "successful"
         self.assertTrue(TestParser.test(input, expect, 209))
