@@ -10,7 +10,7 @@ Set environment variable ANTLR_JAR to the file antlr-4.9.2-complete.jar in your 
 
 1. Go to `src` folder and run the following commands
 
-> Test Syntax Analisis
+> Test Static Checker
 
 ```sh
 python3 run.py test CheckerSuite
