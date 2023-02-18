@@ -1,1 +1,1 @@
-Program([VarDecl(x,BoolType),VarDecl(y,BoolType),VarDecl(z,FloatType),BinOp(">",BinOp("&&",Id("x"),Id("y")),BinOp("||",BoolLit(True),UnOp("-",Id("z"))))])
+Program([VarDecl("x"),VarDecl("t")],Assign(Id("x"),IntLit(3)),Block([VarDecl("y")],Assign(Id("x"),Id("y")),Block([VarDecl("z")],Assign(Id("t"),FloatLit(3)),Assign(Id("z"),UnOp("floor",Id("y"))))))

@@ -1,1 +1,1 @@
-Program([VarDecl(x,IntType),VarDecl(y,IntType),VarDecl(z,IntType),UnOp("!",BinOp("==",Id("z"),BinOp("*",Id("y"),Id("x"))))])
+Program([VarDecl("x"),VarDecl("t")],Assign(Id("x"),IntLit(3)),Block([VarDecl("x")],Assign(Id("x"),FloatLit(3.0)),Assign(Id("t"),Id("x"))),Assign(Id("x"),Id("t")))

@@ -1,1 +1,1 @@
-BinOp("||",BoolLit(True),BinOp("<",IntLit(3),IntLit(8)))
+Program([VarDecl("x")],Assign(Id("x"),IntLit(3)),Block([VarDecl("y"),VarDecl("x")],Assign(Id("x"),Id("y")),Assign(Id("y"),FloatLit(3))))

@@ -30,10 +30,11 @@ class Decl(AST):
 
 
 class FuncDecl(Decl):
-    # name:str,param:List[VarDecl],body:Tuple(List[Decl],List[Expr])
-    def __init__(self, name, param, body):
+    # name:str,param:List[VarDecl],local:List[Decl],stmts:List[Stmt]
+    def __init__(self, name, param, local, body):
         self.name = name
         self.param = param
+        self.local = local
         self.body = body
 
     def __str__(self):
@@ -49,7 +50,7 @@ class VarDecl(Decl):
         self.name = name
 
     def __str__(self) -> str:
-        return "VarDecl(" + str(self.name) + ")"
+        return "VarDecl(\"" + str(self.name) + "\")"
 
     def accept(self, v, param):
         return v.visitVarDecl(self, param)
@@ -100,7 +101,6 @@ class LHS(Expr):
 
 
 class Id(LHS):
-    # name:string
     def __init__(self, name):
         self.name = name
 
@@ -117,7 +117,6 @@ class Lit(Expr):
 
 
 class IntLit(Lit):
-    # value:int
     def __init__(self, value):
         self.value = value
 
@@ -129,7 +128,6 @@ class IntLit(Lit):
 
 
 class FloatLit(Lit):
-    # value:float
     def __init__(self, value):
         self.value = value
 
@@ -141,7 +139,6 @@ class FloatLit(Lit):
 
 
 class BoolLit(Lit):
-    # value:bool
     def __init__(self, value):
         self.value = value
 
@@ -153,7 +150,6 @@ class BoolLit(Lit):
 
 
 class BinOp(Expr):
-    # op:str,e1:Exp,e2:Exp #op is +,-,*,/,&&,||, >, <, ==, or  !=
     def __init__(self, op: str, e1: Expr, e2: Expr) -> None:
         self.op = op
         self.e1 = e1
@@ -167,7 +163,6 @@ class BinOp(Expr):
 
 
 class UnOp(Expr):
-    # op:str,e:Exp #op is -, !
     def __init__(self, op: str, e: Expr) -> None:
         self.op = op
         self.e = e
@@ -190,3 +185,16 @@ class Assign(Stmt):
 
     def accept(self, v, param):
         return v.visitAssign(self, param)
+
+
+class Block(Stmt):
+    # decl:List[VarDecl],stmts:List[Stmt]
+    def __init__(self, decl, stmts) -> None:
+        self.decl = decl
+        self.stmts = stmts
+
+    def __str__(self) -> str:
+        return "Block([" + ','.join(str(i) for i in self.decl) + "]," + ','.join(str(s) for s in self.stmts) + ")"
+
+    def accept(self, v, param):
+        return v.visitBlock(self, param)

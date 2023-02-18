@@ -1,7 +1,7 @@
-from Quiz3 import Quiz3Checker
+from Quiz4 import Quiz4Checker
 
 
-class StaticChecker(Quiz3Checker):
+class StaticChecker(Quiz4Checker):
     global_envi = []
 
     def __init__(self, ast):

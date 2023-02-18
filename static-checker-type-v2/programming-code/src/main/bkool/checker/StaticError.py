@@ -30,17 +30,6 @@ class StaticError(Exception):
     pass
 
 
-class RedeclaredDeclaration(StaticError):
-    """k: Kind
-       n: string: name of identifier """
-
-    def __init__(self, n):
-        self.n = n
-
-    def __str__(self):
-        return self.n
-
-
 class UndeclaredIdentifier(StaticError):
     """k: Kind
        n: string: name of identifier """
@@ -52,7 +41,7 @@ class UndeclaredIdentifier(StaticError):
         return "Undeclared Identifier: " + self.n
 
 
-class RedeclaredVariable(StaticError):
+class Redeclared(StaticError):
     """k: Kind
        n: string: name of identifier """
 
@@ -60,7 +49,7 @@ class RedeclaredVariable(StaticError):
         self.n = n
 
     def __str__(self):
-        return "Redeclared Variable: " + str(self.n)
+        return "Redeclared: " + str(self.n)
 
 
 class RedeclaredConstant(StaticError):

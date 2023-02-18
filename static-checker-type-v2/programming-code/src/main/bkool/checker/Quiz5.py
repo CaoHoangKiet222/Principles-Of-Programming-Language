@@ -28,7 +28,7 @@ def infer(id: Id, type, o):
     return None
 
 
-class Quiz3Checker(BaseVisitor):
+class Quiz5Checker(BaseVisitor):
     def visitProgram(self, ctx: Program, o):
         o = [{}]
         for decl in ctx.decl:
@@ -41,6 +41,13 @@ class Quiz3Checker(BaseVisitor):
         if ctx.name in o[0]:
             raise Redeclared(ctx)
         o[0][ctx.name] = None
+
+    def visitBlock(self, ctx: Block, o):
+        env = [{}] + o
+        for decl in ctx.decl:
+            self.visit(decl, env)
+        for stmt in ctx.stmts:
+            self.visit(stmt, env)
 
     def visitAssign(self, ctx: Assign, o):
         lhs = self.visit(ctx.lhs, o)
