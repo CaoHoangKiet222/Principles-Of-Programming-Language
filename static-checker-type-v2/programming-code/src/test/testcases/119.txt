@@ -1,1 +1,1 @@
-Program([VarDecl(x,IntType),VarDecl(y,IntType),VarDecl(z,IntType),BinOp("||",BoolLit(True),BinOp("<",IntLit(3),Id("t")))])
+Program([VarDecl("x"),FuncDecl(foo,[],[VarDecl("x")],[Assign(Id("x"),FloatLit(2))])],Assign(Id("x"),IntLit(3)),CallStmt("foo",[Id("x")]))

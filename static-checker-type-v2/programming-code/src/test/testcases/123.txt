@@ -1,0 +1,1 @@
+Program([VarDecl("x"),FuncDecl(foo,[VarDecl("y")],[],[])],CallStmt("foo",[IntLit(3)]),CallStmt("foo",[Id("x")]),Assign(Id("x"),FloatLit(0.0)))

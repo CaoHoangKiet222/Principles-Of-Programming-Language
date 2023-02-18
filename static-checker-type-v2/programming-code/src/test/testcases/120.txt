@@ -1,0 +1,1 @@
+Program([VarDecl("x"),FuncDecl(x,[VarDecl("y")],[],[])],)

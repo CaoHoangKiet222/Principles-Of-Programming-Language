@@ -1,1 +1,1 @@
-Type Mismatch In Expression: UnOp("!",BinOp("-",Id("z"),BinOp("/",Id("y"),Id("x"))))
+Type Mismatch In Statement: CallStmt("foo",[Id("x")])

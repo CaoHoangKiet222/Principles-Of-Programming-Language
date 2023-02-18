@@ -31,14 +31,14 @@ class Decl(AST):
 
 class FuncDecl(Decl):
     # name:str,param:List[VarDecl],local:List[Decl],stmts:List[Stmt]
-    def __init__(self, name, param, local, body):
+    def __init__(self, name, param, local, stmts):
         self.name = name
         self.param = param
         self.local = local
-        self.body = body
+        self.stmts = stmts
 
     def __str__(self):
-        return "FuncDecl(" + str(self.name) + ",[" + ','.join(str(i) for i in self.param) + "],[" + ','.join(str(i) for i in self.body) + "])"
+        return "FuncDecl(" + str(self.name) + ",[" + ','.join(str(i) for i in self.param) + "],[" + ','.join(str(i) for i in self.local) + "],[" + ','.join(str(i) for i in self.stmts) + "])"
 
     def accept(self, v, param):
         return v.visitFuncDecl(self, param)
@@ -194,7 +194,20 @@ class Block(Stmt):
         self.stmts = stmts
 
     def __str__(self) -> str:
-        return "Block([" + ','.join(str(i) for i in self.decl) + "]," + ','.join(str(s) for s in self.stmts) + ")"
+        return "Block([" + ','.join(str(i) for i in self.decl) + "],[" + ','.join(str(s) for s in self.stmts) + "])"
 
     def accept(self, v, param):
         return v.visitBlock(self, param)
+
+
+class CallStmt(Stmt):
+    # name:str,args:List[Exp]
+    def __init__(self, name, args) -> None:
+        self.name = name
+        self.args = args
+
+    def __str__(self) -> str:
+        return "CallStmt(\"" + str(self.name) + "\",[" + ','.join(str(s) for s in self.args) + "])"
+
+    def accept(self, v, param):
+        return v.visitCallStmt(self, param)

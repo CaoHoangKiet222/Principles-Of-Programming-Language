@@ -1,0 +1,1 @@
+Program([VarDecl("x"),FuncDecl(foo,[VarDecl("y")],[FuncDecl(foo2,[],[],[])],[CallStmt("foo2",[])])],CallStmt("foo2",[]))
