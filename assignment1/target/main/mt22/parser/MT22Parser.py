@@ -1049,7 +1049,7 @@ class MT22Parser ( Parser ):
 
 
             if assign == True and self.size_id != self.size_expr:
-              raise RecognitionException()
+              raise NoViableAltException(self)
 
             self.state = 181
             self.match(MT22Parser.SEMI)

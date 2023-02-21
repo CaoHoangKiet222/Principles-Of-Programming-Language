@@ -85,7 +85,7 @@ vardecl
     | auto_type ASSIGN expr_list_for_valdecl {assign = True}) 
 {
 if assign == True and self.size_id != self.size_expr:
-  raise RecognitionException()
+  raise NoViableAltException(self)
 }
 )
   SEMI) 
