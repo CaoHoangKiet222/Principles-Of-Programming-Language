@@ -493,7 +493,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_38(self):
         input = """
-        max_two_nums: function auto (a: integer, b: integer) { 
+        max_two_nums: function auto (a: integer, b: integer) {
             if (a > b) {
                 return a;
             }
@@ -505,7 +505,7 @@ class ParserSuite(unittest.TestCase):
 
     def test_39(self):
         input = """
-        min_two_nums: function auto (a: integer, b: integer) { 
+        min_two_nums: function auto (a: integer, b: integer) {
             if (a < b) {
                 return a;
             }
@@ -617,7 +617,7 @@ class ParserSuite(unittest.TestCase):
           for (i = 1, i < size, i+1) {
             if (ar[i] == ar[0]) {
               return false;
-            } 
+            }
 
             if (ar[i] < ar[0]) {
               less[less_size] = ar[i];
@@ -646,7 +646,7 @@ class ParserSuite(unittest.TestCase):
           for (i = 1, i < size, i+1) {
             if (ar[i] == ar[0]) {
               return false;
-            } 
+            }
 
             if (ar[i] < ar[0]) {
               less[less_size] = ar[i];
@@ -675,7 +675,7 @@ class ParserSuite(unittest.TestCase):
           for (i = 1, i < size, i+1) {
             if (ar[i] == ar[0]) {
               return false;
-            } 
+            }
 
             if (ar[i] < ar[0]) {
               less[less_size] = ar[i];
@@ -1072,7 +1072,7 @@ class ParserSuite(unittest.TestCase):
                 maxHeap[index] = maxHeap[PARENT(index)];
                 maxHeap[PARENT(index)] = temp;
                 reheapUp(maxHeap, numberOfElements, PARENT(index));
-            
+
         }
     """
         expect = "Error on line 20 col 4: <EOF>"
@@ -1093,17 +1093,17 @@ class ParserSuite(unittest.TestCase):
             }
                 left: integer = LEFT(index);
                 right: integer = RIGHT(index);
-         
+
                 largest: integer = index;
-         
+
                 if (left < numberOfElements && (maxHeap[left] > maxHeap[index])) {
                     largest = left;
                 }
-         
+
                 if (right < numberOfElements && (maxHeap[right] > maxHeap[largest])) {
                     largest = right;
                 }
-         
+
                 if (largest != index)
                 {
                     temp:integer  = maxHeap[index];
@@ -1131,17 +1131,17 @@ class ParserSuite(unittest.TestCase):
             }
             left: integer = LEFT(index);
             right: integer = RIGHT(index);
-     
+
             largest: integer = index;
-     
+
             if (left <  && (maxHeap[left] > maxHeap[index])) {
                 largest = left;
             }
-     
+
             if (right <  && (maxHeap[right] > maxHeap[largest])) {
                 largest = right;
             }
-     
+
             if (largest != index)
             {
                 temp:integer  = maxHeap[index];
@@ -1169,17 +1169,17 @@ class ParserSuite(unittest.TestCase):
             }
             left: integer = LEFT(index);
             right: integer = RIGHT(index);
-     
+
             largest: integer = index;
-     
+
             if (left < numberOfElements && (maxHeap[left] > maxHeap[index])) {
                 largest = left;
             }
-     
+
             if (right < numberOfElements && (maxHeap[right] > maxHeap[largest])) {
                 largest = right;
             }
-     
+
             if (largest != index)
             {
                 temp:  = maxHeap[index];
@@ -1207,17 +1207,17 @@ class ParserSuite(unittest.TestCase):
             }
             left: integer = LEFT(index);
             right: integer = RIGHT(index);
-     
+
             largest: integer = index;
-     
+
             if (left < numberOfElements && (maxHeap[left] > maxHeap[index])) {
                 largest = left;
             }
-     
+
             if (right < && (maxHeap[right] > maxHeap[largest])) {
                 largest = right;
             }
-     
+
             if (largest != index)
             {
                 temp:  = maxHeap[index];

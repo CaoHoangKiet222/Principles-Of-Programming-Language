@@ -15,20 +15,32 @@ def size_id(self):
         return self._size_id
 
 @property
-def size_expr(self):
+def assign(self):
     try:
-        return self._size_expr
+        return self._assign
     except AttributeError:
-        self._size_expr = 0
-        return self._size_expr
+        self._assign = False
+        return self._assign
 
 @size_id.setter
 def size_id(self, value):
     self._size_id = value
 
-@size_expr.setter
-def size_expr(self, value):
-    self._size_expr = value
+@assign.setter
+def assign(self, value):
+    self._assign = value
+
+def checkFullFormat(self, flag=False):
+    self.size_id -= 1
+    if self.assign == True:
+      # a,b,c,d: float = 1+2,3,4,5,7+8; -> error
+      if flag == False and self.size_id <= 0:
+        raise NoViableAltException(self)
+
+      # a,b,c,d: float = 1+2,3,4; -> error
+      if flag == True and self.size_id > 0:
+        raise NoViableAltException(self)
+    
 }
 
 options{
@@ -79,20 +91,8 @@ body : block_stat
 // Variable declarations
 
 vardecl 
-  : 
-  ({assign = False} id_list COLON (
-    (non_auto_type_decl (ASSIGN expr_list_for_valdecl {assign = True})? 
-    | auto_type ASSIGN expr_list_for_valdecl {assign = True}) 
-{
-if assign == True and self.size_id != self.size_expr:
-  raise NoViableAltException(self)
-}
-)
-  SEMI) 
-{
-self.size_id = 0
-self.size_expr = 0
-}
+  : (id_list COLON type_decl (ASSIGN {self.assign = True} expr_list_for_valdecl)? SEMI) 
+    {self.size_id = 0}
   ;
 
 id_list
@@ -277,8 +277,8 @@ body_block_stat
 
 /* use for define vardecl*/
 expr_list_for_valdecl
-  : expr {self.size_expr += 1} COMMA expr_list_for_valdecl
-  | expr {self.size_expr += 1}
+  : expr {self.checkFullFormat()} COMMA expr_list_for_valdecl
+  | expr {self.checkFullFormat(True)}
   ;
 
 expr_list
@@ -536,6 +536,8 @@ ERROR_CHAR
       raise ErrorToken(self.text)
     }
   ;
+
+
 
 
 

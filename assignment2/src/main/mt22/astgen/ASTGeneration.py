@@ -58,7 +58,7 @@ class ASTGeneration(MT22Visitor):
     def visitBody(self, ctx: MT22Parser.BodyContext):
         return ctx.block_stat().accept(self)
 
-    # vardecl: id_list COLON (non_auto_type_decl (ASSIGN expr_list_for_valdecl)?| auto_type ASSIGN expr_list_for_valdecl) SEMI;
+    # vardecl: id_list COLON type_decl (ASSIGN {self.assign = True} expr_list_for_valdecl)? SEMI
     #  x, y, z: integer = 1, 2, 3; -> Program([
     # 	VarDecl(x, IntegerType, IntegerLit(1))
     # 	VarDecl(y, IntegerType, IntegerLit(2))

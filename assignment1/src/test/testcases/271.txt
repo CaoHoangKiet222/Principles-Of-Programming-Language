@@ -12,17 +12,17 @@
             }
                 left: integer = LEFT(index);
                 right: integer = RIGHT(index);
-         
+
                 largest: integer = index;
-         
+
                 if (left < numberOfElements && (maxHeap[left] > maxHeap[index])) {
                     largest = left;
                 }
-         
+
                 if (right < numberOfElements && (maxHeap[right] > maxHeap[largest])) {
                     largest = right;
                 }
-         
+
                 if (largest != index)
                 {
                     temp:integer  = maxHeap[index];
