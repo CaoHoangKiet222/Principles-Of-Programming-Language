@@ -57,7 +57,7 @@ def test(suite):
 
 
 def printUsage():
-    print("python3 run.py test ASTGenSuite")
+    print("python3 run.py test CheckerSuite")
 
 
 if __name__ == "__main__":
