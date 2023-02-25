@@ -1,0 +1,1 @@
+Program(List(FuncDecl(Id("main"),List(),VoidType,Block(List(),List(CallExpr(Id("putFloat"),List(BinExpr("*.",FloatLiteral(1.0),BinExpr("-.",FloatLiteral(10.0),FloatLiteral(2.0))))))))))
