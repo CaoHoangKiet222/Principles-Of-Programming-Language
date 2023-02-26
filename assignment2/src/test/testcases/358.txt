@@ -3,10 +3,10 @@
             if(!size) return 0;
             result : integer = 1;
             for (i = 0, i < size - 1, i + 1) {
-                if (words[i][0] == words[i + 1][0]) {
+                if (words[i, 0] == words[i + 1, 0]) {
                   pre_result, j: integer  = 2 , i + 1;
                   while (j < size - 1) {
-                    if (words[j][0] == words[j + 1][0]) {
+                    if (words[j, 0] == words[j + 1, 0]) {
                       pre_result = pre_result + 1;
                       j = j + 1;
                     } else {

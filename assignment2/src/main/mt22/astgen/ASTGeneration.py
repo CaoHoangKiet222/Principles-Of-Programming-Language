@@ -303,7 +303,7 @@ class ASTGeneration(MT22Visitor):
     def visitExpr7(self, ctx: MT22Parser.Expr7Context):
         if ctx.getChildCount() == 2:
             cell = ctx.index_op().accept(self)
-            name = ctx.expr7().accept(self)
+            name = Id(ctx.ID().getText())
             return ArrayCell(name, cell)
         return ctx.expr8().accept(self)
 

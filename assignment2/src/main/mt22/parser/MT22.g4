@@ -322,7 +322,7 @@ expr6
   ;
 
 expr7
-  : expr7 index_op
+  : ID index_op
   | expr8
   ;
 
