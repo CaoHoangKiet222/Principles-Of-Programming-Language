@@ -1,0 +1,10 @@
+
+        isPalindrome: function boolean(str: array[100] of string, strSize: integer) {
+          for (i = 0, i < strSize / 2, i+1) {
+            if (str[i] != str[strSize-i-1]) {
+              return false;
+            }
+          }
+          return true;
+        }
+    

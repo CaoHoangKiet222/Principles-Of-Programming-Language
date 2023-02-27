@@ -1,0 +1,6 @@
+
+        factorial: function auto(N: integer) {}
+        main : function void () {
+            printFac(factorial(20));
+        }
+    

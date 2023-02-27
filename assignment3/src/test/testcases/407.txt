@@ -1,0 +1,4 @@
+
+        b: auto = 1 == true;
+        c: auto = b == false;
+        

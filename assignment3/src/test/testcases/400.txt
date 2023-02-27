@@ -1,0 +1,14 @@
+
+        rotation: function integer (key: integer, addressSize: integer) {}
+
+        midSquare: function integer (seed: integer) {}
+
+        digitExtraction: function integer(seed: integer, extractDigits: array[100] of integer, size: integer) {}
+
+        foldShift: function integer (key: integer, addressSize: integer) {}
+
+        main : function void () {
+            print(midSquare(62323));
+            print(foldShift(62323, 5));
+        }
+    

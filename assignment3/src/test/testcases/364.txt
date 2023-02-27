@@ -1,0 +1,9 @@
+
+        x : integer = 65;
+        main : function void () {
+            arr : array [2, 3] of integer;
+            if(numIsPrime(7)){
+                arr[1, 2] = Fibonacci(10);
+            }
+        }
+    

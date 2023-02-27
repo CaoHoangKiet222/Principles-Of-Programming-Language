@@ -1,0 +1,15 @@
+
+        buildMaxHeap: function void(arr: array[100] of integer, numOfEl: integer) {}
+
+        heapSort: function void (start: array[100] of integer, numOfEl: integer) {
+            buildMaxHeap(start, numOfEl);
+            // some code here
+        }
+
+        main : function void () {
+            index: integer = 1;
+            maxHeap: array[100] of integer = {100_1, 20, 30, 40};
+            heapSort(maxHeap, 100);
+            print(maxHeap);
+        }
+    

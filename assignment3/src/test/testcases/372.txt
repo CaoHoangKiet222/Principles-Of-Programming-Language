@@ -1,0 +1,12 @@
+
+        minStr: function string (S1: string , S2: string, sizeS1: integer, sizeS2: integer) {
+          result : string = "";
+          /*for (i = 0, i <= sizeS2 - sizeS1, i + 1) {
+            result = S1::S2;
+            if (containStr(S1, result)) {
+              return result;
+            }
+          }*/
+          return "Not found";
+        }
+    

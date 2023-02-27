@@ -1,0 +1,6 @@
+
+        lengthOfFirstWord: function auto() {return "";}
+        lengthOfLastWord: function auto() inherit lengthOfFirstWord {
+            return "lengthOfLastWord";
+        }
+    

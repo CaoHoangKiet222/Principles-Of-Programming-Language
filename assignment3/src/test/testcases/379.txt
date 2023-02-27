@@ -1,0 +1,7 @@
+
+        containStr: function boolean (S1: string , S2: string, sizeS1: integer, sizeS2: integer) {}
+        main : function void () {
+            S1, S2: string = "OKOK", "okok";
+            lengthOfLastWord(S1, S2, 4, 4);
+        }
+    

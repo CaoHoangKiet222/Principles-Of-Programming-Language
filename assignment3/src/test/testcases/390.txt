@@ -1,0 +1,12 @@
+
+        checkDuplicate: function boolean(ar: array[100] of integer, size: integer) {}
+        main : function void () {
+            nums: array[100] of integer = {100, 2, 3, 4};
+            nE: integer = 100;
+            if (checkDuplicate(nums, nE) == true) {
+                print("");
+            } else {
+                print("");
+            }
+        }
+    

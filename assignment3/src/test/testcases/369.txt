@@ -1,0 +1,13 @@
+
+        foldShift: function integer (key: integer, addressSize: integer) {
+            x: string = to_string(key);
+            sum: integer = 0;
+          for (i = 0, i < length(x), i + 1) {
+            s: string = substr(x, i, addressSize);
+            i = i + addressSize;
+            sum = sum + stoi(s);
+          }
+          test : integer = pow(10, addressSize);
+          return sum % (test);
+        }
+    

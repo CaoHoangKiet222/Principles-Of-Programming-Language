@@ -1,0 +1,12 @@
+
+        isSymmetry: function boolean(head: array[100] of integer, tail: array[100] of integer, size: integer) {}
+        main : function void () {
+            size: integer = 100;
+            head, tail: array[100] of integer = {100, 2, 3, 4}, {};
+            if (isSymmetry(head, tail, size) == true) {
+                print("array is symmetric");
+            } else {
+                print("array is not symmetric");
+            }
+        }
+    

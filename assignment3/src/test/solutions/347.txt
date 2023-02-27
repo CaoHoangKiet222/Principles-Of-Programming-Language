@@ -1,0 +1,6 @@
+Program([
+	FuncDecl(Id(PARENT), IntegerType, [Param(Id(i), IntegerType)], None, BlockStmt([ReturnStmt(BinExpr(/, BinExpr(-, Id(i), IntegerLit(1)), IntegerLit(2)))]))
+	FuncDecl(Id(LEFT), IntegerType, [Param(Id(i), IntegerType)], None, BlockStmt([ReturnStmt(BinExpr(+, BinExpr(*, IntegerLit(2), Id(i)), IntegerLit(1)))]))
+	FuncDecl(Id(RIGHT), IntegerType, [Param(Id(i), IntegerType)], None, BlockStmt([ReturnStmt(BinExpr(+, BinExpr(*, IntegerLit(2), Id(i)), IntegerLit(2)))]))
+	FuncDecl(Id(reheapUp), VoidType, [Param(Id(maxHeap), ArrayType([100], IntegerType)), Param(Id(numberOfElements), IntegerType), Param(Id(index), IntegerType)], None, BlockStmt([IfStmt(BinExpr(>=, Id(index), Id(numberOfElements)), BlockStmt([ReturnStmt()])), IfStmt(BinExpr(<, BinExpr(&&, Id(index), ArrayCell(Id(maxHeap), [FuncCall(Id(PARENT), [Id(index)])])), ArrayCell(Id(maxHeap), [Id(index)])), BlockStmt([VarDecl(Id(temp), IntegerType, ArrayCell(Id(maxHeap), [Id(index)])), AssignStmt(ArrayCell(Id(maxHeap), [Id(index)]), ArrayCell(Id(maxHeap), [FuncCall(Id(PARENT), [Id(index)])])), AssignStmt(ArrayCell(Id(maxHeap), [FuncCall(Id(PARENT), [Id(index)])]), Id(temp)), CallStmt(Id(reheapUp), Id(maxHeap), Id(numberOfElements), FuncCall(Id(PARENT), [Id(index)]))]))]))
+])

@@ -1,0 +1,7 @@
+
+        main: function void() {
+            found : boolean = true;
+            is_Num, is_String: string = "", "";
+            is_String = "TEST";
+        }
+    

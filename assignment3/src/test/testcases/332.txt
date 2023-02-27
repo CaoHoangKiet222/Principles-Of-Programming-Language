@@ -1,0 +1,8 @@
+
+        max_two_nums: function auto (a: integer, b: integer) { 
+            if (a > b) {
+                return a;
+            }
+            return b;
+        }
+    

@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(main), VoidType, [], None, BlockStmt([CallStmt(Id(printInteger), IntegerLit(4))]))
+])

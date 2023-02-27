@@ -1,0 +1,4 @@
+Program([
+	FuncDecl(Id(containStr), BooleanType, [Param(Id(S1), StringType), Param(Id(S2), StringType), Param(Id(sizeS1), IntegerType), Param(Id(sizeS2), IntegerType)], None, BlockStmt([]))
+	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(S1), StringType, StringLit(OKOK)), VarDecl(Id(S2), StringType, StringLit(okok)), CallStmt(Id(lengthOfLastWord), Id(S1), Id(S2), IntegerLit(4), IntegerLit(4))]))
+])

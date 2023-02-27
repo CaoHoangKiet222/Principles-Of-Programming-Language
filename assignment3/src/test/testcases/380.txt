@@ -1,0 +1,8 @@
+
+        search: function integer(nums: array[100] of integer, size: integer, target: integer) {}
+        main : function void () {
+            nE, target : integer = 100, 20;
+            nums: array[100] of integer = {1, 2, 3, 4};
+            search(nums, nE, target);
+        }
+    

@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Id(buildMaxHeap), VoidType, [Param(Id(arr), ArrayType([100], IntegerType)), Param(Id(numOfEl), IntegerType)], None, BlockStmt([ForStmt(AssignStmt(Id(i), BinExpr(-, BinExpr(/, Id(numOfEl), IntegerLit(2)), IntegerLit(1))), BinExpr(>=, Id(i), IntegerLit(0)), BinExpr(-, Id(i), IntegerLit(1)), BlockStmt([CallStmt(Id(heapify), Id(arr), Id(numOfEl), Id(i))]))]))
+])

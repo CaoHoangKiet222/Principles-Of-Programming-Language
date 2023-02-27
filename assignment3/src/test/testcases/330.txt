@@ -1,0 +1,32 @@
+
+        search: function integer(nums: array[100] of integer, size: integer, target: integer) {
+            left, right: integer = 0, size - 1;
+            index: integer = -1;
+            found: boolean = false;
+            while (left <= right && !found) {
+              mid: integer = (left + right) / 2;
+              if (nums[mid] == target) {
+                found = true;
+                index = mid;
+              }
+              if (nums[mid] >= nums[left]) {
+                if (nums[mid] > target) {
+                  if (target < nums[left])
+                    left = mid + 1;
+                  else
+                    right = mid - 1;
+                } else
+                  left = mid + 1;
+              } else {
+                if (target > nums[mid]) {
+                  if (target > nums[right])
+                    right = mid - 1;
+                  else
+                    left = mid + 1;
+                } else
+                  right = mid - 1;
+              }
+            }
+            return index;
+        }
+    

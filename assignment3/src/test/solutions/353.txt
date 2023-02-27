@@ -1,0 +1,6 @@
+Program([
+	VarDecl(Id(x), IntegerType, IntegerLit(65))
+	FuncDecl(Id(fact), IntegerType, [Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(==, Id(n), IntegerLit(0)), ReturnStmt(IntegerLit(1)), ReturnStmt(BinExpr(*, Id(n), FuncCall(Id(fact), [BinExpr(-, Id(n), IntegerLit(1))]))))]))
+	FuncDecl(Id(inc), VoidType, [OutParam(Id(n), IntegerType), Param(Id(delta), IntegerType)], None, BlockStmt([AssignStmt(Id(n), BinExpr(+, Id(n), Id(delta)))]))
+	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(delta), IntegerType, FuncCall(Id(fact), [IntegerLit(3)])), CallStmt(Id(inc), Id(x), Id(delta)), CallStmt(Id(printegerIntegereger), Id(x))]))
+])

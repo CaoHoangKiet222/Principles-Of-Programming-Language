@@ -1,0 +1,4 @@
+
+        a, b, c : integer = -1, 0, 3;
+        y, z : integer = 1, 1;
+        x : array [0, 100] of integer;

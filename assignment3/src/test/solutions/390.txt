@@ -1,0 +1,4 @@
+Program([
+	FuncDecl(Id(checkDuplicate), BooleanType, [Param(Id(ar), ArrayType([100], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([]))
+	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(nums), ArrayType([100], IntegerType), ArrayLit([IntegerLit(100), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), VarDecl(Id(nE), IntegerType, IntegerLit(100)), IfStmt(BinExpr(==, FuncCall(Id(checkDuplicate), [Id(nums), Id(nE)]), BooleanLit(False)), BlockStmt([CallStmt(Id(print), StringLit())]), BlockStmt([CallStmt(Id(print), StringLit())]))]))
+])

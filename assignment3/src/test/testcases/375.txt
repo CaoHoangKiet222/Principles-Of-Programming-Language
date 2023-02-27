@@ -1,0 +1,10 @@
+
+        checkzero: function boolean(nums: array[100] of integer, size: integer) {}
+        recursive: function void (nums: array[100] of integer, size: integer, index: integer , count: integer, sum: integer , minjump: integer) {}
+        main : function void () {
+            nE : integer = 100;
+            nums: array[100] of integer = {1, 2, 3, 4};
+            // checkzero(nums, nE);
+            recursive(nums, 0, 0, 0, 1);
+        }
+    

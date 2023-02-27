@@ -1,0 +1,7 @@
+
+        gcdIteration: function integer(p: integer, q: integer) {}
+        main : function void () {
+            p, q: integer = 100, 200;
+            print(gcdIteration(p, q));
+        }
+    

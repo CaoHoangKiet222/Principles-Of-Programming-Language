@@ -1,0 +1,8 @@
+
+        findMax: function auto(vals: array[100] of integer, numEls: integer) {}
+        main : function void () {
+            nE: integer = 100;
+            nums: array[100] of integer = {100, 2, 3, 4};
+            printMax(findMax(nums, nE));
+        }
+    

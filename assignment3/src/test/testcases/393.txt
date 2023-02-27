@@ -1,0 +1,8 @@
+
+        recursiveSearch: function integer(out n: integer, m: integer, arr: array[100] of integer, index: integer) {}
+        main : function void () {
+            n, m, index: integer = 0, 0, 0;
+            arr: array[100] of integer = {100, 2, 3, 4};
+            print(recursiveSearch(n, m, arr, index));
+        }
+    

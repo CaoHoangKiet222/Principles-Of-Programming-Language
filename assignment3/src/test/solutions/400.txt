@@ -1,0 +1,7 @@
+Program([
+	FuncDecl(Id(rotation), IntegerType, [Param(Id(key), IntegerType), Param(Id(addressSize), IntegerType)], None, BlockStmt([]))
+	FuncDecl(Id(midSquare), IntegerType, [Param(Id(seed), IntegerType)], None, BlockStmt([]))
+	FuncDecl(Id(digitExtraction), IntegerType, [Param(Id(seed), IntegerType), Param(Id(extractDigits), ArrayType([100], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([]))
+	FuncDecl(Id(foldShift), IntegerType, [Param(Id(key), IntegerType), Param(Id(addressSize), IntegerType)], None, BlockStmt([]))
+	FuncDecl(Id(main), VoidType, [], None, BlockStmt([CallStmt(Id(print), FuncCall(Id(midSquare), [IntegerLit(62323)])), CallStmt(Id(print), FuncCall(Id(foldShift), [IntegerLit(62323), IntegerLit(5)]))]))
+])

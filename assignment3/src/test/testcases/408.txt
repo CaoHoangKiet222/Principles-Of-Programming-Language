@@ -1,0 +1,4 @@
+
+        x: integer = 9_9999_999;
+        y: integer = x == 1;
+        

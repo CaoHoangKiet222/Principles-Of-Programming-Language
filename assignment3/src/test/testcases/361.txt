@@ -1,0 +1,13 @@
+
+        checkStrCode: function boolean (code : string, size: integer) {
+            if (code == "")
+                return false;
+            for (i = 0, i < size, i + 6 - 3) {
+                if (!(((code[i] >= "a") && (code[i] <= "z")) ||
+                      ((code[i] >= "A") && (code[i] <= "Z")))) {
+                    break;
+                }
+            }
+            return true;
+        }
+    
