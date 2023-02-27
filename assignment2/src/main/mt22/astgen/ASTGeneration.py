@@ -237,7 +237,7 @@ class ASTGeneration(MT22Visitor):
     def visitExpr_list(self, ctx: MT22Parser.Expr_list_for_valdeclContext):
         return [ctx.expr().accept(self), *ctx.expr_list().accept(self)] if ctx.COMMA() else [ctx.expr().accept(self)]
 
-    # expr : expr SCOPE_OP expr1| expr1;
+    # expr : expr1 SCOPE_OP expr1| expr1;
     def visitExpr(self, ctx: MT22Parser.ExprContext):
         if ctx.SCOPE_OP():
             op = ctx.SCOPE_OP().getText()
