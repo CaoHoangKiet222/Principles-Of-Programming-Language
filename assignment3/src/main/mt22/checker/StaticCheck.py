@@ -33,6 +33,43 @@ class Symbol:
         self.value = value
 
 
+class CheckUtils:
+    @staticmethod
+    def dimensionsMatch(dimensions1: List[int], dimensions2: List[int]):
+        print(dimensions1, dimensions2)
+        if dimensions2[0] == 0:
+            return True
+        if len(dimensions1) != len(dimensions2):
+            return False
+        for idx, i in enumerate(dimensions1):
+            if i < dimensions2[idx]:
+                return False
+        return True
+
+
+class TypUtils:
+    @staticmethod
+    def retriveType(typ: Type):
+        # typ: ArrayTyp(2,ArrayTyp(4,IntegerType)) -> IntegerType
+        return TypUtils.retriveType(typ.el_typ) if ExpUtils.isArrayLit(typ) else typ
+
+    @staticmethod
+    def retriveDimensions(typ: Type):
+        # typ: ArrayTyp(2,ArrayTyp(4,IntegerType)) -> [2, 4]
+        return [typ.num_of_el, *TypUtils.retriveDimensions(typ.el_typ)] if ExpUtils.isArrayLit(typ) else []
+
+    @staticmethod
+    def impConversion(typ: Type, init_typ: Type, callback):
+        if type(typ) is IntegerType:
+            if type(init_typ) is FloatType:
+                callback()
+                return
+        elif type(typ) is FloatType:
+            if type(init_typ) is IntegerType:
+                return FloatType()
+        return init_typ
+
+
 class ExpUtils:
     @staticmethod
     def isNotIntFloatLit(expr):
@@ -55,7 +92,7 @@ class ExpUtils:
         return type(expr) is not StringType
 
     @staticmethod
-    def isArrayTyp(expr):
+    def isArrayLit(expr):
         return type(expr) is ArrayTyp
 
     @staticmethod
@@ -91,9 +128,16 @@ class StaticChecker(BaseVisitor):
     def __init__(self, ast):
         self.ast = ast
         self.global_env = [{}]
+        self.illegal_array_lit = False
 
     def check(self):
         return self.ast.accept(self, StaticChecker.global_envi)
+
+    def setIlligalArrayLit(self, value):
+        self.illegal_array_lit = value
+
+    def __raise(self, ex):
+        raise ex
 
     def visitProgram(self, ast: Program, c):
         # decls: List[Decl]
@@ -120,24 +164,25 @@ class StaticChecker(BaseVisitor):
         if init is not None:
             if type(typ) is ArrayType:
                 init_typ = self.visit(init, (c, typ))
+                if self.illegal_array_lit:
+                    raise TypeMismatchInStatement(ast)
                 print(init_typ)
-            else:
-                print(init)
-                init_typ = self.visit(init, (c))
-                # Check error when implicit conversion
-                if type(typ) is IntegerType:
-                    if type(init_typ) is FloatType:
-                        raise TypeMismatchInExpression(ast)
-                elif type(typ) is FloatType:
-                    if type(init_typ) is IntegerType:
-                        init_typ = FloatType()
+                # Check dimensions initialization match with its array_type_dimensions
+                if not CheckUtils.dimensionsMatch(typ.dimensions, TypUtils.retriveDimensions(init_typ)):
+                    raise TypeMismatchInStatement(ast)
 
+            else:
+                init_typ = self.visit(init, (c))
+                # Check error when implicit conversion --> Case: float / integer
+                init_typ = TypUtils.impConversion(
+                    typ, init_typ, lambda: self.__raise(
+                        TypeMismatchInStatement(ast)))
                 # Need to infer type when initialization
                 if type(typ) is AutoType:
                     typ = init_typ
-
-                if type(typ) is not type(init_typ):
-                    raise TypeMismatchInExpression(ast)
+                # Check type element in automic_lit is similar with type of its type
+                if not ExpUtils.isTheSameType(typ, init_typ):
+                    raise TypeMismatchInStatement(ast)
 
         c[0][name] = {"kind": Variable(), "typ": typ}
 
@@ -276,14 +321,16 @@ class StaticChecker(BaseVisitor):
         value_lst = list(map(lambda x: self.visit(
             x, (global_env, array_ast)), ast.explist))
         # value_lst: [IntegerType(...), ArrayTyp(...)]
+        print(value_lst)
 
         if len(ast.explist) == 0:
             return ArrayTyp(0, array_ast.typ)
 
         first_el_type = value_lst[0]
-        if ExpUtils.isArrayTyp(first_el_type):
+        if ExpUtils.isArrayLit(first_el_type):
             maximum_val = first_el_type
             for i in value_lst:
+                # Check all elements in one array_lit have the same array_type
                 if not ExpUtils.isTheSameType(first_el_type, i):
                     raise IllegalArrayLiteral(ast)
                 # {{1}, {1, 2, 3}} -> ArrayTyp(2,ArrayTyp(3,IntegerType))
@@ -292,7 +339,13 @@ class StaticChecker(BaseVisitor):
             return ArrayTyp(len(value_lst), maximum_val)
 
         for i in value_lst:
+            # Check all elements in one array_lit have the same automic_type
             if not ExpUtils.isTheSameType(first_el_type, i):
                 raise IllegalArrayLiteral(ast)
+            # Check each type element in array_lit is similar with type of array_type
+            i = TypUtils.impConversion(
+                array_ast.typ, i, lambda: self.setIlligalArrayLit(True))
+            if not ExpUtils.isTheSameType(i, array_ast.typ):
+                self.illegal_array_lit = True
         # {1, 2, 3} -> ArrayTyp(3,IntegerType)
         return ArrayTyp(len(value_lst), first_el_type)

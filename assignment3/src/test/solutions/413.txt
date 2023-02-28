@@ -1,0 +1,1 @@
+Type Mismatch In Statement: VarDecl(Id(b), ArrayType([2, 3], BooleanType), ArrayLit([IntegerLit(1)]))

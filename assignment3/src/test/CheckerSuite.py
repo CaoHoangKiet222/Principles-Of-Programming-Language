@@ -88,17 +88,55 @@ class CheckerSuite(unittest.TestCase):
     #     expect = "Type Mismatch In Expression: VarDecl(Id(y), IntegerType, BinExpr(==, Id(x), IntegerLit(1)))"
     #     self.assertTrue(TestChecker.test(input, expect, 408))
 
-    def test_9(self):
+    # def test_9(self):
+    #     input = """
+    #     a: array [2] of integer = {1, 2};
+    #     b: array [2, 3] of integer = {{}, {}};
+    #     c: array [2, 3] of integer = {{1}, {1, 2, 3}};
+    #     d: array [2, 3, 5] of integer = {{{1, 3, 4}, {5, 6}, {}}, {{1}, {2}, {1}}};
+    #     e: array [2, 3] of integer = {{1.0}, {1, 2, 3}};
+    #     f: array [2, 3] of integer = {{1, 1}, {1.0, 2, 3}};
+    #     """
+    #     expect = "Illegal Array Literal: ArrayLit([FloatLit(1.0), IntegerLit(2), IntegerLit(3)])"
+    #     self.assertTrue(TestChecker.test(input, expect, 409))
+
+    # def test_10(self):
+    #     input = """
+    #     x, y, z: integer = 1, 2, 3;
+    #     a: array [3, 2] of integer = {{x + z}, {y, z}};
+    #     b: array [2, 3] of integer = {1, {1, 3, 4}};
+    #     """
+    #     expect = "Illegal Array Literal: ArrayLit([IntegerLit(1), ArrayLit([IntegerLit(1), IntegerLit(3), IntegerLit(4)])])"
+    #     self.assertTrue(TestChecker.test(input, expect, 410))
+
+    # def test_11(self):
+    #     input = """
+    #     a: array [2, 3] of float = {{1}, {1, 3, 4}};
+    #     b: array [2, 3] of integer = {{1.0}, {1.0, 3.0, 4.0}};
+    #     """
+    #     expect = "Type Mismatch In Expression: VarDecl(Id(b), ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([FloatLit(1.0)]), ArrayLit([FloatLit(1.0), FloatLit(3.0), FloatLit(4.0)])]))"
+    #     self.assertTrue(TestChecker.test(input, expect, 411))
+
+    # def test_12(self):
+    #     input = """
+    #     a: array [2, 3] of float = {{1}, {1, 3, 4}};
+    #     b: array [2, 3] of integer = {{1.0}, {1.0, 3.0, 4.0}};
+    #     """
+    #     expect = "Type Mismatch In Expression: VarDecl(Id(b), ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([FloatLit(1.0)]), ArrayLit([FloatLit(1.0), FloatLit(3.0), FloatLit(4.0)])]))"
+    #     self.assertTrue(TestChecker.test(input, expect, 412))
+
+    def test_13(self):
         input = """
-        // a: array [2] of integer = {1, 2};
-        // b: array [2, 3] of integer = {{}, {}};
-        // b: array [2, 3] of integer = {{1}, {1, 2, 3}};
-        b: array [2, 3, 5] of integer = {{{1, 3, 4}, {5, 6}, {}}, {{1}, {2}, {1}}};
-        // b: array [2, 3] of integer = {{1.0}, {1, 2, 3}};
-        // b: array [2, 3] of integer = {{1, 1}, {1.0, 2, 3}};
-        // b: array [2, 3] of integer = {1, {1, 3, 4, 5}};
-        /* x, y, z: integer = 1, 2, 3;
-        a: array [3] of integer = {x + z, y, z}; */
+        // a: array [2, 3] of integer = {{1}, {1, 3, 4}};
+        // a: array [2, 3] of integer = {{}};
+        // a: array [2, 3] of integer = {{}, {}, {}};
+        // a: array [2, 3] of integer = {{1}, {1, 3, 4, 5}};
+        // b: array [2, 3, 2] of integer = {{{1, 3, 4}, {5, 6}, {}}, {{1}, {2}, {1}}};
+        // a: array [2, 3] of boolean = {{1}, {false}};
+        // a: array [2, 3] of boolean = {{false, false}, {1}};
+        // a: array [2, 3] of boolean = {};
+        b: array [2, 3] of boolean = {1};
+        // c: array [2, 3] of boolean = {{}};
         """
         expect = "[]"
-        self.assertTrue(TestChecker.test(input, expect, 409))
+        self.assertTrue(TestChecker.test(input, expect, 413))
