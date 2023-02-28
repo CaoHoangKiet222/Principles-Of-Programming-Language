@@ -36,7 +36,6 @@ class Symbol:
 class CheckUtils:
     @staticmethod
     def dimensionsMatch(dimensions1: List[int], dimensions2: List[int]):
-        print(dimensions1, dimensions2)
         if dimensions2[0] == 0:
             return True
         if len(dimensions1) != len(dimensions2):
@@ -149,12 +148,22 @@ class StaticChecker(BaseVisitor):
         #   }
         # ]
         c = self.global_env
-
+        flag = False
         for decl in ast.decls:
+            if type(decl) is FuncDecl:
+                # change this if error
+                if decl.name.name == "main" and type(decl.return_type) is VoidType and len(decl.params) == 0:
+                    flag = True
             self.visit(decl, c)
+
+        if flag == False:
+            raise NoEntryPoint()
+        # print("visitProgram", c)
         return ""
 
     def visitVarDecl(self, ast: VarDecl, c):
+        # print("========================")
+        # print("visitVarDecl", ast)
         name = ast.name.name  # change this if error
         typ = self.visit(ast.typ, c)
         init = ast.init
@@ -166,13 +175,12 @@ class StaticChecker(BaseVisitor):
                 init_typ = self.visit(init, (c, typ))
                 if self.illegal_array_lit:
                     raise TypeMismatchInStatement(ast)
-                print(init_typ)
                 # Check dimensions initialization match with its array_type_dimensions
                 if not CheckUtils.dimensionsMatch(typ.dimensions, TypUtils.retriveDimensions(init_typ)):
                     raise TypeMismatchInStatement(ast)
 
             else:
-                init_typ = self.visit(init, (c))
+                init_typ = self.visit(init, c)
                 # Check error when implicit conversion --> Case: float / integer
                 init_typ = TypUtils.impConversion(
                     typ, init_typ, lambda: self.__raise(
@@ -186,11 +194,34 @@ class StaticChecker(BaseVisitor):
 
         c[0][name] = {"kind": Variable(), "typ": typ}
 
-    def visitParamDecl(self, ast, c):
-        pass
+    def visitParamDecl(self, ast: ParamDecl, c):
+        global_env = c
+        name = ast.name.name  # change this if error
+        typ = ast.typ
+        out = ast.out
+        inherit = ast.inherit
+        if name in global_env[0]:
+            raise Redeclared(Parameter(), name)
+        global_env[0][name] = {
+            "kind": Parameter(), "typ": typ, "out": out, "inherit": inherit
+        }
+        return [typ]
 
-    def visitFuncDecl(self, ast, c):
-        pass
+    def visitFuncDecl(self, ast: FuncDecl, c):
+        print("===========================", "FuncDecl")
+        name = ast.name.name  # change this if error
+        return_type = ast.return_type
+        params = ast.params
+        body = ast.body
+
+        if name in c[0]:
+            raise Redeclared(Function(), name)
+        env = [{}] + c
+        c[0][name] = {"kind": Function(), "typ": return_type,
+                      "params": []}
+        c[0][name]["params"] += reduce(lambda acc,
+                                       p: acc + self.visit(p, env), params, [])
+        self.visit(body, env)
 
     def visitIntegerType(self, ast: IntegerType, c):
         return IntegerType()
@@ -261,7 +292,11 @@ class StaticChecker(BaseVisitor):
             return IntegerType() if type(val) is IntegerType else FloatType()
 
     def visitId(self, ast: Id, c):
-        global_env = c[0]
+        global_env = c
+        # check c is pass from array_lit
+        if type(c) is tuple:
+            global_env = c[0]
+
         name = ast.name
         for x in global_env:
             if name in x:
@@ -269,13 +304,24 @@ class StaticChecker(BaseVisitor):
         raise Undeclared(Identifier(), name)
 
     def visitArrayCell(self, ast: ArrayCell, c):
-        pass
+        typ = self.visit(ast.name, c)
+        # check index operator E1[E2] (E1 must be in array type)
+        if type(typ) is not ArrayType:
+            raise TypeMismatchInExpression(ast)
+        # check index operator E1[E2] (E2 must be in list of int type)
+        reduce(lambda _, x: self.__raise(TypeMismatchInExpression(ast))
+               if ExpUtils.isNotIntLit(self.visit(x, c)) else [], ast.cell, [])
+        return typ.typ
 
     def visitFuncCall(self, ast, c):
         pass
 
-    def visitBlockStmt(self, ast, c):
-        pass
+    def visitBlockStmt(self, ast: BlockStmt, c):
+        print("======================")
+        print("visitBlockStmt", c)
+        global_env = c
+        list(map(lambda x: self.visit(x, global_env), ast.body))
+        # print(c)
 
     def visitIfStmt(self, ast, c):
         pass
@@ -321,7 +367,6 @@ class StaticChecker(BaseVisitor):
         value_lst = list(map(lambda x: self.visit(
             x, (global_env, array_ast)), ast.explist))
         # value_lst: [IntegerType(...), ArrayTyp(...)]
-        print(value_lst)
 
         if len(ast.explist) == 0:
             return ArrayTyp(0, array_ast.typ)
