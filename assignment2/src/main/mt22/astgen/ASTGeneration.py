@@ -110,7 +110,7 @@ class ASTGeneration(MT22Visitor):
     # dimensions: INT_LIT COMMA dimensions| INT_LIT;
     def visitDimensions(self, ctx: MT22Parser.DimensionsContext):
         val = ctx.INT_LIT().getText()
-        return [val, *ctx.dimensions().accept(self)] if ctx.dimensions() else [val]
+        return [int(val), *ctx.dimensions().accept(self)] if ctx.dimensions() else [int(val)]
 
     # element_type: int_type | float_type | boolean_type | string_type;
     def visitElement_type(self, ctx: MT22Parser.Element_typeContext):
