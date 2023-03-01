@@ -11,6 +11,9 @@ else:
 from lexererr import *
 
 
+from lexererr import *
+
+
 
 def serializedATN():
     with StringIO() as buf:

@@ -17,4 +17,4 @@ python3 run.py gen
 python3 run.py test ASTGenSuite
 ```
 
-Create testcases by uncomment testcases in files `ASTGenSuite.py`
+Run testcases by change in files `BKOOL.g4` and `ASTGeneration.py`

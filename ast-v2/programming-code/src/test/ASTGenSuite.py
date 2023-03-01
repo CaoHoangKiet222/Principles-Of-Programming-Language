@@ -3,6 +3,7 @@ from TestUtils import TestAST
 
 
 class ASTGenSuite(unittest.TestCase):
+    # Quiz1
     def test_1(self):
         input = """a := b := 4"""
         expect = "Binary(:=,Id(a),Binary(:=,Id(b),IntLiteral(4)))"
