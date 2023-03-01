@@ -1,0 +1,17 @@
+T__0=1
+T__1=2
+T__2=3
+T__3=4
+INTLIT=5
+INTTYPE=6
+FLOATTYPE=7
+WS=8
+ERROR_CHAR=9
+UNCLOSE_STRING=10
+ILLEGAL_ESCAPE=11
+'['=1
+'..'=2
+']'=3
+'-'=4
+'integer'=6
+'real'=7
