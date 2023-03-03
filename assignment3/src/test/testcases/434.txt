@@ -1,0 +1,11 @@
+
+        x: integer;
+        inc: function auto(out n: integer, delta: integer) {
+            n = n + delta;
+        }
+        inc1: function auto() {}
+        main: function void() {
+            delta: integer = inc(inc(x, x), x);
+            y: integer = inc(x, delta) + inc1();
+        }
+        

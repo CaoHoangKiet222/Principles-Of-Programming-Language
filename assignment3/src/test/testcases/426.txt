@@ -1,7 +1,8 @@
 
         inc: function void(out n: integer, delta: integer) {
             x, y, z: integer;
-            a: auto = x;
+            a, b, c: boolean;
+            n: integer;
         }
         main: function void() {}
         

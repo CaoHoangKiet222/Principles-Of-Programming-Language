@@ -1,0 +1,10 @@
+
+        foo: function auto(out n: integer, delta: integer) {
+            n = n + delta;
+            // return 1;
+            // return;
+        }
+        main: function void() {
+            return 1;
+        }
+        

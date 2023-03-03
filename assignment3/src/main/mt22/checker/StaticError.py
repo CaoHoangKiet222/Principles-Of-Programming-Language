@@ -55,7 +55,7 @@ class Invalid(StaticError):
     n: str  # name of variable/parameter
 
     def __str__(self):
-        return "Invalid: " + str(self.k) + ": " + self.n
+        return "Invalid " + str(self.k) + ": " + self.n
 
 
 @dataclass

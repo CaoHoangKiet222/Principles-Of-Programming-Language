@@ -58,15 +58,15 @@ class TypUtils:
         return [typ.num_of_el, *TypUtils.retriveDimensions(typ.el_typ)] if ExpUtils.isArrayLit(typ) else []
 
     @staticmethod
-    def impConversion(typ: Type, init_typ: Type, callback):
-        if type(typ) is IntegerType:
-            if type(init_typ) is FloatType:
+    def impConversion(lhs_typ: Type, rhs_typ: Type, callback):
+        if type(lhs_typ) is IntegerType:
+            if type(rhs_typ) is FloatType:
                 callback()
                 return
-        elif type(typ) is FloatType:
-            if type(init_typ) is IntegerType:
+        elif type(lhs_typ) is FloatType:
+            if type(rhs_typ) is IntegerType:
                 return FloatType()
-        return init_typ
+        return rhs_typ
 
 
 class ExpUtils:
@@ -99,15 +99,11 @@ class ExpUtils:
         return type(expr1) is type(expr2)
 
 
-def infer(id: Id, type, o):
+def retriveEl(name: str, o, callback):
     for env in o:
-        if id.name in env:
-            if env[id.name] is None:
-                env[id.name] = type
-                return type
-            else:
-                return env[id.name]
-    return None
+        if name in env:
+            return env[name]
+    return callback()
 
 
 class StaticChecker(BaseVisitor):
@@ -127,7 +123,13 @@ class StaticChecker(BaseVisitor):
     def __init__(self, ast):
         self.ast = ast
         self.global_env = [{}]
+        self.current_method = {}
         self.illegal_array_lit = False
+        self.init = {
+            "error": False,
+            "forloop": False,
+        }
+        self.inloop = False
 
     def check(self):
         return self.ast.accept(self, StaticChecker.global_envi)
@@ -144,9 +146,11 @@ class StaticChecker(BaseVisitor):
         # [
         #   {
         #      variable_name: {"kind": Variable/Parameter, "typ": Type},
-        #      method_name: {"kind": Function, "return_typ": Type, "params": [Type]},
+        #      method_name: {"kind": Function, "typ": Type, "params": [Type]},
         #   }
         # ]
+        # global_env need to be passed when visit stmt and decls
+        # (global_env, infer_typ) need to be passed when visit expr
         c = self.global_env
         flag = False
         for decl in ast.decls:
@@ -158,12 +162,10 @@ class StaticChecker(BaseVisitor):
 
         if flag == False:
             raise NoEntryPoint()
-        # print("visitProgram", c)
         return ""
 
     def visitVarDecl(self, ast: VarDecl, c):
-        # print("========================")
-        # print("visitVarDecl", ast)
+        print("========================== VarDecl", ast)
         name = ast.name.name  # change this if error
         typ = self.visit(ast.typ, c)
         init = ast.init
@@ -178,9 +180,8 @@ class StaticChecker(BaseVisitor):
                 # Check dimensions initialization match with its array_type_dimensions
                 if not CheckUtils.dimensionsMatch(typ.dimensions, TypUtils.retriveDimensions(init_typ)):
                     raise TypeMismatchInStatement(ast)
-
             else:
-                init_typ = self.visit(init, c)
+                init_typ = self.visit(init, (c, typ))
                 # Check error when implicit conversion --> Case: float / integer
                 init_typ = TypUtils.impConversion(
                     typ, init_typ, lambda: self.__raise(
@@ -191,8 +192,12 @@ class StaticChecker(BaseVisitor):
                 # Check type element in automic_lit is similar with type of its type
                 if not ExpUtils.isTheSameType(typ, init_typ):
                     raise TypeMismatchInStatement(ast)
+        # Declared in type auto without the initialization.
+        elif type(typ) is AutoType:
+            raise Invalid(Variable(), name)
 
         c[0][name] = {"kind": Variable(), "typ": typ}
+        print("========================== End VarDecl")
 
     def visitParamDecl(self, ast: ParamDecl, c):
         global_env = c
@@ -208,7 +213,8 @@ class StaticChecker(BaseVisitor):
         return [typ]
 
     def visitFuncDecl(self, ast: FuncDecl, c):
-        print("===========================", "FuncDecl")
+        print("=========================== FuncDecl", ast)
+        print(c)
         name = ast.name.name  # change this if error
         return_type = ast.return_type
         params = ast.params
@@ -221,7 +227,9 @@ class StaticChecker(BaseVisitor):
                       "params": []}
         c[0][name]["params"] += reduce(lambda acc,
                                        p: acc + self.visit(p, env), params, [])
-        self.visit(body, env)
+        self.current_method = c[0][name]
+        self.visit(body, (env, None))  # (global_env, infer_typ)
+        print("=========================== End FuncDecl")
 
     def visitIntegerType(self, ast: IntegerType, c):
         return IntegerType()
@@ -245,8 +253,35 @@ class StaticChecker(BaseVisitor):
         return ast
 
     def visitBinExpr(self, ast: BinExpr, c):
-        left = self.visit(ast.left, c)
-        right = self.visit(ast.right, c)
+        (global_env, infer_typ) = c
+        left = ast.left
+        right = ast.right
+        if type(left) is FuncCall and type(right) is FuncCall:
+            left_name = left.name.name  # change this if error
+            right_name = right.name.name  # change this if error
+            func_left = retriveEl(left_name, global_env, lambda: self.__raise(
+                Undeclared(Function(), left_name)))
+            func_right = retriveEl(right_name, global_env, lambda: self.__raise(
+                Undeclared(Function(), right_name)))
+            if isinstance(func_left["typ"], AutoType) and not isinstance(func_right["typ"], AutoType):
+                right = self.visit(right, c)
+                left = self.visit(left, (global_env, right))
+            elif isinstance(func_right["typ"], AutoType) and not isinstance(func_left["typ"], AutoType):
+                left = self.visit(left, c)
+                right = self.visit(right, (global_env, left))
+            else:
+                left = self.visit(left, c)
+                right = self.visit(right, c)
+        elif type(left) is FuncCall and type(right) is not FuncCall:
+            right = self.visit(right, c)
+            left = self.visit(left, (global_env, right))
+        elif type(right) is FuncCall and type(left) is not FuncCall:
+            left = self.visit(left, c)
+            right = self.visit(right, (global_env, left))
+        else:
+            left = self.visit(left, c)
+            right = self.visit(right, c)
+
         if ast.op in ['+', '-', '*', '/']:
             if ExpUtils.isNotIntFloatLit(left) or ExpUtils.isNotIntFloatLit(right):
                 raise TypeMismatchInExpression(ast)
@@ -281,7 +316,8 @@ class StaticChecker(BaseVisitor):
             return StringType()
 
     def visitUnExpr(self, ast: UnExpr, c):
-        val = self.visit(ast.val, c)
+        (global_env, infer_typ) = c
+        val = self.visit(ast.val, (global_env, infer_typ))
         if ast.op == '!':
             if ExpUtils.isNotBoolLit(val):
                 raise TypeMismatchInExpression(ast)
@@ -296,12 +332,9 @@ class StaticChecker(BaseVisitor):
         # check c is pass from array_lit
         if type(c) is tuple:
             global_env = c[0]
-
-        name = ast.name
-        for x in global_env:
-            if name in x:
-                return x[name]['typ']
-        raise Undeclared(Identifier(), name)
+        el = retriveEl(ast.name, global_env, lambda: self.__raise(
+            Undeclared(Identifier(), ast.name)))
+        return el["typ"]
 
     def visitArrayCell(self, ast: ArrayCell, c):
         typ = self.visit(ast.name, c)
@@ -313,42 +346,205 @@ class StaticChecker(BaseVisitor):
                if ExpUtils.isNotIntLit(self.visit(x, c)) else [], ast.cell, [])
         return typ.typ
 
-    def visitFuncCall(self, ast, c):
-        pass
+    def visitFuncCall(self, ast: FuncCall, c):
+        print("====================== FuncCall", ast)
+        (global_env, infer_typ) = c
+        name = ast.name.name  # change this if error
+        args = ast.args
+        el = None
+        for env in global_env:
+            if name in env:
+                if isinstance(env[name]["kind"], Function):
+                    el = env[name]
+                    # Check function call is non_void_type + arguments and parameters need to be the same length
+                    if isinstance(el["typ"], VoidType) or len(el["params"]) != len(args):
+                        raise TypeMismatchInExpression(ast)
+                    for x in zip(args, el["params"]):
+                        typ = None
+                        if type(x[0]) is FuncCall:
+                            # Infer from parameter
+                            typ = self.visit(x[0], (global_env, x[1]))
+                        else:
+                            typ = self.visit(x[0], (global_env, infer_typ))
+                        # Check arguments and parameters have the same type
+                        if not ExpUtils.isTheSameType(typ, x[1]):
+                            raise TypeMismatchInExpression(ast)
+        if el is None:
+            raise Undeclared(Function(), name)
+        # Infer return of function
+        if isinstance(el["typ"], AutoType):
+            el["typ"] = infer_typ
+        print(c)
+        print("====================== End FuncCall", el["typ"])
+        return el["typ"]
 
     def visitBlockStmt(self, ast: BlockStmt, c):
-        print("======================")
-        print("visitBlockStmt", c)
+        print("====================== BlockStmt")
+        # Check c passed from funcdecl
+        if type(c) is tuple:
+            # Do not increase scope when c is passed from funcdecl
+            env = c[0]
+        else:
+            env = [{}] + c
+        list(map(lambda x: self.visit(x, env), ast.body))
+        print("====================== End BlockStmt")
+
+    def visitIfStmt(self, ast: IfStmt, c):
+        print("================== IfStmt", ast)
         global_env = c
-        list(map(lambda x: self.visit(x, global_env), ast.body))
-        # print(c)
+        cond = self.visit(ast.cond, (global_env, None))
+        if ExpUtils.isNotBoolLit(cond):
+            raise TypeMismatchInStatement(ast)
+        self.visit(ast.tstmt, global_env)
+        if ast.fstmt is not None:
+            self.visit(ast.fstmt, global_env)
+        print("================== End IfStmt")
 
-    def visitIfStmt(self, ast, c):
-        pass
+    def visitForStmt(self, ast: ForStmt, c):
+        print("================== ForStmt", ast)
+        # init: AssignStmt, cond: Expr, upd: Expr, stmt: Stmt
 
-    def visitForStmt(self, ast, c):
-        pass
+        global_env = c
+        env = [{}] + global_env
+        self.init["forloop"] = self.inloop = True
+        self.visit(ast.init, env)
+        # Check init for loop error
+        if self.init["error"] == True:
+            raise TypeMismatchInStatement(ast)
+        cond = self.visit(ast.cond, (env, BooleanType()))
+        # Check cond is BooleanType
+        if ExpUtils.isNotBoolLit(cond):
+            raise TypeMismatchInStatement(ast)
+        upd = self.visit(ast.upd, (env, IntegerType()))
+        # Check update is IntegerType
+        if ExpUtils.isNotIntLit(upd):
+            raise TypeMismatchInStatement(ast)
+        self.visit(ast.stmt, env)
+        self.init["forloop"] = self.inloop = False
+        print("================== End ForStmt")
 
-    def visitWhileStmt(self, ast, c):
-        pass
+    def visitWhileStmt(self, ast: WhileStmt, c):
+        print("================== WhileStmt", ast)
+        # cond: Expr, stmt: Stmt
 
-    def visitDoWhileStmt(self, ast, c):
-        pass
+        global_env = c
+        self.inloop = True
+        cond = self.visit(ast.cond, (global_env, BooleanType()))
+        # Check cond is BooleanType
+        if ExpUtils.isNotBoolLit(cond):
+            raise TypeMismatchInStatement(ast)
+        self.visit(ast.stmt, global_env)
+        self.inloop = False
+        print("================== End WhileStmt")
 
-    def visitContinueStmt(self, ast, c):
-        pass
+    def visitDoWhileStmt(self, ast: DoWhileStmt, c):
+        print("================== DoWhileStmt", ast)
+        # cond: Expr, stmt: Stmt
 
-    def visitBreakStmt(self, ast, c):
-        pass
+        global_env = c
+        self.inloop = True
+        cond = self.visit(ast.cond, (global_env, BooleanType()))
+        # Check cond is BooleanType
+        if ExpUtils.isNotBoolLit(cond):
+            raise TypeMismatchInStatement(ast)
+        self.visit(ast.stmt, global_env)
+        self.inloop = False
+        print("================== End DoWhileStmt")
 
-    def visitReturnStmt(self, ast, c):
-        pass
+    def visitContinueStmt(self, ast: ContinueStmt, c):
+        if not self.inloop:
+            raise MustInLoop(ast)
 
-    def visitAssignStmt(self, ast, c):
-        pass
+    def visitBreakStmt(self, ast: BreakStmt, c):
+        if not self.inloop:
+            raise MustInLoop(ast)
 
-    def visitCallStmt(self, ast, c):
-        pass
+    def visitReturnStmt(self, ast: ReturnStmt, c):
+        print("============== ReturnStmt", ast)
+        global_env = c
+        if ast.expr is not None:
+            rhs_typ = self.visit(ast.expr, (global_env, None))
+        else:
+            rhs_typ = VoidType()
+        # Check error when implicit conversion --> Case: float / integer
+        rhs_typ = TypUtils.impConversion(
+            self.current_method["typ"], rhs_typ, lambda: self.__raise(
+                TypeMismatchInStatement(ast)))
+        # Need to infer return_typ with expr
+        if type(self.current_method["typ"]) is AutoType:
+            self.current_method["typ"] = rhs_typ
+        # Check type element in automic_lit is similar with type of its type
+        if not ExpUtils.isTheSameType(rhs_typ, self.current_method["typ"]):
+            raise TypeMismatchInStatement(ast)
+
+        print(c)
+        print("============== End ReturnStmt")
+
+    def visitAssignStmt(self, ast: AssignStmt, c):
+        print("============== AssignStmt", ast)
+        global_env = c
+        if self.init["forloop"] == True:
+            name = ast.lhs.name  # change this if error
+            try:
+                el = retriveEl(name, global_env, lambda: self.__raise(
+                    Undeclared(Variable(), name)))
+                # Check the type of scalar variable must be integer in for loop
+                if not isinstance(el["typ"], IntegerType):
+                    self.init["error"] = True
+                    return
+                lhs_typ = el["typ"]
+            except Undeclared:
+                lhs_typ = IntegerType()
+                global_env[0][name] = {"kind": Variable(), "typ": lhs_typ}
+
+            rhs_typ = self.visit(ast.rhs, (global_env, lhs_typ))
+            if ExpUtils.isNotIntLit(rhs_typ):
+                self.init["error"] = True
+                return
+        else:
+            lhs_typ = self.visit(ast.lhs, global_env)
+            # Check left-hand side is void type or array type
+            if type(lhs_typ) is ArrayType or type(lhs_typ) is VoidType:
+                raise TypeMismatchInStatement(ast)
+
+            rhs_typ = self.visit(ast.rhs, (global_env, lhs_typ))
+            # Check element type coercion
+            rhs_typ = TypUtils.impConversion(
+                lhs_typ, rhs_typ, lambda: self.__raise(TypeMismatchInStatement(ast)))
+            if not ExpUtils.isTheSameType(lhs_typ, rhs_typ):
+                raise TypeMismatchInStatement(ast)
+        print("============== End AssignStmt")
+
+    def visitCallStmt(self, ast: CallStmt, c):
+        print("====================== CallStmt", ast)
+        global_env = c
+        print(c)
+        name = ast.name.name  # change this if error
+        args = ast.args
+        el = None
+        for env in global_env:
+            if name in env:
+                if isinstance(env[name]["kind"], Function):
+                    el = env[name]
+                    # Infer return of function
+                    if isinstance(el["typ"], AutoType):
+                        el["typ"] = VoidType()
+                    # Check callstmt is void_type + arguments and parameters need to be the same length
+                    if (not isinstance(el["typ"], VoidType)) or len(el["params"]) != len(args):
+                        raise TypeMismatchInExpression(ast)
+                    for x in zip(args, el["params"]):
+                        typ = None
+                        if type(x[0]) is FuncCall:
+                            # Infer from parameter
+                            typ = self.visit(x[0], (global_env, x[1]))
+                        else:
+                            typ = self.visit(x[0], (global_env, None))
+                        # Check arguments and parameters have the same type
+                        if not ExpUtils.isTheSameType(typ, x[1]):
+                            raise TypeMismatchInExpression(ast)
+        if el is None:
+            raise Undeclared(Function(), name)
+        print("====================== End CallStmt")
 
     def visitIntegerLit(self, ast: IntegerLit, c):
         return IntegerType()

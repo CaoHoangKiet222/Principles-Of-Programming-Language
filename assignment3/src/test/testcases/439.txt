@@ -1,0 +1,15 @@
+
+        x: array[0, 100] of integer;
+        inc: function auto(out n: integer, delta: integer) {
+            n = n + delta;
+        }
+        main: function void() {
+            delta: integer = 1;
+            i: integer = 1;
+            if (x[i, 0] > inc(x[0, i])) {
+                x[i, 0] = i;
+            } else {
+                x[0, i] = i + 1;
+            }
+        }
+        

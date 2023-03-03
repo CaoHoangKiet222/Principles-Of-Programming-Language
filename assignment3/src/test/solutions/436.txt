@@ -1,0 +1,1 @@
+Type Mismatch In Expression: BinExpr(<, UnExpr(-, FuncCall(Id(inc), [Id(x), Id(delta)])), IntegerLit(8))

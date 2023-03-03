@@ -1,0 +1,12 @@
+
+        x: integer;
+        a: array [10] of integer;
+        inc: function auto(out n: integer, delta: integer) {
+            n = n + delta;
+        }
+        main: function void() {
+            delta: integer = 1;
+            a[1] = inc(delta, x);
+            x = (inc(delta, x) + a[1]) - 4;
+        }
+        

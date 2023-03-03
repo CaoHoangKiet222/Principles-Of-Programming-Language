@@ -298,12 +298,12 @@ class ASTGeneration(MT22Visitor):
             return UnExpr(op, val)
         return ctx.expr7().accept(self)
 
-    # expr7: expr7 index_op| expr8;
+    # expr7: ID index_op| expr8;
     # # a[1, 2] -> ArrayCell(a, [1, 2])
     def visitExpr7(self, ctx: MT22Parser.Expr7Context):
         if ctx.getChildCount() == 2:
             cell = ctx.index_op().accept(self)
-            name = ctx.expr7().accept(self)
+            name = Id(ctx.ID().getText())
             return ArrayCell(name, cell)
         return ctx.expr8().accept(self)
 
