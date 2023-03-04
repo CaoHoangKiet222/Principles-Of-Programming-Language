@@ -246,7 +246,7 @@ class CallStmt(Stmt):
         self.args = args
 
     def __str__(self):
-        return "CallStmt({}, {})".format(self.name, ", ".join([str(expr) for expr in self.args]))
+        return "CallStmt({}, [{}])".format(self.name, ", ".join([str(expr) for expr in self.args]))
 
 
 # Declarations

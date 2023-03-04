@@ -475,13 +475,75 @@ class CheckerSuite(unittest.TestCase):
     #     expect = "Type Mismatch In Statement: ReturnStmt(IntegerLit(1))"
     #     self.assertTrue(TestChecker.test(input, expect, 441))
 
-    def test_42(self):
+    # def test_42(self):
+    #     input = """
+    #     foo2: function auto(i: integer){}
+    #     foo1: function integer(){
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         foo2(foo1());
+    #     }
+    #     """
+    #     expect = "[]"
+    #     self.assertTrue(TestChecker.test(input, expect, 442))
+
+    # def test_43(self):
+    #     input = """
+    #     foo2: function auto(inherit i: float, a: float){}
+    #     foo1: function integer() {
+    #         super(1, 1.0);
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         foo2(foo1());
+    #     }
+    #     """
+    #     expect = "Type Mismatch In Statement: CallStmt(Id(super), [IntegerLit(1), FloatLit(1.0)])"
+    #     self.assertTrue(TestChecker.test(input, expect, 443))
+
+    # def test_44(self):
+    #     input = """
+    #     foo2: function auto(inherit i: float, a: float){}
+    #     foo1: function integer() inherit foo2 {
+    #         super(1, true);
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         foo2(foo1());
+    #     }
+    #     """
+    #     expect = "Invalid Statement In Function: foo1"
+    #     self.assertTrue(TestChecker.test(input, expect, 444))
+
+    # def test_44(self):
+    #     input = """
+    #     foo2: function auto(inherit i: float, a: float){}
+    #     foo1: function integer() inherit foo2 {
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         foo2(foo1());
+    #     }
+    #     """
+    #     expect = "Invalid Statement In Function: foo1"
+    #     self.assertTrue(TestChecker.test(input, expect, 444))
+
+    def test_45(self):
         input = """
-        foo2: function auto(i: integer){
-
+        foo3: function auto(inherit i: integer, a: float) {}
+        foo2: function auto(inherit i: float, a: float) inherit foo3 {
+            super(1, 1.0);
         }
-
-        foo1: function integer(){
+        foo1: function integer() inherit foo2 {
+            // preventDefault();
+            super(1, 1.0);
+            //preventDefault(1, 2, 3);
+            i: integer = 2;
             return 1;
         }
 
@@ -489,5 +551,5 @@ class CheckerSuite(unittest.TestCase):
             foo2(foo1());
         }
         """
-        expect = "[]"
-        self.assertTrue(TestChecker.test(input, expect, 442))
+        expect = "Redeclared Variable: i"
+        self.assertTrue(TestChecker.test(input, expect, 445))

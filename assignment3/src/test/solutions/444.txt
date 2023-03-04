@@ -1,0 +1,1 @@
+Type Mismatch In Statement: CallStmt(Id(foo2), [FuncCall(Id(foo1), [])])
