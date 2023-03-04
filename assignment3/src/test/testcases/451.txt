@@ -1,7 +1,7 @@
 
         foo2: function auto() {}
         foo1: function integer(inherit c: float) inherit foo2 {
-            super();
+            printInteger(foo2());
             i: integer = 2;
             return 1;
         }

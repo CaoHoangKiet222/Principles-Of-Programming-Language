@@ -46,6 +46,12 @@ class CheckUtils:
                 return False
         return True
 
+    @staticmethod
+    def redeclaredParams(params1, params2, error):
+        for key in params1:
+            if key in params2:
+                raise error(key)
+
 
 class TypUtils:
     @staticmethod
@@ -114,6 +120,19 @@ def retriveElWithCond(name: str, o, cond, callback):
     return callback()
 
 
+def retriveInheritParams(name: str, o):
+    for env in o:
+        if name in env and isinstance(env[name]["kind"], Function):
+            inherit_name = env[name]["inherit"]
+            params_inherit = retriveInheritParams(inherit_name, o)
+            CheckUtils.redeclaredParams(
+                params_inherit, env[name]["params_inherit"], lambda e: Redeclared(
+                    Parameter(), e)
+            )
+            return {**params_inherit, **env[name]["params_inherit"]}
+    return {}
+
+
 class StaticChecker(BaseVisitor, Utils):
     global_envi = [
         Symbol("readInteger", MType([], IntegerType())),
@@ -158,9 +177,9 @@ class StaticChecker(BaseVisitor, Utils):
                 typ = self.visit(x[0], (global_env, x[1]))
             else:
                 typ = self.visit(x[0], (global_env, infer_typ))
-                # Check error when implicit conversion --> Case: float / integer
-                typ = TypUtils.impConversion(
-                    x[1], typ, lambda: self.__raise(error))
+            # Check error when implicit conversion --> Case: float / integer
+            typ = TypUtils.impConversion(
+                x[1], typ, lambda: self.__raise(error))
             # Check arguments and parameters have the same type
             if not ExpUtils.isTheSameType(typ, x[1]):
                 self.__raise(error)
@@ -240,7 +259,9 @@ class StaticChecker(BaseVisitor, Utils):
             "kind": Parameter(), "typ": typ, "out": out, "inherit": inherit
         }
         if inherit == True:
-            self.current_method["params_inherit"].append({name, typ})
+            self.current_method["params_inherit"][name] = {
+                "kind": Parameter(), "typ": typ, "out": out
+            }
         self.current_method["params"].append(typ)
 
     def visitFuncDecl(self, ast: FuncDecl, c):
@@ -256,31 +277,51 @@ class StaticChecker(BaseVisitor, Utils):
             raise Redeclared(Function(), name)
         env = [{}] + c
         self.current_method = c[0][name] = {
-            "kind": Function(), "typ": return_type, "params": [], "params_inherit": [], "inherit": inherit.name if inherit else None
+            "kind": Function(), "typ": return_type, "params": [], "params_inherit": {}, "inherit": inherit.name if inherit else None
         }
         reduce(lambda _, p: self.visit(p, env), params, [])
         if inherit is not None:
             inherit = inherit.name  # change this if error
             parent_func = retriveElWithCond(
                 inherit, env, lambda el: isinstance(el[name]["kind"], Function), lambda: self.__raise(
-                    Undeclared(Function(), inherit)))
+                    Undeclared(Function(), inherit))
+            )
             first_stmt = body.body[0]
-            if type(first_stmt) is not CallStmt:
+            if type(first_stmt) is CallStmt:
+                # change this if error
+                sym = self.lookup(first_stmt.name.name,
+                                  StaticChecker.global_envi, lambda x: x.name)
+                # check first_stmt is preventDefault or super
+                if sym.name != "preventDefault" and sym.name != "super":
+                    if len(parent_func["params"]) != 0:
+                        raise InvalidStatementInFunction(name)
+                    else:
+                        self.visit(first_stmt, env)
+                else:
+                    if len(parent_func["params"]) == 0:
+                        if len(first_stmt.args) != 0:
+                            raise InvalidStatementInFunction(name)
+                    else:
+                        # first_stmt is super
+                        if sym.name == "super":
+                            if len(first_stmt.args) != len(parent_func["params"]):
+                                raise InvalidStatementInFunction(name)
+                            self.checkParamsMatch(
+                                first_stmt.args, parent_func["params"], (env, None, InvalidStatementInFunction(name)))
+                        else:
+                            if len(first_stmt.args) != 0:
+                                raise InvalidStatementInFunction(name)
+                    # Inherit all params from parent function including hierarchical
+                    if sym.name == "super":
+                        inherit_params = retriveInheritParams(inherit, env)
+                        CheckUtils.redeclaredParams(
+                            inherit_params, env[0], lambda e: Redeclared(
+                                Parameter(), e)
+                        )
+                        env[0] = {**env[0], **inherit_params}
+            # Check activation of parent function is implicit with super
+            elif len(parent_func["params"]) != 0:
                 raise InvalidStatementInFunction(name)
-            # change this if error
-            sym = self.lookup(first_stmt.name.name,
-                              StaticChecker.global_envi, lambda x: x.name)
-            if sym.name != "preventDefault" and sym.name != "super":
-                raise InvalidStatementInFunction(name)
-            if len(parent_func["params"]) == 0:
-                if len(first_stmt.args) != 0:
-                    raise InvalidStatementInFunction(name)
-            else:
-                if len(first_stmt.args) != len(parent_func["params"]):
-                    raise InvalidStatementInFunction(name)
-                self.checkParamsMatch(
-                    first_stmt.args, parent_func["params"], (env, None, InvalidStatementInFunction(name)))
-
         self.visit(body, (env, None))  # (global_env, infer_typ)
         print("=========================== End FuncDecl")
 
@@ -569,15 +610,25 @@ class StaticChecker(BaseVisitor, Utils):
         name = ast.name.name  # change this if error
         args = ast.args
         el = None
-        print(c)
 
         for env in global_env:
             if name in env:
                 if isinstance(env[name]["kind"], Function):
                     el = env[name]
-                    if self.current_method["inherit"] is None:
+                    # Check current function has super or preventDefault method with no inherit
+                    inherit = self.current_method["inherit"]
+                    if inherit is None:
                         if name == "super" or name == "preventDefault":
                             raise TypeMismatchInStatement(ast)
+                    else:
+                        parent_func = retriveElWithCond(
+                            inherit, global_env, lambda el: isinstance(el[name]["kind"], Function), lambda: self.__raise(
+                                Undeclared(Function(), inherit))
+                        )
+                        if name != "preventDefault" and name != "super":
+                            if len(parent_func["params"]) != 0:
+                                raise TypeMismatchInStatement(ast)
+
                     # Infer return of function
                     if isinstance(el["typ"], AutoType):
                         el["typ"] = VoidType()

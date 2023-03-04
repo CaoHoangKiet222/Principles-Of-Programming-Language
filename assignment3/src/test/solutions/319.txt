@@ -1,3 +1,3 @@
 Program([
-	FuncDecl(Id(main), VoidType, [OutParam(Id(x), IntegerType)], None, BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(1)), BinExpr(<, Id(i), IntegerLit(100)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([ForStmt(AssignStmt(Id(j), IntegerLit(1)), BinExpr(<, Id(j), IntegerLit(200)), BinExpr(+, Id(j), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(>=, BinExpr(+, Id(i), Id(j)), IntegerLit(2)), BlockStmt([CallStmt(Id(foo), IntegerLit(2), BinExpr(+, Id(x), IntegerLit(1)))]))]))]))]))
+	FuncDecl(Id(main), VoidType, [OutParam(Id(x), IntegerType)], None, BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(1)), BinExpr(<, Id(i), IntegerLit(100)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([ForStmt(AssignStmt(Id(j), IntegerLit(1)), BinExpr(<, Id(j), IntegerLit(200)), BinExpr(+, Id(j), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(>=, BinExpr(+, Id(i), Id(j)), IntegerLit(2)), BlockStmt([CallStmt(Id(foo), [IntegerLit(2), BinExpr(+, Id(x), IntegerLit(1))])]))]))]))]))
 ])

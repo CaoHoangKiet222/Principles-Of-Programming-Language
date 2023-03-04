@@ -4,24 +4,6 @@ from AST import *
 
 
 class CheckerSuite(unittest.TestCase):
-    # def test_1(self):
-    #     input = """
-    #     x: integer = 65;
-    #     fact: function integer (n: integer) {
-    #         if (n == 0) return 1;
-    #         else return n * fact(n - 1);
-    #     }
-    #     inc: function void(out n: integer, delta: integer) {
-    #         n = n + delta;
-    #     }
-    #     main: function void() {
-    #         delta: integer = fact(3);
-    #         inc(x, delta);
-    #         printInteger(x);
-    #     }
-    #     """
-    #     expect = ""
-    #     self.assertTrue(TestChecker.test(input, expect, 401))
 
     # # Test VarDecl
     # def test_1(self):
@@ -533,23 +515,158 @@ class CheckerSuite(unittest.TestCase):
     #     expect = "Invalid Statement In Function: foo1"
     #     self.assertTrue(TestChecker.test(input, expect, 444))
 
-    def test_45(self):
-        input = """
-        foo3: function auto(inherit i: integer, a: float) {}
-        foo2: function auto(inherit i: float, a: float) inherit foo3 {
-            super(1, 1.0);
-        }
-        foo1: function integer() inherit foo2 {
-            // preventDefault();
-            super(1, 1.0);
-            //preventDefault(1, 2, 3);
-            i: integer = 2;
-            return 1;
-        }
+    # def test_45(self):
+    #     input = """
+    #     foo2: function auto() {}
+    #     foo1: function integer(inherit c: float) inherit foo2 {
+    #         super();
+    #         i: integer = 2;
+    #         return 1;
+    #     }
 
-        main: function void(){
-            foo2(foo1());
+    #     main: function void(){
+    #         foo2();
+    #     }
+    #     """
+    #     expect = "[]"
+    #     self.assertTrue(TestChecker.test(input, expect, 445))
+
+    # def test_46(self):
+    #     input = """
+    #     foo2: function auto() {}
+    #     foo1: function integer(inherit c: float) inherit foo2 {
+    #         preventDefault(1, 2, 3);
+    #         i: integer = 2;
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         foo2();
+    #     }
+    #     """
+    #     expect = "Invalid Statement In Function: foo1"
+    #     self.assertTrue(TestChecker.test(input, expect, 446))
+
+    # def test_47(self):
+    #     input = """
+    #     foo2: function auto(inherit a: integer) {}
+    #     foo1: function integer(inherit c: float) inherit foo2 {
+    #         i: integer = 2;
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         foo2(1);
+    #     }
+    #     """
+    #     expect = "Invalid Statement In Function: foo1"
+    #     self.assertTrue(TestChecker.test(input, expect, 447))
+
+    # def test_48(self):
+    #     input = """
+    #     foo3: function auto(inherit i: integer, a: float) {}
+    #     foo2: function auto(inherit b: float, a: float) inherit foo3 {
+    #         super(true, 1.0);
+    #     }
+    #     foo1: function integer(inherit c: float) inherit foo2 {
+    #         i: integer = 2;
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         foo2(foo1(1.0), 1);
+    #     }
+    #     """
+    #     expect = "Invalid Statement In Function: foo2"
+    #     self.assertTrue(TestChecker.test(input, expect, 448))
+
+    # def test_49(self):
+    #     input = """
+    #     foo3: function auto(inherit i: integer, a: float) {}
+    #     foo2: function auto(inherit b: float, a: float) inherit foo3 {
+    #         super(1, 1.0);
+    #         c: integer = 1;
+    #     }
+    #     foo1: function integer(inherit c: float) inherit foo2 {
+    #         super(1, 1.0);
+    #         i: integer = 2;
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         foo2(foo1(1.0), 1);
+    #     }
+    #     """
+    #     expect = "Redeclared Variable: i"
+    #     self.assertTrue(TestChecker.test(input, expect, 449))
+
+    # def test_50(self):
+    #     input = """
+    #     foo3: function auto(inherit i: integer, a: float) {}
+    #     foo2: function auto(inherit b: float, a: float) inherit foo3 {
+    #         super(1, 1.0);
+    #         c: integer = 1;
+    #     }
+    #     foo1: function integer(inherit c: float) inherit foo2 {
+    #         preventDefault();
+    #         i: integer = 2;
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         foo2(foo1(1.0), 1);
+    #     }
+    #     """
+    #     expect = "[]"
+    #     self.assertTrue(TestChecker.test(input, expect, 450))
+
+    # def test_51(self):
+    #     input = """
+    #     foo2: function auto() {}
+    #     foo1: function integer(inherit c: float) inherit foo2 {
+    #         printInteger(super(1.0, 1.0));
+    #         i: integer = 2;
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         foo2(foo1(1.0), 1);
+    #     }
+    #     """
+    #     expect = "Type Mismatch In Expression: FuncCall(Id(super), [FloatLit(1.0), FloatLit(1.0)])"
+    #     self.assertTrue(TestChecker.test(input, expect, 451))
+
+    # def test_52(self):
+    #     input = """
+    #     foo2: function auto() {}
+    #     foo1: function integer(inherit c: float) inherit foo2 {
+    #         printInteger(foo2());
+    #         i: integer = 2;
+    #         return 1;
+    #     }
+
+    #     main: function void(){
+    #         foo2();
+    #     }
+    #     """
+    #     expect = "Type Mismatch In Statement: CallStmt(Id(foo2), [])"
+    #     self.assertTrue(TestChecker.test(input, expect, 452))
+
+    def test_53(self):
+        input = """
+        x: integer = 65;
+        fact: function integer (n: integer) {
+            if (n == 0) return 1;
+            else return n * fact(n - 1);
+        }
+        inc: function void(out n: integer, delta: integer) {
+            n = n + delta;
+        }
+        main: function void() {
+            delta: integer = fact(3);
+            inc(x, delta);
+            printInteger(x);
         }
         """
-        expect = "Redeclared Variable: i"
-        self.assertTrue(TestChecker.test(input, expect, 445))
+        expect = "[]"
+        self.assertTrue(TestChecker.test(input, expect, 453))
