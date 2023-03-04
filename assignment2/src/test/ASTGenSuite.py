@@ -205,7 +205,7 @@ class ASTGenSuite(unittest.TestCase):
     """
         expect = """Program([
 	FuncDecl(Id(lengthOfFirstWord), AutoType, [], None, BlockStmt([ReturnStmt(StringLit())]))
-	FuncDecl(Id(lengthOfLastWord), AutoType, [], inherit, BlockStmt([ReturnStmt(StringLit(lengthOfLastWord))]))
+	FuncDecl(Id(lengthOfLastWord), AutoType, [], Id(lengthOfFirstWord), BlockStmt([ReturnStmt(StringLit(lengthOfLastWord))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 317))
 

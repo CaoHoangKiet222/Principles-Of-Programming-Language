@@ -38,7 +38,7 @@ class ASTGeneration(MT22Visitor):
         name = ctx.func_name().accept(self)
         return_type = ctx.return_type().accept(self)
         params = ctx.param_list().accept(self) if ctx.param_list() else []
-        inherit = ctx.INHERIT().getText() if ctx.INHERIT() else None
+        inherit = Id(ctx.ID().getText()) if ctx.ID() else None
         body = ctx.body().accept(self)
         return FuncDecl(name, return_type, params, inherit, body)
 
