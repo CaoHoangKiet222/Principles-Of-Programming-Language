@@ -1,7 +1,6 @@
 
+        x: float;
         main: function void() {
-            x: float = 1;
-            a: array[10] of integer = {1, 2, 3};
-            x = a[1, 2];
+            x = 1;
         }
         

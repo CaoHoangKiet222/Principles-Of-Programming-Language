@@ -6,8 +6,6 @@
         }
         foo1: function integer(inherit c: float) inherit foo2 {
             preventDefault();
-            // super(1, 1.0);
-            // preventDefault(1, 2, 3);
             i: integer = 2;
             return 1;
         }

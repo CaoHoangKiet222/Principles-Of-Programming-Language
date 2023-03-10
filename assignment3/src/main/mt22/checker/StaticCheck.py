@@ -233,7 +233,7 @@ class StaticChecker(BaseVisitor, Utils):
                 # Check error when implicit conversion --> Case: float / integer
                 init_typ = TypUtils.impConversion(
                     typ, init_typ, lambda: self.__raise(
-                        TypeMismatchInExpression(ast)))
+                        TypeMismatchInStatement(ast)))
                 # Need to infer type when initialization
                 if type(typ) is AutoType:
                     typ = init_typ
@@ -450,6 +450,7 @@ class StaticChecker(BaseVisitor, Utils):
             if name in env:
                 if isinstance(env[name]["kind"], Function):
                     el = env[name]
+                    print("++++++++++", el)
                     # Check function call is non_void_type + arguments and parameters need to be the same length
                     if isinstance(el["typ"], VoidType) or len(el["params"]) != len(args):
                         raise TypeMismatchInExpression(ast)

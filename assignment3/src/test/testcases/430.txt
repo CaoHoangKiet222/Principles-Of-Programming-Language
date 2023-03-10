@@ -1,6 +1,6 @@
 
-        x: float;
+        x: integer;
         main: function void() {
-            x = 1;
+            x = false;
         }
         

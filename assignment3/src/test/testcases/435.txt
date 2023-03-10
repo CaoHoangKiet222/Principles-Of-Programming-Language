@@ -3,13 +3,8 @@
         inc: function auto(out n: integer, delta: integer) {
             n = n + delta;
         }
-        inc1: function auto() {}
         main: function void() {
             delta: integer = inc(inc(x, x), x);
-            y: integer = inc(x, delta) + inc1();
-            // y: integer = inc(x, 1) + 1;
-            // y: integer = inc(x, 1) + inc1();
-            // y: bool = -inc(x, 1);
-            // inc(x, delta);
+            y: boolean = -inc(x, 1);
         }
         

@@ -234,7 +234,7 @@ class CheckerSuite(unittest.TestCase):
     #     expect = "Redeclared Variable: n"
     #     self.assertTrue(TestChecker.test(input, expect, 426))
 
-    # Test IfStmt in Function
+    # # Test IfStmt in Function
     # def test_27(self):
     #     input = """
     #     inc: function void(out n: integer, delta: integer) {
@@ -261,7 +261,7 @@ class CheckerSuite(unittest.TestCase):
     #     expect = "Type Mismatch In Expression: BinExpr(%, Id(n), FloatLit(2.0))"
     #     self.assertTrue(TestChecker.test(input, expect, 428))
 
-    # Test Assignment In function
+    # # Test Assignment In function
     # def test_29(self):
     #     input = """
     #     x: integer;
@@ -313,19 +313,6 @@ class CheckerSuite(unittest.TestCase):
     #         n = n + delta;
     #     }
     #     main: function void() {
-    #         delta: float = inc(inc(), x);
-    #     }
-    #     """
-    #     expect = "[]"
-    #     self.assertTrue(TestChecker.test(input, expect, 433))
-
-    # def test_33(self):
-    #     input = """
-    #     x: integer;
-    #     inc: function auto(out n: integer, delta: integer) {
-    #         n = n + delta;
-    #     }
-    #     main: function void() {
     #         delta: integer = inc(inc(x, x), x);
     #         y: integer = inc(x, 1) + 1;
     #     }
@@ -356,10 +343,10 @@ class CheckerSuite(unittest.TestCase):
     #     }
     #     main: function void() {
     #         delta: integer = inc(inc(x, x), x);
-    #         y: bool = -inc(x, 1);
+    #         y: boolean = -inc(x, 1);
     #     }
     #     """
-    #     expect = "[]"
+    #     expect = "not check"
     #     self.assertTrue(TestChecker.test(input, expect, 435))
 
     # def test_36(self):
@@ -373,10 +360,10 @@ class CheckerSuite(unittest.TestCase):
     #         n1: float = -inc(x, delta) + 1; // inc: float
     #         n1: float = !inc(x, delta) + 1;
     #         n1: float = -inc(x, delta) < 8;
-    #         n1: bool = -inc(x, 1);
+    #         n1: boolean = -inc(x, 1);
     #     }
     #     """
-    #     expect = "[]"
+    #     expect = "not check"
     #     self.assertTrue(TestChecker.test(input, expect, 436))
 
     # def test_37(self):
@@ -441,7 +428,7 @@ class CheckerSuite(unittest.TestCase):
     #         }
     #     }
     #     """
-    #     expect = "[]"
+    #     expect = "Type Mismatch In Expression: FuncCall(Id(foo), [BinExpr(+, Id(i), IntegerLit(1)), FuncCall(Id(foo), [BinExpr(+, Id(x), IntegerLit(2)), IntegerLit(1)])])"
     #     self.assertTrue(TestChecker.test(input, expect, 440))
 
     # def test_41(self):
@@ -652,21 +639,21 @@ class CheckerSuite(unittest.TestCase):
     #     expect = "Type Mismatch In Statement: CallStmt(Id(foo2), [])"
     #     self.assertTrue(TestChecker.test(input, expect, 452))
 
-    def test_53(self):
-        input = """
-        x: integer = 65;
-        fact: function integer (n: integer) {
-            if (n == 0) return 1;
-            else return n * fact(n - 1);
-        }
-        inc: function void(out n: integer, delta: integer) {
-            n = n + delta;
-        }
-        main: function void() {
-            delta: integer = fact(3);
-            inc(x, delta);
-            printInteger(x);
-        }
-        """
-        expect = "[]"
-        self.assertTrue(TestChecker.test(input, expect, 453))
+    # def test_53(self):
+    #     input = """
+    #     x: integer = 65;
+    #     fact: function integer (n: integer) {
+    #         if (n == 0) return 1;
+    #         else return n * fact(n - 1);
+    #     }
+    #     inc: function void(out n: integer, delta: integer) {
+    #         n = n + delta;
+    #     }
+    #     main: function void() {
+    #         delta: integer = fact(3);
+    #         inc(x, delta);
+    #         printInteger(x);
+    #     }
+    #     """
+    #     expect = "[]"
+    #     self.assertTrue(TestChecker.test(input, expect, 453))

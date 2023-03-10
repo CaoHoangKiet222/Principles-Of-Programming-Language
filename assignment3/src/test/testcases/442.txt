@@ -1,8 +1,5 @@
 
-        foo2: function auto(i: integer){
-
-        }
-
+        foo2: function auto(i: integer){}
         foo1: function integer(){
             return 1;
         }
