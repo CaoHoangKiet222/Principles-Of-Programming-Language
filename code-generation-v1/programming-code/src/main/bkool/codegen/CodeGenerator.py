@@ -207,9 +207,8 @@ class CodeGenVisitor(BaseVisitor, Utils):
         frame.exitScope()
 
     def visitCallExpr(self, ast, o):
-        ctxt = o
-        frame = ctxt.frame
-        nenv = ctxt.sym
+        frame = o.frame
+        nenv = o.sym
         sym = self.lookup(ast.method.name, nenv, lambda x: x.name)
         cname = sym.value.value
 
@@ -225,8 +224,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
 
     # Quiz 3
     def visitBinExpr(self, ast, o):
-        ctxt = o
-        frame = ctxt.frame
+        frame = o.frame
 
         e1_j, typ_e1 = self.visit(ast.e1, o)
         self.emit.printout(e1_j)
@@ -293,24 +291,75 @@ class CodeGenVisitor(BaseVisitor, Utils):
     #         else:
     #             return e1str + e2str + self.emit.emitREOP(ctx.op, IntType(), o.frame), BoolType()
 
+    def visitAssign(self, ast, o):
+        frame = o.frame
+        sym = o.sym
+        rhs_j, rhs_typ = self.visit(ast.rhs, Access(frame, sym, False, False))
+        lsh_j, lsh_typ = self.visit(ast.lhs, Access(frame, sym, True, False))
+        self.emit.printout(rhs_j + lsh_j)
+
+    def visitIf(self, ast, o):
+        frame = o.frame
+        sym = o.sym
+        exp_j, exp_typ = self.visit(
+            ast.expr, Access(frame, sym, False, False))
+        self.emit.printout(exp_j)
+
+        labelF = frame.getNewLabel()  # eval is false
+        labelE = frame.getNewLabel()  # label end
+
+        self.emit.printout(self.emit.emitIFFALSE(labelF, frame))
+
+        self.visit(ast.tstmt, o)
+        self.emit.printout(self.emit.emitGOTO(labelE, frame))
+
+        self.emit.printout(self.emit.emitLABEL(labelF, frame))
+        if ast.estmt:
+            self.visit(ast.estmt, o)
+
+        self.emit.printout(self.emit.emitLABEL(labelE, frame))
+
+    def visitWhile(self, ast, o):
+        frame = o.frame
+        sym = o.sym
+        labelW = frame.getNewLabel()  # label while
+        labelE = frame.getNewLabel()  # label end
+        frame.enterLoop()
+        self.emit.printout(self.emit.emitLABEL(labelW, frame))
+        exp_j, exp_typ = self.visit(ast.expr, Access(frame, sym, False, False))
+        self.emit.printout(exp_j + self.emit.emitIFFALSE(labelE, frame))
+        self.visit(ast.stmt, o)
+        self.emit.printout(self.emit.emitLABEL(
+            frame.getContinueLabel(), frame))
+        self.emit.printout(self.emit.emitGOTO(
+            labelW, frame) + self.emit.emitLABEL(labelE, frame))
+        self.emit.printout(self.emit.emitLABEL(
+            frame.getBreakLabel(), frame))
+        frame.exitLoop()
+
     # Quiz 1
     def visitIntLiteral(self, ast, o):
-        ctxt = o
-        frame = ctxt.frame
+        frame = o.frame
         return self.emit.emitPUSHICONST(ast.value, frame), IntType()
 
     # Quiz 2
     def visitFloatLiteral(self, ast, o):
-        ctxt = o
-        frame = ctxt.frame
+        frame = o.frame
         return self.emit.emitPUSHFCONST(str(ast.value), frame), FloatType()
+
+    def visitBoolLiteral(self, ast, o):
+        frame = o.frame
+        return self.emit.emitPUSHICONST(ast.value, frame), BoolType()
 
     # Quiz 4
     def visitId(self, ast, o):
-        ctxt = o
-        frame = ctxt.frame
-        for s in ctxt.sym:
+        frame = o.frame
+        for s in o.sym:
             if ast.name == s.name:
                 if type(s.value) is CName:
-                    return self.emit.emitGETSTATIC(s.value.value + '.' + ast.name, s.mtype, frame)
+                    if o.isLeft == True:
+                        return self.emit.emitPUTSTATIC(s.value.value + '.' + ast.name, s.mtype, frame), s.mtype
+                    return self.emit.emitGETSTATIC(s.value.value + '.' + ast.name, s.mtype, frame), s.mtype
+                if o.isLeft == True:
+                    return self.emit.emitWRITEVAR(ast.name, s.mtype, s.value.value, frame), s.mtype
                 return self.emit.emitREADVAR(ast.name, s.mtype, s.value.value, frame), s.mtype
