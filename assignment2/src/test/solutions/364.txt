@@ -1,4 +1,4 @@
 Program([
-	VarDecl(Id(x), IntegerType, IntegerLit(65))
-	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(arr), ArrayType([2, 3], IntegerType)), IfStmt(FuncCall(Id(numIsPrime), [IntegerLit(7)]), BlockStmt([AssignStmt(ArrayCell(Id(arr), [IntegerLit(1), IntegerLit(2)]), FuncCall(Id(Fibonacci), [IntegerLit(10)]))]))]))
+	VarDecl(x, IntegerType, IntegerLit(65))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(arr, ArrayType([2, 3], IntegerType)), IfStmt(FuncCall(numIsPrime, [IntegerLit(7)]), BlockStmt([AssignStmt(ArrayCell(arr, [IntegerLit(1), IntegerLit(2)]), FuncCall(Fibonacci, [IntegerLit(10)]))]))]))
 ])

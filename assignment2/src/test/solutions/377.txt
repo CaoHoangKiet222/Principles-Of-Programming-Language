@@ -1,4 +1,4 @@
 Program([
-	FuncDecl(Id(reverseStr), StringType, [Param(Id(str), StringType), Param(Id(size), IntegerType)], None, BlockStmt([]))
-	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(s), StringType, StringLit(Hello World!)), CallStmt(Id(reverseStr), Id(s), IntegerLit(12))]))
+	FuncDecl(reverseStr, StringType, [Param(str, StringType), Param(size, IntegerType)], None, BlockStmt([]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(s, StringType, StringLit(Hello World!)), CallStmt(reverseStr, s, IntegerLit(12))]))
 ])

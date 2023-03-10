@@ -1,5 +1,5 @@
 Program([
-	VarDecl(Id(a), ArrayType([2], BooleanType), ArrayLit([BooleanLit(False), BooleanLit(False)]))
-	VarDecl(Id(b), ArrayType([2], BooleanType), ArrayLit([BooleanLit(False)]))
-	VarDecl(Id(c), ArrayType([2], BooleanType), ArrayLit([BooleanLit(False)]))
+	VarDecl(a, ArrayType([2], BooleanType), ArrayLit([BooleanLit(False), BooleanLit(False)]))
+	VarDecl(b, ArrayType([2], BooleanType), ArrayLit([BooleanLit(False)]))
+	VarDecl(c, ArrayType([2], BooleanType), ArrayLit([BooleanLit(False)]))
 ])

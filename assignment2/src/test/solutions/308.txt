@@ -1,5 +1,5 @@
 Program([
-	VarDecl(Id(a), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([StringLit(x), StringLit(y)]), ArrayLit([StringLit(z)])]))
-	VarDecl(Id(b), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([]), ArrayLit([])]))
-	VarDecl(Id(c), ArrayType([2, 3], StringType), ArrayLit([ArrayLit([StringLit(hello), StringLit(world)]), ArrayLit([StringLit(hihi)])]))
+	VarDecl(a, ArrayType([2, 3], StringType), ArrayLit([ArrayLit([StringLit(x), StringLit(y)]), ArrayLit([StringLit(z)])]))
+	VarDecl(b, ArrayType([2, 3], StringType), ArrayLit([ArrayLit([]), ArrayLit([])]))
+	VarDecl(c, ArrayType([2, 3], StringType), ArrayLit([ArrayLit([StringLit(hello), StringLit(world)]), ArrayLit([StringLit(hihi)])]))
 ])

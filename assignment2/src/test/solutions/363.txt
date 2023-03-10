@@ -1,3 +1,3 @@
 Program([
-	FuncDecl(Id(numIsPrime), BooleanType, [Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(<, Id(n), IntegerLit(2)), ReturnStmt(BooleanLit(False))), ForStmt(AssignStmt(Id(i), IntegerLit(2)), BinExpr(<=, Id(i), FuncCall(Id(sqrt), [Id(n)])), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, BinExpr(%, Id(n), Id(i)), IntegerLit(0)), ReturnStmt(BooleanLit(False)))])), ReturnStmt(BooleanLit(False))]))
+	FuncDecl(numIsPrime, BooleanType, [Param(n, IntegerType)], None, BlockStmt([IfStmt(BinExpr(<, n, IntegerLit(2)), ReturnStmt(BooleanLit(False))), ForStmt(AssignStmt(i, IntegerLit(2)), BinExpr(<=, i, FuncCall(sqrt, [n])), BinExpr(+, i, IntegerLit(1)), BlockStmt([IfStmt(BinExpr(==, BinExpr(%, n, i), IntegerLit(0)), ReturnStmt(BooleanLit(False)))])), ReturnStmt(BooleanLit(False))]))
 ])

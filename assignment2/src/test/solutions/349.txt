@@ -1,5 +1,5 @@
 Program([
-	VarDecl(Id(less_zero), BooleanType, BooleanLit(False))
-	VarDecl(Id(c), IntegerType, IntegerLit(0))
-	FuncDecl(Id(printegerPattern), VoidType, [Param(Id(n), IntegerType)], None, BlockStmt([IfStmt(BinExpr(<=, Id(n), IntegerLit(0)), BlockStmt([AssignStmt(Id(less_zero), BooleanLit(False))])), IfStmt(Id(less_zero), BlockStmt([AssignStmt(Id(c), BinExpr(-, Id(c), IntegerLit(1))), IfStmt(BinExpr(==, Id(c), UnExpr(-, IntegerLit(1))), ReturnStmt()), CallStmt(Id(printegerPattern), BinExpr(+, Id(n), IntegerLit(5)))]), BlockStmt([AssignStmt(Id(c), BinExpr(+, Id(c), IntegerLit(1))), CallStmt(Id(printegerPattern), BinExpr(-, Id(n), IntegerLit(5)))]))]))
+	VarDecl(less_zero, BooleanType, BooleanLit(False))
+	VarDecl(c, IntegerType, IntegerLit(0))
+	FuncDecl(printegerPattern, VoidType, [Param(n, IntegerType)], None, BlockStmt([IfStmt(BinExpr(<=, n, IntegerLit(0)), BlockStmt([AssignStmt(less_zero, BooleanLit(False))])), IfStmt(less_zero, BlockStmt([AssignStmt(c, BinExpr(-, c, IntegerLit(1))), IfStmt(BinExpr(==, c, UnExpr(-, IntegerLit(1))), ReturnStmt()), CallStmt(printegerPattern, BinExpr(+, n, IntegerLit(5)))]), BlockStmt([AssignStmt(c, BinExpr(+, c, IntegerLit(1))), CallStmt(printegerPattern, BinExpr(-, n, IntegerLit(5)))]))]))
 ])

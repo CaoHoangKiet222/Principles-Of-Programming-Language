@@ -1,4 +1,4 @@
 Program([
-	FuncDecl(Id(jump), IntegerType, [Param(Id(nums), ArrayType([100], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([]))
-	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(nE), IntegerType, IntegerLit(100)), VarDecl(Id(nums), ArrayType([100], IntegerType), ArrayLit([IntegerLit(1), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), CallStmt(Id(jump), Id(nums), IntegerLit(100))]))
+	FuncDecl(jump, IntegerType, [Param(nums, ArrayType([100], IntegerType)), Param(size, IntegerType)], None, BlockStmt([]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(nE, IntegerType, IntegerLit(100)), VarDecl(nums, ArrayType([100], IntegerType), ArrayLit([IntegerLit(1), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), CallStmt(jump, nums, IntegerLit(100))]))
 ])

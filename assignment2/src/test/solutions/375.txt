@@ -1,5 +1,5 @@
 Program([
-	FuncDecl(Id(checkzero), BooleanType, [Param(Id(nums), ArrayType([100], IntegerType)), Param(Id(size), IntegerType)], None, BlockStmt([]))
-	FuncDecl(Id(recursive), VoidType, [Param(Id(nums), ArrayType([100], IntegerType)), Param(Id(size), IntegerType), Param(Id(index), IntegerType), Param(Id(count), IntegerType), Param(Id(sum), IntegerType), Param(Id(minjump), IntegerType)], None, BlockStmt([]))
-	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(nE), IntegerType, IntegerLit(100)), VarDecl(Id(nums), ArrayType([100], IntegerType), ArrayLit([IntegerLit(1), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), CallStmt(Id(recursive), Id(nums), IntegerLit(0), IntegerLit(0), IntegerLit(0), IntegerLit(1))]))
+	FuncDecl(checkzero, BooleanType, [Param(nums, ArrayType([100], IntegerType)), Param(size, IntegerType)], None, BlockStmt([]))
+	FuncDecl(recursive, VoidType, [Param(nums, ArrayType([100], IntegerType)), Param(size, IntegerType), Param(index, IntegerType), Param(count, IntegerType), Param(sum, IntegerType), Param(minjump, IntegerType)], None, BlockStmt([]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(nE, IntegerType, IntegerLit(100)), VarDecl(nums, ArrayType([100], IntegerType), ArrayLit([IntegerLit(1), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), CallStmt(recursive, nums, IntegerLit(0), IntegerLit(0), IntegerLit(0), IntegerLit(1))]))
 ])

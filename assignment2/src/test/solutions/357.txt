@@ -1,3 +1,3 @@
 Program([
-	FuncDecl(Id(swap), VoidType, [Param(Id(x), IntegerType), Param(Id(y), IntegerType)], None, BlockStmt([VarDecl(Id(k), IntegerType, Id(x)), AssignStmt(Id(x), Id(y)), AssignStmt(Id(y), Id(k))]))
+	FuncDecl(swap, VoidType, [Param(x, IntegerType), Param(y, IntegerType)], None, BlockStmt([VarDecl(k, IntegerType, x), AssignStmt(x, y), AssignStmt(y, k)]))
 ])

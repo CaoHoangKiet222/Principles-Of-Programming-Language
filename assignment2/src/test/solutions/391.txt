@@ -1,4 +1,4 @@
 Program([
-	FuncDecl(Id(gcdIteration), IntegerType, [Param(Id(p), IntegerType), Param(Id(q), IntegerType)], None, BlockStmt([]))
-	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(p), IntegerType, IntegerLit(100)), VarDecl(Id(q), IntegerType, IntegerLit(200)), CallStmt(Id(print), FuncCall(Id(gcdIteration), [Id(p), Id(q)]))]))
+	FuncDecl(gcdIteration, IntegerType, [Param(p, IntegerType), Param(q, IntegerType)], None, BlockStmt([]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(p, IntegerType, IntegerLit(100)), VarDecl(q, IntegerType, IntegerLit(200)), CallStmt(print, FuncCall(gcdIteration, [p, q]))]))
 ])

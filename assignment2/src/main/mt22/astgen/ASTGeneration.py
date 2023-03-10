@@ -38,7 +38,7 @@ class ASTGeneration(MT22Visitor):
         name = ctx.func_name().accept(self)
         return_type = ctx.return_type().accept(self)
         params = ctx.param_list().accept(self) if ctx.param_list() else []
-        inherit = Id(ctx.ID().getText()) if ctx.ID() else None
+        inherit = ctx.ID().getText() if ctx.ID() else None
         body = ctx.body().accept(self)
         return FuncDecl(name, return_type, params, inherit, body)
 
@@ -52,7 +52,7 @@ class ASTGeneration(MT22Visitor):
 
     # param: INHERIT? OUT? ID COLON type_decl;
     def visitParam(self, ctx: MT22Parser.ParamContext):
-        return ParamDecl(Id(ctx.ID().getText()), ctx.type_decl().accept(self), True if ctx.OUT() else False, True if ctx.INHERIT() else False)
+        return ParamDecl(ctx.ID().getText(), ctx.type_decl().accept(self), True if ctx.OUT() else False, True if ctx.INHERIT() else False)
 
     # body: block_stat;
     def visitBody(self, ctx: MT22Parser.BodyContext):
@@ -75,7 +75,7 @@ class ASTGeneration(MT22Visitor):
 
     # id_list: ID COMMA id_list| ID;
     def visitId_list(self, ctx: MT22Parser.Id_listContext):
-        return [Id(ctx.ID().getText()), *ctx.id_list().accept(self)] if ctx.id_list() else [Id(ctx.ID().getText())]
+        return [ctx.ID().getText(), *ctx.id_list().accept(self)] if ctx.id_list() else [ctx.ID().getText()]
 
     # type_decl: non_auto_type_decl | auto_type;
     def visitType_decl(self, ctx: MT22Parser.Type_declContext):
@@ -139,8 +139,7 @@ class ASTGeneration(MT22Visitor):
         if ctx.scalar_var():
             lhs = ctx.scalar_var().accept(self)
         if ctx.index_op():
-            lhs = ArrayCell(Id(ctx.ID().getText()),
-                            ctx.index_op().accept(self))
+            lhs = ArrayCell(ctx.ID().getText(), ctx.index_op().accept(self))
         rhs = ctx.expr().accept(self)
         return AssignStmt(lhs, rhs)
 
@@ -164,7 +163,7 @@ class ASTGeneration(MT22Visitor):
 
     # scalar_var : ID;
     def visitScalar_var(self, ctx: MT22Parser.Scalar_varContext):
-        return Id(ctx.ID().getText())
+        return ctx.ID().getText()
 
     # init_expr : expr;
     def visitInit_expr(self, ctx: MT22Parser.Init_exprContext):
@@ -210,7 +209,7 @@ class ASTGeneration(MT22Visitor):
 
     # func_name: ID;
     def visitFunc_name(self, ctx: MT22Parser.Func_nameContext):
-        return Id(ctx.ID().getText())
+        return ctx.ID().getText()
 
     # block_stat: LCB body_block_stat? RCB;
     def visitBlock_stat(self, ctx: MT22Parser.Block_statContext):
@@ -303,7 +302,7 @@ class ASTGeneration(MT22Visitor):
     def visitExpr7(self, ctx: MT22Parser.Expr7Context):
         if ctx.getChildCount() == 2:
             cell = ctx.index_op().accept(self)
-            name = Id(ctx.ID().getText())
+            name = ctx.ID().getText()
             return ArrayCell(name, cell)
         return ctx.expr8().accept(self)
 
@@ -329,7 +328,7 @@ class ASTGeneration(MT22Visitor):
             return BooleanLit(True if ctx.getChild(0).getText() == 'True' else False)
         if ctx.STRING_LIT():
             return StringLit(ctx.getChild(0).getText())
-        return Id(ctx.getChild(0).getText())
+        return ctx.getChild(0).getText()
 
     # index_op: LSB expr_list RSB;
     def visitIndex_op(self, ctx: MT22Parser.Index_opContext):

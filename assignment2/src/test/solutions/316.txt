@@ -1,3 +1,3 @@
 Program([
-	FuncDecl(Id(main), VoidType, [OutParam(Id(x), ArrayType([0, 100], IntegerType))], None, BlockStmt([]))
+	FuncDecl(main, VoidType, [OutParam(x, ArrayType([0, 100], IntegerType))], None, BlockStmt([]))
 ])

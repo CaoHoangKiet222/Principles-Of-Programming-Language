@@ -1,4 +1,4 @@
 Program([
-	FuncDecl(Id(isPalindrome), BooleanType, [Param(Id(str), ArrayType([100], StringType)), Param(Id(strSize), IntegerType)], None, BlockStmt([]))
-	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(str), ArrayType([100], StringType), ArrayLit([StringLit(), StringLit(2), StringLit(23423), StringLit(23432)])), VarDecl(Id(nE), IntegerType, IntegerLit(100)), CallStmt(Id(isPalindrome), Id(str), Id(nE))]))
+	FuncDecl(isPalindrome, BooleanType, [Param(str, ArrayType([100], StringType)), Param(strSize, IntegerType)], None, BlockStmt([]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(str, ArrayType([100], StringType), ArrayLit([StringLit(), StringLit(2), StringLit(23423), StringLit(23432)])), VarDecl(nE, IntegerType, IntegerLit(100)), CallStmt(isPalindrome, str, nE)]))
 ])

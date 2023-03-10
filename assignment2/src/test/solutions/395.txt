@@ -1,7 +1,7 @@
 Program([
-	FuncDecl(Id(PARENT), IntegerType, [Param(Id(i), IntegerType)], None, BlockStmt([]))
-	FuncDecl(Id(LEFT), IntegerType, [Param(Id(i), IntegerType)], None, BlockStmt([]))
-	FuncDecl(Id(RIGHT), IntegerType, [Param(Id(i), IntegerType)], None, BlockStmt([]))
-	FuncDecl(Id(reheapUp), VoidType, [Param(Id(maxHeap), ArrayType([100], IntegerType)), Param(Id(numberOfElements), IntegerType), Param(Id(index), IntegerType)], None, BlockStmt([]))
-	FuncDecl(Id(main), VoidType, [], None, BlockStmt([VarDecl(Id(index), IntegerType, IntegerLit(1)), VarDecl(Id(maxHeap), ArrayType([100], IntegerType), ArrayLit([IntegerLit(1001), IntegerLit(20), IntegerLit(30), IntegerLit(40)])), CallStmt(Id(reheapUp), Id(maxHeap), IntegerLit(100), Id(index))]))
+	FuncDecl(PARENT, IntegerType, [Param(i, IntegerType)], None, BlockStmt([]))
+	FuncDecl(LEFT, IntegerType, [Param(i, IntegerType)], None, BlockStmt([]))
+	FuncDecl(RIGHT, IntegerType, [Param(i, IntegerType)], None, BlockStmt([]))
+	FuncDecl(reheapUp, VoidType, [Param(maxHeap, ArrayType([100], IntegerType)), Param(numberOfElements, IntegerType), Param(index, IntegerType)], None, BlockStmt([]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(index, IntegerType, IntegerLit(1)), VarDecl(maxHeap, ArrayType([100], IntegerType), ArrayLit([IntegerLit(1001), IntegerLit(20), IntegerLit(30), IntegerLit(40)])), CallStmt(reheapUp, maxHeap, IntegerLit(100), index)]))
 ])

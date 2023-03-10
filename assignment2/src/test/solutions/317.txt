@@ -1,4 +1,4 @@
 Program([
-	FuncDecl(Id(lengthOfFirstWord), AutoType, [], None, BlockStmt([ReturnStmt(StringLit())]))
-	FuncDecl(Id(lengthOfLastWord), AutoType, [], Id(lengthOfFirstWord), BlockStmt([ReturnStmt(StringLit(lengthOfLastWord))]))
+	FuncDecl(lengthOfFirstWord, AutoType, [], None, BlockStmt([ReturnStmt(StringLit())]))
+	FuncDecl(lengthOfLastWord, AutoType, [], lengthOfFirstWord, BlockStmt([ReturnStmt(StringLit(lengthOfLastWord))]))
 ])
