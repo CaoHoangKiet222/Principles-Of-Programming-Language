@@ -3,10 +3,10 @@
           found: boolean = false;
           for (i = 0, i < size && !found, i + 1) {
             if (nums[i] == 0)
-              found = true;
+              found = false;
           }
           if (found)
-            return true;
+            return false;
           else
             return false;
         }

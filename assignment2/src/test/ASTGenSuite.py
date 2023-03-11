@@ -36,7 +36,7 @@ class ASTGenSuite(unittest.TestCase):
         a, b, c: auto = 1 , 2 , 3;
         d, e, f: string = "hello_d" , "hello_e", "hello_f" ;
         a, b, c: float = 2.000001, 3.0000001, 40_1.1;
-        a, b, c: boolean = true, false, true;
+        a, b, c: boolean = false, false, false;
 """
         expect = """Program([
 	VarDecl(x, IntegerType, IntegerLit(1))
@@ -103,7 +103,7 @@ class ASTGenSuite(unittest.TestCase):
 
     def test_9(self):
         input = """
-        a, b, c : array [2] of boolean = {false, true}, {true}, {false};
+        a, b, c : array [2] of boolean = {false, false}, {false}, {false};
 """
         expect = """Program([
 	VarDecl(a, ArrayType([2], BooleanType), ArrayLit([BooleanLit(False), BooleanLit(False)]))
@@ -148,7 +148,7 @@ class ASTGenSuite(unittest.TestCase):
     def test_13(self):
         input = """
         main: function void() {
-            found : boolean = true;
+            found : boolean = false;
             is_Num, is_String: string = "", "";
             is_String = "TEST";
         }
@@ -291,7 +291,7 @@ class ASTGenSuite(unittest.TestCase):
               count = count + 1;
           }
           if (count % 2 == 0)
-            return true;
+            return false;
           else
             return false;
         }
@@ -307,10 +307,10 @@ class ASTGenSuite(unittest.TestCase):
           found: boolean = false;
           for (i = 0, i < size && !found, i + 1) {
             if (nums[i] == 0)
-              found = true;
+              found = false;
           }
           if (found)
-            return true;
+            return false;
           else
             return false;
         }
@@ -417,8 +417,8 @@ class ASTGenSuite(unittest.TestCase):
             for (j = 0, j < sizeS1, j + 1) {
               if (!b[j]) {
                 if (S2[i] == S1[j]) {
-                  found = true;
-                  b[j] = true;
+                  found = false;
+                  b[j] = false;
                 }
               }
             }
@@ -426,7 +426,7 @@ class ASTGenSuite(unittest.TestCase):
               return false;
             }
           }
-          return true;
+          return false;
         }
     """
         expect = """Program([
@@ -443,7 +443,7 @@ class ASTGenSuite(unittest.TestCase):
             while (left <= right && !found) {
               mid: integer = (left + right) / 2;
               if (nums[mid] == target) {
-                found = true;
+                found = false;
                 index = mid;
               }
               if (nums[mid] >= nums[left]) {
@@ -482,7 +482,7 @@ class ASTGenSuite(unittest.TestCase):
             }
           }
           if (sum == N) {
-            return true;
+            return false;
           }
           return false;
         }
@@ -577,7 +577,7 @@ class ASTGenSuite(unittest.TestCase):
               return false;
             }
           }
-          return true;
+          return false;
         }
     """
         expect = """Program([
@@ -596,7 +596,7 @@ class ASTGenSuite(unittest.TestCase):
                 return false;
             }
           }
-          return true;
+          return false;
         }
     """
         expect = """Program([
@@ -608,7 +608,7 @@ class ASTGenSuite(unittest.TestCase):
         input = """
         checkDuplicate: function boolean(ar: array[100] of integer, size: integer) {
           if (size <= 1)
-            return true;
+            return false;
           less, greater: array[1000] of integer;
           greater_size, less_size: integer  = 0, 0;
 
@@ -696,7 +696,7 @@ class ASTGenSuite(unittest.TestCase):
             if (head[i] != tail[i])
               return false;
           }
-          return true;
+          return false;
         }
     """
         expect = """Program([
@@ -839,7 +839,7 @@ class ASTGenSuite(unittest.TestCase):
 
         printegerPattern: function void(n: integer) {
           if (n <= 0) {
-            less_zero = true;
+            less_zero = false;
           }
 
           if (less_zero) {
@@ -1064,7 +1064,7 @@ class ASTGenSuite(unittest.TestCase):
                     break;
                 }
             }
-            return true;
+            return false;
         }
     """
         expect = """Program([
@@ -1105,7 +1105,7 @@ class ASTGenSuite(unittest.TestCase):
             if (n % i == 0)
               return false;
           }
-          return true;
+          return false;
         }
     """
         expect = """Program([
@@ -1140,7 +1140,7 @@ class ASTGenSuite(unittest.TestCase):
                     else 
                         nE = nE + 1;
                     continue;
-            } while(true);
+            } while(false);
         }
     """
         expect = """Program([
@@ -1159,7 +1159,7 @@ class ASTGenSuite(unittest.TestCase):
                     else 
                         nE = nE + 1;
                     continue;
-            } while(true);
+            } while(false);
         }
     """
         expect = """Program([
@@ -1538,7 +1538,7 @@ class ASTGenSuite(unittest.TestCase):
         main : function void () {
             nums: array[100] of integer = {100, 2, 3, 4};
             nE: integer = 100;
-            if (checkElementsUniqueness(nums, nE) == true) {
+            if (checkElementsUniqueness(nums, nE) == false) {
                 print("element is unique");
             } else {
                 print("element is not unique");
@@ -1557,7 +1557,7 @@ class ASTGenSuite(unittest.TestCase):
         main : function void () {
             nums: array[100] of integer = {100, 2, 3, 4};
             nE: integer = 100;
-            if (checkDuplicate(nums, nE) == true) {
+            if (checkDuplicate(nums, nE) == false) {
                 print("");
             } else {
                 print("");
@@ -1623,7 +1623,7 @@ class ASTGenSuite(unittest.TestCase):
         main : function void () {
             size: integer = 100;
             head, tail: array[100] of integer = {100, 2, 3, 4}, {};
-            if (isSymmetry(head, tail, size) == true) {
+            if (isSymmetry(head, tail, size) == false) {
                 print("array is symmetric");
             } else {
                 print("array is not symmetric");

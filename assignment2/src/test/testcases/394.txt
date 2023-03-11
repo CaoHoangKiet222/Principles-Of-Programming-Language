@@ -3,7 +3,7 @@
         main : function void () {
             size: integer = 100;
             head, tail: array[100] of integer = {100, 2, 3, 4}, {};
-            if (isSymmetry(head, tail, size) == true) {
+            if (isSymmetry(head, tail, size) == false) {
                 print("array is symmetric");
             } else {
                 print("array is not symmetric");

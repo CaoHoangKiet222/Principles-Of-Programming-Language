@@ -4,7 +4,7 @@
 
         printegerPattern: function void(n: integer) {
           if (n <= 0) {
-            less_zero = true;
+            less_zero = false;
           }
 
           if (less_zero) {

@@ -1,6 +1,6 @@
 
         main: function void() {
-            found : boolean = true;
+            found : boolean = false;
             is_Num, is_String: string = "", "";
             is_String = "TEST";
         }

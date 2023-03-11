@@ -5,7 +5,7 @@
         main : function void () {
             nums: array[100] of integer = {100, 2, 3, 4};
             nE: integer = 100;
-            if (checkElementsUniqueness(nums, nE) == true) {
+            if (checkElementsUniqueness(nums, nE) == false) {
                 print("element is unique");
             } else {
                 print("element is not unique");

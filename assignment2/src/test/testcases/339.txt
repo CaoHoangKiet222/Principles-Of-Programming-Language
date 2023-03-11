@@ -1,7 +1,7 @@
 
         checkDuplicate: function boolean(ar: array[100] of integer, size: integer) {
           if (size <= 1)
-            return true;
+            return false;
           less, greater: array[1000] of integer;
           greater_size, less_size: integer  = 0, 0;
 

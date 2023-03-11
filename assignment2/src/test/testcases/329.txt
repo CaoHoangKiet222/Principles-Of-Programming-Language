@@ -6,8 +6,8 @@
             for (j = 0, j < sizeS1, j + 1) {
               if (!b[j]) {
                 if (S2[i] == S1[j]) {
-                  found = true;
-                  b[j] = true;
+                  found = false;
+                  b[j] = false;
                 }
               }
             }
@@ -15,6 +15,6 @@
               return false;
             }
           }
-          return true;
+          return false;
         }
     

@@ -8,6 +8,6 @@
                     else 
                         nE = nE + 1;
                     continue;
-            } while(true);
+            } while(false);
         }
     

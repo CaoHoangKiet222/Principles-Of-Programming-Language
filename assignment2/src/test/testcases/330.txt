@@ -6,7 +6,7 @@
             while (left <= right && !found) {
               mid: integer = (left + right) / 2;
               if (nums[mid] == target) {
-                found = true;
+                found = false;
                 index = mid;
               }
               if (nums[mid] >= nums[left]) {

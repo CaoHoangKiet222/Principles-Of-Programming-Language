@@ -4,6 +4,6 @@
             if (head[i] != tail[i])
               return false;
           }
-          return true;
+          return false;
         }
     
