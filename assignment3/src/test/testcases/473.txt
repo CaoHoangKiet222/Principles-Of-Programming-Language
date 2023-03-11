@@ -1,17 +1,19 @@
 
-        s : string;
-        random: function string(n: integer)
+        sum: function integer(n: integer)
         {
-            i: integer;
-            s = "";
-            for (i = 0,i < n,i+1)
-                s = s + randomChar();
-            return s;
+            total,dem : integer = 0,0;
+            do
+            {
+                total = total + (n%10);
+                dem = dem + 1;
+                n = n % 10;
+            }
+            while (n!=0);
         }
         main: function void() {
             n : integer;
-            print("Input n:");
-            readInt(n);
-            print("The random string length n is ", random(n));
+            printString("Input n:");
+            n = readInteger();
+            printString("The sum is" + sum(n));
         }
         

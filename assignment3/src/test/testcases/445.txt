@@ -1,6 +1,12 @@
 
-    foo2: function auto(i: integer){
-        return 1;
-    }
+        foo2: function auto() {}
+        foo1: function integer(inherit c: float) inherit foo2 {
+            super();
+            i: integer = 2;
+            return 1;
+        }
 
-    main: function void(){}
+        main: function void(){
+            foo2();
+        }
+        

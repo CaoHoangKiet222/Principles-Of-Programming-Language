@@ -1,25 +1,10 @@
 
-    foo: function auto(x: integer){}
-    foo1: function auto(x: float){}
-    fact : function integer (n : integer) {
-        // b: integer = 99;
-        // b = foo(100); // foo: int
-        // foo(19) = b // don't have this
+        foo2: function auto(i: integer){}
+        foo1: function integer(){
+            return 1;
+        }
 
-        a : array [2] of integer;
-        a[1] = (foo1(foo(1900)) + 1);
-        // a[0] = 19;
-        // a[2] = 10.1231;
-        // a[2] = false;
-
-        // foo: float = 3.0;
-        // foo = foo(100);
-
-        // n1: float = foo(foo(1)); // foo(int)
-        // n1: float = foo(1) + foo1(foo(100)); // foo: float foo1: float
-        // n1: float = foo(1) + 1; // foo: int
-        //n1: float = !foo(1) + 1; // TypeMisMatch
-        // n1: boolean = -foo(1) == true;
-        // n1: float = -foo(1) + 1; // foo: float
-    }
-    main: function void(){}
+        main: function void(){
+            foo2(foo1());
+        }
+        

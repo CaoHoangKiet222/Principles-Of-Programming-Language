@@ -1,0 +1,15 @@
+
+    isPalindrome: function boolean(strs: array[100] of string, strSize: integer) {
+      for (i = 0, i < strSize / 2, i+1) {
+        if (strs[i] != strs[strSize-i-1]) {
+          return false;
+        }
+      }
+      return true;
+    }
+    main: function void() {
+        strs   : array [5] of string = {"hello", "world", "!!!", "", "test\n"};
+
+        if(isPalindrome(strs, 5)) printString("Correct!!!");
+        else printString("Wrong!!!");
+    }

@@ -1,0 +1,1 @@
+Type Mismatch In Statement: ForStmt(AssignStmt(Id(i), IntegerLit(123)), BinExpr(>, Id(i), IntegerLit(8)), FuncCall(Id(foo2), [IntegerLit(1)]), BlockStmt([]))

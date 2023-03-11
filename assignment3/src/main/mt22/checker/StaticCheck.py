@@ -240,8 +240,8 @@ class StaticChecker(BaseVisitor, Utils):
                 if self.illegal_array_lit:
                     raise TypeMismatchInStatement(ast)
                 # Check dimensions initialization match with its array_type_dimensions
-                # if not CheckUtils.dimensionsMatch(typ.dimensions, TypUtils.retriveDimensions(init_typ)):
-                #     raise TypeMismatchInStatement(ast)
+                if not CheckUtils.dimensionsMatch(typ.dimensions, TypUtils.retriveDimensions(init_typ)):
+                    raise TypeMismatchInStatement(ast)
             else:
                 init_typ = self.visit(init, (c, typ))
                 # Check error when implicit conversion --> Case: float / integer
@@ -303,6 +303,9 @@ class StaticChecker(BaseVisitor, Utils):
                 inherit, env, lambda el: isinstance(el[name]["kind"], Function), lambda: self.__raise(
                     Undeclared(Function(), inherit))
             )
+            # check no stmts in funcdecl body
+            if len(body.body) == 0 and len(parent_func["params"]) != 0:
+                raise InvalidStatementInFunction(name)
             first_stmt = body.body[0]
             if type(first_stmt) is CallStmt:
                 # change this if error
@@ -450,6 +453,8 @@ class StaticChecker(BaseVisitor, Utils):
 
     def visitArrayCell(self, ast: ArrayCell, c):
         # change this if error
+        print("======================= ArrayCell", ast)
+        print(c)
         typ = self.visit(ast.name, c)
         # check index operator E1[E2] (E1 must be in array type)
         if type(typ) is not ArrayType:
@@ -457,6 +462,7 @@ class StaticChecker(BaseVisitor, Utils):
         # check index operator E1[E2] (E2 must be in list of int type)
         reduce(lambda _, x: self.__raise(TypeMismatchInExpression(ast))
                if ExpUtils.isNotIntLit(self.visit(x, c)) else [], ast.cell, [])
+        print("======================= End ArrayCell")
         return typ.typ
 
     def visitFuncCall(self, ast: FuncCall, c):
@@ -542,6 +548,7 @@ class StaticChecker(BaseVisitor, Utils):
         global_env = c
         self.inloop["while"].append(True)
         cond = self.visit(ast.cond, (global_env, BooleanType()))
+        print("+++++++++++++++++++++", cond)
         # Check cond is BooleanType
         if ExpUtils.isNotBoolLit(cond):
             raise TypeMismatchInStatement(ast)
@@ -578,6 +585,7 @@ class StaticChecker(BaseVisitor, Utils):
         global_env = c
         if ast.expr is not None:
             rhs_typ = self.visit(ast.expr, (global_env, None))
+            print("++++++++++++++++++++++++++++", rhs_typ)
         else:
             rhs_typ = VoidType()
         # Check error when implicit conversion --> Case: float / integer

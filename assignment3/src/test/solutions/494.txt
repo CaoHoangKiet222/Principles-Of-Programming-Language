@@ -1,0 +1,1 @@
+Type Mismatch In Expression: BinExpr(!=, ArrayCell(Id(strs), [Id(i)]), ArrayCell(Id(strs), [BinExpr(-, BinExpr(-, Id(strSize), Id(i)), IntegerLit(1))]))

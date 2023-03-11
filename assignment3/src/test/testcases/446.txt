@@ -1,26 +1,12 @@
 
+        foo2: function auto() {}
+        foo1: function integer(inherit c: float) inherit foo2 {
+            preventDefault(1, 2, 3);
+            i: integer = 2;
+            return 1;
+        }
 
-    foo1: function integer(){}
-
-    // foo2: function float(inherit x: float) inherit foo1{
-    foo2: function float(inherit x: boolean){
-        // super(10);
-        // i: integer = 4; error
-        return 1;
-    }
-    // super: function integer(){} -> Redeclared
-    // foo3: function float() inherit foo1{
-    foo3: function float() inherit foo1{
-    // foo3: function float(){
-        printInteger(1);
-        preventDefault();
-        // super();
-        // preventDefault();
-        // i: integer = 4; error
-        // super(1, 322, 324); -> Invalid Statement In Function: foo3
-        return 1.123;
-    }
-
-    main: function void(){
-        x: integer = readInteger();
-    }
+        main: function void(){
+            foo2();
+        }
+        

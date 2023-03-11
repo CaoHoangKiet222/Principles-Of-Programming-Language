@@ -1,0 +1,7 @@
+
+        foo2: function boolean(i: integer){}
+        main: function void() inherit foo2 {
+            super(1);
+            for (i = 123, i > 8, foo2(1)){}
+        }
+    

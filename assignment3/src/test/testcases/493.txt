@@ -1,0 +1,17 @@
+
+
+    foo1: function integer(){}
+
+    foo2: function float(inherit x: boolean) inherit foo1{
+        return 1;
+    }
+    foo3: function float() inherit foo2{
+        super(false);
+        preventDefault();
+        x: float = 10.2;
+        return 1.123;
+    }
+
+    main: function void(){
+        x: integer = readInteger();
+    }

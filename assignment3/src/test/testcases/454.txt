@@ -1,5 +1,5 @@
 
-        x: integer
+        inherit out  x: integer
         main: function void() {
         }
         
