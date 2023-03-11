@@ -187,7 +187,7 @@ class ASTGeneration(MT22Visitor):
     def visitDo_while_stat(self, ctx: MT22Parser.Do_while_statContext):
         cond = ctx.expr().accept(self)
         stmt = ctx.block_stat().accept(self)
-        return WhileStmt(cond, stmt)
+        return DoWhileStmt(cond, stmt)
 
     # break_stat: BREAK SEMI;
     def visitBreak_stat(self, ctx: MT22Parser.Break_statContext):

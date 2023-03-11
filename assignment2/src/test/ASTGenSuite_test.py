@@ -1144,7 +1144,7 @@ class ASTGenSuite(unittest.TestCase):
         }
     """
         expect = """Program([
-	FuncDecl(Id(inc), VoidType, [OutParam(Id(n), IntegerType), Param(Id(delta), IntegerType)], None, BlockStmt([VarDecl(Id(nE), IntegerType, IntegerLit(0)), WhileStmt(BooleanLit(False), BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(nE)), BinExpr(+, Id(i), IntegerLit(1)), IfStmt(BinExpr(==, Id(nE), BinExpr(+, IntegerLit(10), IntegerLit(5))), ReturnStmt(Id(nE)), AssignStmt(Id(nE), BinExpr(+, Id(nE), IntegerLit(1))))), ContinueStmt()]))]))
+	FuncDecl(Id(inc), VoidType, [OutParam(Id(n), IntegerType), Param(Id(delta), IntegerType)], None, BlockStmt([VarDecl(Id(nE), IntegerType, IntegerLit(0)), DoWhileStmt(BooleanLit(False), BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(nE)), BinExpr(+, Id(i), IntegerLit(1)), IfStmt(BinExpr(==, Id(nE), BinExpr(+, IntegerLit(10), IntegerLit(5))), ReturnStmt(Id(nE)), AssignStmt(Id(nE), BinExpr(+, Id(nE), IntegerLit(1))))), ContinueStmt()]))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 365))
 
@@ -1163,7 +1163,7 @@ class ASTGenSuite(unittest.TestCase):
         }
     """
         expect = """Program([
-	FuncDecl(Id(increase), VoidType, [OutParam(Id(n), IntegerType), Param(Id(delta), IntegerType)], None, BlockStmt([VarDecl(Id(nE), IntegerType, IntegerLit(0)), WhileStmt(BooleanLit(False), BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(nE)), BinExpr(+, Id(i), IntegerLit(1)), IfStmt(BinExpr(==, Id(nE), BinExpr(+, IntegerLit(10), IntegerLit(5))), ReturnStmt(Id(nE)), AssignStmt(Id(nE), BinExpr(+, Id(nE), IntegerLit(1))))), ContinueStmt()]))]))
+	FuncDecl(Id(increase), VoidType, [OutParam(Id(n), IntegerType), Param(Id(delta), IntegerType)], None, BlockStmt([VarDecl(Id(nE), IntegerType, IntegerLit(0)), DoWhileStmt(BooleanLit(False), BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), Id(nE)), BinExpr(+, Id(i), IntegerLit(1)), IfStmt(BinExpr(==, Id(nE), BinExpr(+, IntegerLit(10), IntegerLit(5))), ReturnStmt(Id(nE)), AssignStmt(Id(nE), BinExpr(+, Id(nE), IntegerLit(1))))), ContinueStmt()]))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 366))
 

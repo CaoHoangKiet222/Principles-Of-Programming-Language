@@ -1144,7 +1144,7 @@ class ASTGenSuite(unittest.TestCase):
         }
     """
         expect = """Program([
-	FuncDecl(inc, VoidType, [OutParam(n, IntegerType), Param(delta, IntegerType)], None, BlockStmt([VarDecl(nE, IntegerType, IntegerLit(0)), WhileStmt(BooleanLit(False), BlockStmt([ForStmt(AssignStmt(i, IntegerLit(0)), BinExpr(<, i, nE), BinExpr(+, i, IntegerLit(1)), IfStmt(BinExpr(==, nE, BinExpr(+, IntegerLit(10), IntegerLit(5))), ReturnStmt(nE), AssignStmt(nE, BinExpr(+, nE, IntegerLit(1))))), ContinueStmt()]))]))
+	FuncDecl(inc, VoidType, [OutParam(n, IntegerType), Param(delta, IntegerType)], None, BlockStmt([VarDecl(nE, IntegerType, IntegerLit(0)), DoWhileStmt(BooleanLit(False), BlockStmt([ForStmt(AssignStmt(i, IntegerLit(0)), BinExpr(<, i, nE), BinExpr(+, i, IntegerLit(1)), IfStmt(BinExpr(==, nE, BinExpr(+, IntegerLit(10), IntegerLit(5))), ReturnStmt(nE), AssignStmt(nE, BinExpr(+, nE, IntegerLit(1))))), ContinueStmt()]))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 365))
 
@@ -1163,7 +1163,7 @@ class ASTGenSuite(unittest.TestCase):
         }
     """
         expect = """Program([
-	FuncDecl(increase, VoidType, [OutParam(n, IntegerType), Param(delta, IntegerType)], None, BlockStmt([VarDecl(nE, IntegerType, IntegerLit(0)), WhileStmt(BooleanLit(False), BlockStmt([ForStmt(AssignStmt(i, IntegerLit(0)), BinExpr(<, i, nE), BinExpr(+, i, IntegerLit(1)), IfStmt(BinExpr(==, nE, BinExpr(+, IntegerLit(10), IntegerLit(5))), ReturnStmt(nE), AssignStmt(nE, BinExpr(+, nE, IntegerLit(1))))), ContinueStmt()]))]))
+	FuncDecl(increase, VoidType, [OutParam(n, IntegerType), Param(delta, IntegerType)], None, BlockStmt([VarDecl(nE, IntegerType, IntegerLit(0)), DoWhileStmt(BooleanLit(False), BlockStmt([ForStmt(AssignStmt(i, IntegerLit(0)), BinExpr(<, i, nE), BinExpr(+, i, IntegerLit(1)), IfStmt(BinExpr(==, nE, BinExpr(+, IntegerLit(10), IntegerLit(5))), ReturnStmt(nE), AssignStmt(nE, BinExpr(+, nE, IntegerLit(1))))), ContinueStmt()]))]))
 ])"""
         self.assertTrue(TestAST.test(input, expect, 366))
 
