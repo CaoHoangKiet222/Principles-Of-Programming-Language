@@ -188,7 +188,7 @@ class ASTGeneration(MT22Visitor):
     def visitDo_while_stat(self, ctx: MT22Parser.Do_while_statContext):
         cond = ctx.expr().accept(self)
         stmt = ctx.block_stat().accept(self)
-        return WhileStmt(cond, stmt)
+        return DoWhileStmt(cond, stmt)
 
     # break_stat: BREAK SEMI;
     def visitBreak_stat(self, ctx: MT22Parser.Break_statContext):
@@ -326,7 +326,7 @@ class ASTGeneration(MT22Visitor):
         if ctx.FLOAT_LIT():
             return FloatLit(ctx.getChild(0).getText())
         if ctx.BOOLEAN_LIT():
-            return BooleanLit(True if ctx.getChild(0).getText() == 'True' else False)
+            return BooleanLit(True if ctx.getChild(0).getText() == 'true' else False)
         if ctx.STRING_LIT():
             return StringLit(ctx.getChild(0).getText())
         return Id(ctx.getChild(0).getText())

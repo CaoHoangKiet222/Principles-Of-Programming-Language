@@ -1,11 +1,25 @@
 
-        foo2: function auto(inherit a: integer) {}
-        foo1: function integer(inherit c: float) inherit foo2 {
-            i: integer = 2;
-            return 1;
-        }
 
-        main: function void(){
-            foo2(1);
-        }
-        
+    x: integer;
+    foo1: function integer(inherit x: float){}
+
+    foo2: function float(inherit y: float) inherit foo1{
+        // preventDefault();
+        super(10);
+        // x: float = 10.1; error
+        z: float = 10.1;
+        // i: integer = 4; error
+        return 1;
+    }
+    // foo3: function float(out y: float) inherit foo2{
+    foo3: function float(out z: float) inherit foo2{
+        preventDefault();
+        y: integer = 10;
+        // super(1111);
+        printInteger(1);
+        return 1.123;
+    }
+
+    main: function void(){
+        x: integer = readInteger();
+    }

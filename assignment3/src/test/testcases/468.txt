@@ -1,0 +1,6 @@
+
+        moduloDivision: function integer(seed: integer, mod: float) { return seed % mod; }
+
+        main: function void() {
+        }
+        

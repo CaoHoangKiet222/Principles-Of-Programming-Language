@@ -1,0 +1,14 @@
+
+        test: function string(str: string, size: integer) {
+            j: boolean = true;
+            for (i = 0, i < size / 2, i+1) {
+                j: integer = 1;
+                j = false;
+            }
+            return str;
+        }
+
+        main: function void() {
+            printString(test("123", 3));
+        }
+        

@@ -1,1 +1,1 @@
-Type Mismatch In Expression: FuncCall(Id(foo), [BinExpr(+, Id(i), IntegerLit(1)), FuncCall(Id(foo), [BinExpr(+, Id(x), IntegerLit(2)), IntegerLit(1)])])
+Type Mismatch In Expression: AssignStmt(Id(n), BinExpr(+, Id(b), IntegerLit(1)))

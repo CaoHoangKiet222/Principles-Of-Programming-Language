@@ -1,0 +1,21 @@
+
+        less_zero: boolean = false;
+        c: integer = 0;
+
+        printegerPattern: function void(n: integer) {
+          if (n <= 0) {
+            less_zero = true;
+          }
+
+          if (less_zero) {
+            c = c - 1;
+            if (c == -1)
+              return;
+            printegerPattern(n + 5);
+          } else {
+            c = c + 1;
+            printegerPattern(n - 5);
+          }
+        }
+        main: function void() {}
+        

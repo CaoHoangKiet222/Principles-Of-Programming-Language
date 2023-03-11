@@ -1,0 +1,16 @@
+
+        inc : function auto (out n: integer, delta : integer) {
+            nE : integer = 0;
+            do {
+                for (i = 0, i < nE, i + 1) 
+                    if (nE == 10 + 5) 
+                        return nE;
+                    else 
+                        nE = nE + 1;
+            } while(true);
+            continue;
+        }
+
+        main: function void() {
+        }
+        

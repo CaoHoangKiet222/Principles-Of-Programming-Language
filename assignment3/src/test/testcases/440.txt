@@ -1,11 +1,9 @@
 
-        foo: function auto(out n: integer, delta: integer) {
-            n = n + delta;
-        }
-        main: function void() {
-            x: integer = 2;
-            for (i = 1, i < 100, i+1) {
-                foo(x + 1, foo(i + 1, foo(x + 2, 1)));
-            }
-        }
-        
+    x: float = 3.0;
+    a : array [2] of integer;
+    foo: function auto(){}
+    fact : function integer (n : integer) {
+        b: float;
+        n = b + 1;
+    }
+    main: function void(){}

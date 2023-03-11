@@ -1,9 +1,16 @@
 
-        foo: function auto(out n: integer, delta: integer) {
-            n = n + delta;
-            return 1;
-        }
-        main: function void() {
-            return 1;
-        }
-        
+    a : array [2] of integer;
+    // foo: function auto(){}
+    foo: function auto(x: integer){}
+    // foo1: function auto(y: float){}
+    fact : function integer (n : integer) {
+        foo: float = 3.0;
+        b: integer;
+        // n1: float = foo(foo(1)); // foo(int)
+        // n1: float = foo(1) + foo1(foo(100)); // foo: float foo1: float
+        // n1: float = foo(1) + 1; // foo: int
+        //n1: float = !foo(1) + 1; // TypeMisMatch
+        n1: boolean = -foo(1) == true;
+        // n1: float = -foo(1) + 1; // foo: float
+    }
+    main: function void(){}

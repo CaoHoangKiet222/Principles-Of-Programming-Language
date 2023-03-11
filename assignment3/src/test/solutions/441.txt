@@ -1,1 +1,1 @@
-Type Mismatch In Statement: ReturnStmt(IntegerLit(1))
+Type Mismatch In Expression: UnExpr(-, FuncCall(Id(foo), [IntegerLit(1)]))

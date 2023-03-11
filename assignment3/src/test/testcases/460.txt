@@ -1,0 +1,17 @@
+
+        main: function void() {
+            x: array[4, 10, 10] of integer;
+            for (i = 1, i < 100, i+1) {
+                if (i % 2 == 0) {
+                    x[i, 0, 1] = i;
+                } else {
+                    x[0, i] = i + 1;
+                }
+                for(j = 1, j < 100, j+1) {
+                    continue;
+                }
+                while(true) {continue;}
+                break;
+            }
+        }
+        

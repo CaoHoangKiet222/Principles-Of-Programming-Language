@@ -1,1 +1,1 @@
-Invalid Statement In Function: foo2
+Type Mismatch In Statement: CallStmt(Id(super), [IntegerLit(10)])
