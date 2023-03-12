@@ -1,17 +1,16 @@
 .source MT22Class.java
 .class public MT22Class
 .super java.lang.Object
+.field static x I
 
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-Label2:
-	bipush 10
-	invokestatic io/printInteger(I)V
-Label3:
+	iconst_1
+	putstatic MT22Class.x I
 Label1:
 	return
-.limit stack 2
+.limit stack 0
 .limit locals 1
 .end method
 
@@ -20,8 +19,6 @@ Label1:
 Label0:
 	aload_0
 	invokespecial java/lang/Object/<init>()V
-Label2:
-Label3:
 Label1:
 	return
 .limit stack 1

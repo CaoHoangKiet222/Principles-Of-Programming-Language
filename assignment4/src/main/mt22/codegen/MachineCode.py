@@ -739,6 +739,7 @@ class JasminCode(MachineCode):
         # lexeme: String
         # typ: String
         # isFinal: Boolean
+
         if isFinal:
             return ".field static final " + lexeme + " " + typ + JasminCode.END
         else:

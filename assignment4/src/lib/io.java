@@ -120,7 +120,7 @@ public class io {
    *
    * @return string value
    */
-  public static float readString() {
+  public static String readString() {
     String tmp = "";
     try {
       tmp = input.readLine();

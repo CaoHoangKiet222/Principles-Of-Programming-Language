@@ -1,4 +1,5 @@
 
+        // x, y, z: integer = 1, 2, 3;
         main: function void() {
             printInteger(10);
         }
