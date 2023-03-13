@@ -1,0 +1,6 @@
+
+        main: function void() {
+            printInteger(-1);
+            printInteger(-1 + 2);
+        }
+        

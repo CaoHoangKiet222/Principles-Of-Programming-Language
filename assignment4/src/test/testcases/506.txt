@@ -1,0 +1,6 @@
+
+        x: float = 1;
+        main: function void() {
+            writeFloat(x);
+        }
+        

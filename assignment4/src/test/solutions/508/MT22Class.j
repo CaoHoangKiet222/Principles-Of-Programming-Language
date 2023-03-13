@@ -1,13 +1,13 @@
 .source MT22Class.java
 .class public MT22Class
 .super java.lang.Object
-.field static x I
+.field static x Ljava/lang/String;
 
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-	getstatic MT22Class.x I
-	invokestatic io/printInteger(I)V
+	getstatic MT22Class.x Ljava/lang/String;
+	invokestatic io/printString(Ljava/lang/String;)V
 Label1:
 	return
 .limit stack 1
@@ -27,10 +27,10 @@ Label1:
 
 .method public static <clinit>()V
 Label0:
-	iconst_1
-	putstatic MT22Class.x I
+	ldc "111111"
+	putstatic MT22Class.x Ljava/lang/String;
 Label1:
 	return
-.limit stack 2
+.limit stack 1
 .limit locals 0
 .end method

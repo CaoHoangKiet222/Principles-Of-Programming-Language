@@ -1,0 +1,8 @@
+
+        main: function void() {
+            printInteger(100 % 20);
+            // printInteger(100 / 20.0);
+            // printInteger(100.0 / 20);
+            // printInteger(100.0 / 20.0);
+        }
+        

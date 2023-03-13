@@ -1,0 +1,5 @@
+
+        main: function void() {
+            printInteger(10 + 1);
+        }
+        

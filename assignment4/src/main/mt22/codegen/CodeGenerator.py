@@ -8,6 +8,38 @@ from Frame import Frame
 from abc import ABC, abstractmethod
 
 
+class MyUtils:
+    @staticmethod
+    def isOpForNumber(op):
+        return MyUtils.isOpForNumberToNumber(op) or MyUtils.isOpForNumberToBoolean(op)
+
+    @staticmethod
+    def isOpForNumberToNumber(op):
+        return str(op) in ['+', '-', '*', '/', '%']
+
+    @staticmethod
+    def isOpForNumberToBoolean(op):
+        return str(op) in ['>', '<', '>=', '<=']
+
+    @staticmethod
+    def isOpForBooleanToBoolean(op):
+        return str(op) in ['&&', '||']
+
+    @staticmethod
+    def isOpForStringToString(op):
+        return str(op) == "::"
+
+    @staticmethod
+    def mergeNumberType(lType, rType):
+        return FloatType() if FloatType in [type(x) for x in [lType, rType]] else IntegerType()
+
+    @staticmethod
+    def retrieveType(originType):
+        if type(originType) is ArrayType:
+            return ArrayPointerType(originType.eleType)
+        return originType
+
+
 class CodeGenerator(Utils):
     def __init__(self):
         self.libName = "io"
@@ -39,14 +71,6 @@ class CodeGenerator(Utils):
         gl = self.init()
         gc = CodeGenVisitor(ast, gl, dir_)
         gc.visit(ast, None)
-
-
-class StringType(Type):
-    def __str__(self):
-        return "StringType"
-
-    def accept(self, v, param):
-        return None
 
 
 class ArrayPointerType(Type):
@@ -137,7 +161,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
             self.className, "java.lang.Object"))
 
         globalEnv = self.env
-        glFrame = Frame("global", VoidType)
+        glFrame = Frame("<clinit>", VoidType)
         # global declarations
         for decl in ast.decls:
             if type(decl) is FuncDecl:
@@ -147,13 +171,15 @@ class CodeGenVisitor(BaseVisitor, Utils):
                     glFrame, globalEnv, isGlobal=True))
                 globalEnv.append(newSym)
 
-        e = SubBody(glFrame, globalEnv)
+        e = SubBody(None, globalEnv)
         [self.visit(decl, e) for decl in ast.decls if type(decl) is FuncDecl]
 
         # # generate default constructor
-        # change this if error
         self.genMETHOD(FuncDecl(Id("<init>"), None, list(), None,
                        BlockStmt(list())), c, Frame("<init>", VoidType))
+
+        self.genMETHOD(FuncDecl(Id("<clinit>"), None, list(),
+                       None, BlockStmt(list())), c, glFrame)
 
         self.emit.emitEPILOG()
         return c
@@ -163,15 +189,14 @@ class CodeGenVisitor(BaseVisitor, Utils):
         # o: Any
         # frame: Frame
         glenv = o
-        name = decl.name.name  # change this if error
+        methodName = decl.name.name  # change this if error
         body = decl.body
 
-        isInit = decl.return_type is None
-        # change this if error
-        isMain = name == "main" and len(
+        isInit = decl.return_type is None and methodName == "<init>"
+        isStaticInit = decl.return_type is None and methodName == "<clinit>"
+        isMain = methodName == "main" and len(
             decl.params) == 0 and type(decl.return_type) is VoidType
-        returnType = VoidType() if isInit else decl.return_type
-        methodName = "<init>" if isInit else name
+        returnType = VoidType() if isInit or isStaticInit else decl.return_type
         isProc = type(returnType) is VoidType
         intype = [ArrayPointerType(StringType())] if isMain else list()
         mtype = MType(intype, returnType)
@@ -179,7 +204,10 @@ class CodeGenVisitor(BaseVisitor, Utils):
         self.emit.printout(self.emit.emitMETHOD(
             methodName, mtype, not isInit, frame))
 
-        frame.enterScope(isProc)
+        if not isStaticInit:
+            frame.enterScope(isProc)
+        else:
+            frame.enterScope(False)
 
         # Generate code for parameter declarations
         if isInit:
@@ -196,11 +224,11 @@ class CodeGenVisitor(BaseVisitor, Utils):
             self.emit.printout(self.emit.emitREADVAR(
                 "this", ClassType(self.className), 0, frame))
             self.emit.printout(self.emit.emitINVOKESPECIAL(frame))
-        if isMain:
+        if isStaticInit:
             [self.emit.printout(initCode + self.emit.emitPUTSTATIC(self.className + "." + name, typ, frame))
              for (name, typ, initCode) in self.globalVardecls]
 
-        self.visit(body, SubBody(frame, glenv))
+        self.visit(body, SubBody(frame, glenv, alreadyBlock=True))
 
         self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
         if isProc:
@@ -216,9 +244,12 @@ class CodeGenVisitor(BaseVisitor, Utils):
         name = ast.name.name  # change this if error
         init = ast.init
         initCode = None
+
         if init:
-            initCode, _ = self.visit(
+            initCode, initTyp = self.visit(
                 init, Access(frame, subctxt.sym, False, False))
+            if type(initTyp) is IntegerType and type(typ) is FloatType:
+                initCode += self.emit.emitI2F(frame)
 
         if subctxt.isGlobal:
             self.emit.printout(self.emit.emitATTRIBUTE(
@@ -247,8 +278,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         subctxt = o
         name = ast.name.name
         return_type = ast.return_type
-        frame = Frame(
-            name, return_type) if subctxt.frame is None else subctxt.frame
+        frame = Frame(name, return_type)
         self.genMETHOD(ast, subctxt.sym, frame)
         print("============================ End FuncDecl")
         return SubBody(None, [Symbol(name, MType(list(), return_type), CName(self.className))] + subctxt.sym)
@@ -279,7 +309,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         frame = o.frame
         sym = o.sym
         alreadyBlock = o.alreadyBlock
-        if alreadyBlock:
+        if not alreadyBlock:
             frame.enterScope(False)
             self.emit.printout(self.emit.emitLABEL(
                 frame.getStartLabel(), frame))
@@ -291,83 +321,55 @@ class CodeGenVisitor(BaseVisitor, Utils):
             else:
                 self.visit(x, newSubBd)
 
-        if alreadyBlock:
+        if not alreadyBlock:
             self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
             frame.exitScope()
         print("================================= End BlockStmt")
 
-    def visitBinExpr(self, ast, o):
+    def visitBinExpr(self, ast: BinExpr, o: Access):
+        leftCode, leftTyp = self.visit(ast.left, o)
+        rightCode, rightTyp = self.visit(ast.right, o)
+        op = ast.op
         frame = o.frame
-        e1_j, typ_e1 = self.visit(ast.e1, o)
-        self.emit.printout(e1_j)
-        e2_j, typ_e2 = self.visit(ast.e2, o)
-        self.emit.printout(e2_j)
-        if ast.op in ['+', '-']:
-            return self.emit.emitADDOP(ast.op, IntType(), frame), IntType()
-        if ast.op in ['*', '/']:
-            return self.emit.emitMULOP(ast.op, IntType(), frame), IntType()
-        if ast.op in ['+.', '-.']:
-            return self.emit.emitADDOP(ast.op[0], FloatType(), frame), FloatType()
-        if ast.op in ['*.', '/.']:
-            return self.emit.emitMULOP(ast.op[0], FloatType(), frame), FloatType()
 
-    def visitUnExpr(self, ast, param):
+        if MyUtils.isOpForNumber(op):
+            mTyp = MyUtils.mergeNumberType(leftTyp, rightTyp)
+            if op == '/':
+                mTyp = FloatType()
+            if type(leftTyp) is IntegerType and type(mTyp) != type(leftTyp):
+                leftCode = leftCode + self.emit.emitI2F(frame)
+            if type(rightTyp) is IntegerType and type(mTyp) != type(rightTyp):
+                rightCode = rightCode + self.emit.emitI2F(frame)
+            if MyUtils.isOpForNumberToNumber(op):
+                if op in ['+', '-']:
+                    return leftCode + rightCode + self.emit.emitADDOP(op, mTyp, frame), mTyp
+                if op in ['*', '/']:
+                    return leftCode + rightCode + self.emit.emitMULOP(op, mTyp, frame), mTyp
+                if op == '%':
+                    return leftCode + rightCode + self.emit.emitMOD(frame), mTyp
+            if MyUtils.isOpForNumberToBoolean(op):
+                return leftCode + rightCode + self.emit.emitREOP(op, mTyp, frame), BooleanType()
+        if MyUtils.isOpForStringToString(op):
+            leftVal = leftCode.replace("\tldc ", "").replace(
+                "\"", "").removesuffix('\n')
+            rightVal = rightCode.replace("\tldc ", "").replace(
+                "\"", "").removesuffix('\n')
+            return self.emit.emitPUSHCONST(str(leftVal + rightVal), StringType(), frame), StringType()
+        if MyUtils.isOpForBooleanToBoolean(op):
+            mTyp = BooleanType()
+            return leftCode + rightCode + (self.emit.emitANDOP(frame) if op == '&&' else self.emit.emitOROP(frame)), mTyp
+
+    def visitUnExpr(self, ast: UnExpr, o: Access):
+        frame = o.frame
+        op = ast.op
+        valCode, valTyp = self.visit(ast.val, o)
+        if op == '-':
+            return valCode + self.emit.emitNEGOP(valTyp, frame), valTyp
+        if op == '!':
+            return valCode + self.emit.emitNOT(valTyp, frame), valTyp
+
+    def visitArrayCell(self, ast, o):
         pass
-
-    def visitArrayCell(self, ast, param):
-        pass
-
-    # Quiz 5
-    # def visitBinExpr(self, ctx, o):
-    #     e1str, e1type = ctx.e1.accept(self, o)
-    #     e2str, e2type = ctx.e2.accept(self, o)
-
-    #     if ctx.op in ['+', '-']:
-    #         if type(e1type) is FloatType and type(e2type) is IntType:
-    #             return e1str + e2str + self.emit.emitI2F(o.frame) + self.emit.emitADDOP(ctx.op, FloatType(), o.frame), FloatType()
-
-    #         if type(e1type) is IntType and type(e2type) is FloatType:
-    #             return e1str + self.emit.emitI2F(o.frame) + e2str + self.emit.emitADDOP(ctx.op, FloatType(), o.frame), FloatType()
-
-    #         if type(e1type) is FloatType and type(e2type) is FloatType:
-    #             return e1str + e2str + self.emit.emitADDOP(ctx.op, FloatType(), o.frame), FloatType()
-    #         else:
-    #             return e1str + e2str + self.emit.emitADDOP(ctx.op, IntType(), o.frame), IntType()
-
-    #     if ctx.op == '*':
-    #         if type(e1type) is FloatType and type(e2type) is IntType:
-    #             return e1str + e2str + self.emit.emitI2F(o.frame) + self.emit.emitMULOP(ctx.op, FloatType(), o.frame), FloatType()
-
-    #         if type(e1type) is IntType and type(e2type) is FloatType:
-    #             return e1str + self.emit.emitI2F(o.frame) + e2str + self.emit.emitMULOP(ctx.op, FloatType(), o.frame), FloatType()
-
-    #         if type(e1type) is FloatType and type(e2type) is FloatType:
-    #             return e1str + e2str + self.emit.emitMULOP(ctx.op, FloatType(), o.frame), FloatType()
-    #         else:
-    #             return e1str + e2str + self.emit.emitMULOP(ctx.op, IntType(), o.frame), IntType()
-
-    #     if ctx.op == '/':
-    #         if type(e1type) is FloatType and type(e2type) is IntType:
-    #             return e1str + e2str + self.emit.emitI2F(o.frame) + self.emit.emitMULOP(ctx.op, FloatType(), o.frame), FloatType()
-
-    #         if type(e1type) is IntType and type(e2type) is FloatType:
-    #             return e1str + self.emit.emitI2F(o.frame) + e2str + self.emit.emitMULOP(ctx.op, FloatType(), o.frame), FloatType()
-
-    #         if type(e1type) is FloatType and type(e2type) is FloatType:
-    #             return e1str + e2str + self.emit.emitMULOP(ctx.op, FloatType(), o.frame), FloatType()
-    #         else:
-    #             return e1str + self.emit.emitI2F(o.frame) + e2str + self.emit.emitI2F(o.frame) + self.emit.emitMULOP(ctx.op, FloatType(), o.frame), FloatType()
-    #     else:
-    #         if type(e1type) is FloatType and type(e2type) is IntType:
-    #             return e1str + e2str + self.emit.emitI2F(o.frame) + self.emit.emitREOP(ctx.op, FloatType(), o.frame), BoolType()
-
-    #         if type(e1type) is IntType and type(e2type) is FloatType:
-    #             return e1str + self.emit.emitI2F(o.frame) + e2str + self.emit.emitREOP(ctx.op, FloatType(), o.frame), BoolType()
-
-    #         if type(e1type) is FloatType and type(e2type) is FloatType:
-    #             return e1str + e2str + self.emit.emitREOP(ctx.op, FloatType(), o.frame), BoolType()
-    #         else:
-    #             return e1str + e2str + self.emit.emitREOP(ctx.op, IntType(), o.frame), BoolType()
 
     def visitAssignStmt(self, ast, o):
         frame = o.frame
@@ -453,10 +455,10 @@ class CodeGenVisitor(BaseVisitor, Utils):
         return self.emit.emitPUSHFCONST(str(ast.val), o.frame), FloatType()
 
     def visitBooleanLit(self, ast: BooleanLit, o: Access):
-        return self.emit.emitPUSHICONST(ast.val, o.frame), BooleanType()
+        return self.emit.emitPUSHICONST(str(ast.val).lower(), o.frame), BooleanType()
 
-    def visitStringLit(self, ast, o):
-        pass
+    def visitStringLit(self, ast: StringLit, o: Access):
+        return self.emit.emitPUSHCONST(ast.val, StringType(), o.frame), StringType()
 
     def visitArrayLit(self, ast, o):
         pass

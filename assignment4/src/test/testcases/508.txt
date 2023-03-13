@@ -1,0 +1,6 @@
+
+        x: string = "111111";
+        main: function void() {
+            printString(x);
+        }
+        

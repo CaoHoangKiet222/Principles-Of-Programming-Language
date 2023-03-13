@@ -1,0 +1,5 @@
+
+        main: function void() {
+            writeFloat(100.1 + 1);
+        }
+        

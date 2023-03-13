@@ -1,16 +1,31 @@
 .source MT22Class.java
 .class public MT22Class
 .super java.lang.Object
-.field static x I
 
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-	getstatic MT22Class.x I
-	invokestatic io/printInteger(I)V
+	iconst_1
+	ifgt Label3
+	iconst_1
+	goto Label2
+Label3:
+	iconst_0
+Label2:
+	invokestatic io/printBoolean(Z)V
+	iconst_1
+	iconst_0
+	iand
+	ifgt Label5
+	iconst_1
+	goto Label4
+Label5:
+	iconst_0
+Label4:
+	invokestatic io/printBoolean(Z)V
 Label1:
 	return
-.limit stack 1
+.limit stack 10
 .limit locals 1
 .end method
 
@@ -27,10 +42,8 @@ Label1:
 
 .method public static <clinit>()V
 Label0:
-	iconst_1
-	putstatic MT22Class.x I
 Label1:
 	return
-.limit stack 2
+.limit stack 0
 .limit locals 0
 .end method
