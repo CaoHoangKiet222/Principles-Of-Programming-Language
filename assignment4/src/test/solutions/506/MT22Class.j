@@ -2,11 +2,14 @@
 .class public MT22Class
 .super java.lang.Object
 .field static x F
+.field static y F
 
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
 	getstatic MT22Class.x F
+	invokestatic io/writeFloat(F)V
+	getstatic MT22Class.y F
 	invokestatic io/writeFloat(F)V
 Label1:
 	return
@@ -30,6 +33,8 @@ Label0:
 	iconst_1
 	i2f
 	putstatic MT22Class.x F
+	ldc 102332.23423
+	putstatic MT22Class.y F
 Label1:
 	return
 .limit stack 2

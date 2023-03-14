@@ -1,6 +1,7 @@
 
-        x: float = 1;
+        x, y: float = 1, 102332.23423;
         main: function void() {
             writeFloat(x);
+            writeFloat(y);
         }
         

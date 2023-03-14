@@ -1,3 +1,6 @@
+from functools import reduce
+from os import pidfd_open
+from typing import List
 from Utils import *
 from StaticCheck import *
 from StaticError import *
@@ -19,7 +22,7 @@ class MyUtils:
 
     @staticmethod
     def isOpForNumberToBoolean(op):
-        return str(op) in ['>', '<', '>=', '<=']
+        return str(op) in ['>', '<', '>=', '<=', '==', '!=']
 
     @staticmethod
     def isOpForBooleanToBoolean(op):
@@ -34,9 +37,10 @@ class MyUtils:
         return FloatType() if FloatType in [type(x) for x in [lType, rType]] else IntegerType()
 
     @staticmethod
-    def retrieveType(originType):
+    def retrieveType(originType, func):
         if type(originType) is ArrayType:
-            return ArrayPointerType(originType.eleType)
+            arraySize, automicTyp = func(originType)
+            return ArrayPointerType(originType.typ, arraySize)
         return originType
 
 
@@ -74,12 +78,13 @@ class CodeGenerator(Utils):
 
 
 class ArrayPointerType(Type):
-    def __init__(self, ctype):
+    def __init__(self, ctype, size=0):
         # cname: String
         self.eleType = ctype
+        self.arraySize = size
 
     def __str__(self):
-        return "ArrayPointerType({0})".format(str(self.eleType))
+        return "ArrayPointerType({0},{1})".format(str(self.arraySize), str(self.eleType))
 
     def accept(self, v, param):
         return None
@@ -107,17 +112,31 @@ class SubBody():
         self.isGlobal = isGlobal
 
 
+class Dimensions():
+    def __init__(self, dimensions: List[int] = [], curDimen=0, idxDimensions=[], idx=0):
+        # [4, 3] - [0, 1]
+        self.dimensions = dimensions
+        self.curDimen = curDimen
+        self.idxDimensions = idxDimensions
+        self.idx = idx
+
+    def __str__(self) -> str:
+        return "Dimensions([{0}],{1})".format(", ".join([str(dimen) for dimen in self.dimensions]), str(self.curDimen))
+
+
 class Access():
-    def __init__(self, frame, sym, isLeft, isFirst):
+    def __init__(self, frame, sym, isLeft, isFirst, dimen=Dimensions([])):
         # frame: Frame
         # sym: List[Symbol]
         # isLeft: Boolean
         # isFirst: Boolean
+        # dimen: Dimensions
 
         self.frame = frame
         self.sym = sym
         self.isLeft = isLeft
         self.isFirst = isFirst
+        self.dimen = dimen
 
 
 class Val(ABC):
@@ -225,8 +244,13 @@ class CodeGenVisitor(BaseVisitor, Utils):
                 "this", ClassType(self.className), 0, frame))
             self.emit.printout(self.emit.emitINVOKESPECIAL(frame))
         if isStaticInit:
-            [self.emit.printout(initCode + self.emit.emitPUTSTATIC(self.className + "." + name, typ, frame))
-             for (name, typ, initCode) in self.globalVardecls]
+            for (name, typ, initCode) in self.globalVardecls:
+                if type(typ) is ArrayPointerType:
+                    self.emit.printout(self.emit.emitInitNewStaticArray(
+                        self.className + "." + name, typ.arraySize, typ.eleType, initCode, frame))
+                else:
+                    self.emit.printout(
+                        initCode + self.emit.emitPUTSTATIC(self.className + "." + name, typ, frame))
 
         self.visit(body, SubBody(frame, glenv, alreadyBlock=True))
 
@@ -240,22 +264,26 @@ class CodeGenVisitor(BaseVisitor, Utils):
         print("============================ VarDecl", ast)
         subctxt = o
         frame = subctxt.frame
-        typ = ast.typ
+        typ = MyUtils.retrieveType(ast.typ, lambda x: self.visit(x, None))
         name = ast.name.name  # change this if error
         init = ast.init
-        initCode = None
+        initCode = ""
 
         if init:
-            initCode, initTyp = self.visit(
-                init, Access(frame, subctxt.sym, False, False))
+            if type(init) is ArrayLit:
+                frame.push()  # need to push due to first initCode
+                access = Access(frame, subctxt.sym, False,
+                                False, Dimensions(ast.typ.dimensions))
+            else:
+                access = Access(frame, subctxt.sym, False, False)
+            initCode, initTyp = self.visit(init, access)
             if type(initTyp) is IntegerType and type(typ) is FloatType:
                 initCode += self.emit.emitI2F(frame)
 
         if subctxt.isGlobal:
             self.emit.printout(self.emit.emitATTRIBUTE(
                 name, typ, False))
-            if initCode:
-                self.globalVardecls.append((name, typ, initCode))
+            self.globalVardecls.append((name, typ, initCode))
             print("============================ End VarDecl", ast)
             return Symbol(name, typ, CName(self.className))
 
@@ -263,7 +291,10 @@ class CodeGenVisitor(BaseVisitor, Utils):
         self.emit.printout(self.emit.emitVAR(
             idx, name, typ, frame.getStartLabel(), frame.getEndLabel(), frame))
 
-        if initCode:
+        if type(typ) is ArrayPointerType:
+            self.emit.printout(self.emit.emitInitNewLocalArray(
+                idx, typ.arraySize, typ.eleType, initCode, frame))
+        else:
             self.emit.printout(
                 initCode + self.emit.emitWRITEVAR(name, typ, idx, frame))
         print("============================ End VarDecl", ast)
@@ -301,8 +332,10 @@ class CodeGenVisitor(BaseVisitor, Utils):
     def visitAutoType(self, ast, o):
         pass
 
-    def visitArrayType(self, ast, o):
-        pass
+    def visitArrayType(self, ast: ArrayType, o: Access or None):
+        dimensions = ast.dimensions
+        typ = ast.typ
+        return reduce(lambda x, y: x * y, dimensions[1:], dimensions[0]), typ
 
     def visitBlockStmt(self, ast: BlockStmt, o: SubBody):
         print("================================= BlockStmt")
@@ -368,8 +401,17 @@ class CodeGenVisitor(BaseVisitor, Utils):
         if op == '!':
             return valCode + self.emit.emitNOT(valTyp, frame), valTyp
 
-    def visitArrayCell(self, ast, o):
-        pass
+    def visitArrayCell(self, ast: ArrayCell, o: Access):
+        print("=========================== ArrayCell", ast)
+        frame = o.frame
+        sym = o.sym
+        cell = ast.cell
+        nameCode, nameTyp = self.visit(
+            ast.name, Access(frame, sym, False, False))
+        cellCode = reduce(lambda x, y: x + self.visit(y, o)
+                          [0], cell[1:], self.visit(cell[0], o)[0])
+        print("=========================== End ArrayCell")
+        return nameCode + cellCode + self.emit.emitALOAD(nameTyp.eleType, frame), nameTyp.eleType
 
     def visitAssignStmt(self, ast, o):
         frame = o.frame
@@ -460,11 +502,38 @@ class CodeGenVisitor(BaseVisitor, Utils):
     def visitStringLit(self, ast: StringLit, o: Access):
         return self.emit.emitPUSHCONST(ast.val, StringType(), o.frame), StringType()
 
-    def visitArrayLit(self, ast, o):
-        pass
+    def visitArrayLit(self, ast: ArrayLit, o: Access):
+        frame = o.frame
+        dimen = o.dimen
+        explist = ast.explist
+        expCode = ""
+        expTyp = None
+        for i, x in enumerate(explist):
+            # dimensions:    [4, 3, 4]
+            # idxDimensions: [1, 2, 2] -> idx = (1 * 3 * 4) + (2 * 3) + 2
+            dimen.idxDimensions.append(i)
+            if type(x) is ArrayLit:
+                dimen.curDimen += 1
+            val = reduce(
+                lambda x, y: x * y, dimen.dimensions[dimen.curDimen:], dimen.idxDimensions[dimen.curDimen - 1])
+            if len(dimen.dimensions) == len(dimen.idxDimensions):
+                val = dimen.idxDimensions[dimen.curDimen]
+            dimen.idx += val
+
+            eC, expTyp = self.visit(x, o)
+
+            if type(x) is ArrayLit:
+                dimen.curDimen -= 1
+            if type(x) is not ArrayLit:
+                expCode += self.emit.emitDUP(
+                    frame) + self.emit.emitPUSHICONST(dimen.idx, frame) + eC + self.emit.emitASTORE(expTyp, frame)
+            else:
+                expCode += eC
+            dimen.idx -= val
+            dimen.idxDimensions.pop()
+        return expCode, expTyp
 
     def visitId(self, ast: Id, o: Access):
-        print("====================== Id", ast)
         frame = o.frame
         for s in o.sym:
             if ast.name == s.name:

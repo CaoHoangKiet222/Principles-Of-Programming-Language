@@ -27,10 +27,10 @@ Label1:
 
 .method public static <clinit>()V
 Label0:
-	iconst_1
+	ldc 121111
 	putstatic MT22Class.x I
 Label1:
 	return
-.limit stack 2
+.limit stack 1
 .limit locals 0
 .end method

@@ -46,22 +46,23 @@ class CheckCodeGenSuite(unittest.TestCase):
 
     # def test_5(self):
     #     input = """
-    #     x: integer = 1;
+    #     x: integer = 12_1111;
     #     main: function void() {
     #         printInteger(x);
     #     }
     #     """
-    #     expect = "1"
+    #     expect = "121111"
     #     self.assertTrue(TestCodeGen.test(input, expect, 505))
 
     # def test_6(self):
     #     input = """
-    #     x: float = 1;
+    #     x, y: float = 1, 102332.23423;
     #     main: function void() {
     #         writeFloat(x);
+    #         writeFloat(y);
     #     }
     #     """
-    #     expect = "1.0"
+    #     expect = "1.0102332.234"
     #     self.assertTrue(TestCodeGen.test(input, expect, 506))
 
     # def test_7(self):
@@ -186,10 +187,12 @@ class CheckCodeGenSuite(unittest.TestCase):
     # def test_19(self):
     #     input = """
     #     main: function void() {
+    #         printString("hello"::"world");
     #         printString(("hello"::"world")::" with kiet");
+    #         printString(("hello"::"world")::(" with kiet"::" cao hoang"));
     #     }
     #     """
-    #     expect = "helloworld with kiet"
+    #     expect = "helloworldhelloworld with kiethelloworld with kiet cao hoang"
     #     self.assertTrue(TestCodeGen.test(input, expect, 519))
 
     # def test_20(self):
@@ -230,12 +233,52 @@ class CheckCodeGenSuite(unittest.TestCase):
     #     expect = "falsetrue"
     #     self.assertTrue(TestCodeGen.test(input, expect, 523))
 
-    def test_24(self):
+    # def test_24(self):
+    #     input = """
+    #     main: function void() {
+    #         printInteger(-1);
+    #         printInteger(-1 + 2);
+    #     }
+    #     """
+    #     expect = "-11"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 524))
+
+    # def test_25(self):
+    #     input = """
+    #     main: function void() {
+    #         printBoolean(1_1.5*2 + 2 - 5_2.3*2.1 > 3*5 + 2_2*3/2 - 4*7.2/14 + 1);
+    #         printBoolean(1_1.5*2 + 2 - 5_2.3*2.1 < 3*5 + 2_2*3/2 - 4*7.2/14 + 1);
+    #         printBoolean(1_1.5*2 + 2 - 5_2.3*2.1 == 3*5 + 2_2*3/2 - 4*7.2/14 + 1);
+    #         printBoolean(1_1.5*2 + 2 - 5_2.3*2.1 >= 3*5 + 2_2*3/2 - 4*7.2/14 + 1);
+    #         printBoolean(1_1.5*2 + 2 - 5_2.3*2.1 <= 3*5 + 2_2*3/2 - 4*7.2/14 + 1);
+    #         printBoolean(1_1.5*2 + 2 - 5_2.3*2.1 != 3*5 + 2_2*3/2 - 4*7.2/14 + 1);
+    #     }
+    #     """
+    #     expect = "falsetruetruefalsetruetrue"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 525))
+
+    # def test_26(self):
+    #     input = """
+    #     a: array[10] of integer = {1, 2, 3, 4};
+    #     b: array[10] of integer;
+    #     main: function void() {
+    #         c: array[10] of integer = {1, 2, 3, 4};
+    #         d: array[10] of integer = {2, 3, 4, 5};
+    #         printInteger(a[2] + b[1] + c[0] + d[5]);
+    #     }
+    #     """
+    #     expect = "4"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 526))
+
+    def test_27(self):
         input = """
+        // a: array[4, 3] of integer = {{12, 13}, {3}, {6}, {7}};
+        arr1 : array [1, 2] of integer = {{1, 3}, {123, 1238}};
+        // arr2 : array [3, 2] of integer = {{1}, {123, 1238}, {5, 0}};
+        // arr3 : array [2, 3, 2] of integer = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
         main: function void() {
-            printInteger(-1);
-            printInteger(-1 + 2);
+            printInteger(arr1[1 + 2, 1]);
         }
         """
-        expect = "-11"
-        self.assertTrue(TestCodeGen.test(input, expect, 524))
+        expect = ""
+        self.assertTrue(TestCodeGen.test(input, expect, 527))

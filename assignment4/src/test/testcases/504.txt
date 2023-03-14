@@ -1,6 +1,6 @@
 
-        // x, y, z: integer = 1, 2, 3;
+        x: integer = 1;
         main: function void() {
-            printInteger(10);
+            printInteger(x);
         }
         

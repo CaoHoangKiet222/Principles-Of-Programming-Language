@@ -1,5 +1,5 @@
 
-        x: integer = 1;
+        x: integer = 12_1111;
         main: function void() {
             printInteger(x);
         }

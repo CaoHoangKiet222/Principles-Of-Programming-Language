@@ -1,0 +1,9 @@
+
+        a: array[10] of integer = {1, 2, 3, 4};
+        b: array[10] of integer;
+        main: function void() {
+            c: array[10] of integer = {1, 2, 3, 4};
+            d: array[10] of integer = {2, 3, 4, 5};
+            printInteger(a[2] + b[1] + c[0] + d[5]);
+        }
+        

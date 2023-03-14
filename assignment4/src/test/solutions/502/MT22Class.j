@@ -5,13 +5,11 @@
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-Label2:
-.var 1 is x I from Label2 to Label3
+.var 1 is x I from Label0 to Label1
 	bipush 10
 	istore_1
 	iload_1
 	invokestatic io/printInteger(I)V
-Label3:
 Label1:
 	return
 .limit stack 2
@@ -23,10 +21,16 @@ Label1:
 Label0:
 	aload_0
 	invokespecial java/lang/Object/<init>()V
-Label2:
-Label3:
 Label1:
 	return
 .limit stack 1
 .limit locals 1
+.end method
+
+.method public static <clinit>()V
+Label0:
+Label1:
+	return
+.limit stack 0
+.limit locals 0
 .end method

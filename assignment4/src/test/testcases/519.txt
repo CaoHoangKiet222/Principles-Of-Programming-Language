@@ -1,5 +1,7 @@
 
         main: function void() {
+            printString("hello"::"world");
             printString(("hello"::"world")::" with kiet");
+            printString(("hello"::"world")::(" with kiet"::" cao hoang"));
         }
         

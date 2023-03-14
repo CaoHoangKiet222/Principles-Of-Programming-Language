@@ -45,7 +45,7 @@ Label9:
 	invokestatic io/printBoolean(Z)V
 Label1:
 	return
-.limit stack 16
+.limit stack 9
 .limit locals 1
 .end method
 

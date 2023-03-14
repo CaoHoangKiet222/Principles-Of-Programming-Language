@@ -322,9 +322,9 @@ class ASTGeneration(MT22Visitor):
         if ctx.func_call():
             return ctx.func_call().accept(self)
         if ctx.INT_LIT():
-            return IntegerLit(ctx.getChild(0).getText())
+            return IntegerLit(int(ctx.getChild(0).getText()))
         if ctx.FLOAT_LIT():
-            return FloatLit(ctx.getChild(0).getText())
+            return FloatLit(float(ctx.getChild(0).getText()))
         if ctx.BOOLEAN_LIT():
             return BooleanLit(True if ctx.getChild(0).getText() == 'true' else False)
         if ctx.STRING_LIT():

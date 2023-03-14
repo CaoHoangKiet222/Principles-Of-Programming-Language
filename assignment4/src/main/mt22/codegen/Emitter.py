@@ -30,10 +30,14 @@ class Emitter():
         elif typeIn is cgen.ClassType:
             return "L" + inType.cname + ";"
 
-    def getFullType(inType):
+    def getFullType(self, inType):
         typeIn = type(inType)
         if typeIn is IntegerType:
             return "int"
+        elif typeIn is FloatType:
+            return "float"
+        elif typeIn is BoolType:
+            return "boolean"
         elif typeIn is cgen.StringType:
             return "java/lang/String"
         elif typeIn is VoidType:
@@ -52,6 +56,7 @@ class Emitter():
                 return self.jvm.emitBIPUSH(i)
             elif i >= -32768 and i <= 32767:
                 return self.jvm.emitSIPUSH(i)
+            return self.jvm.emitLDC(str(i))
         elif type(in_) is str:
             if in_ == "true":
                 return self.emitPUSHICONST(1, frame)
@@ -85,6 +90,8 @@ class Emitter():
 
         if type(typ) is IntegerType:
             return self.emitPUSHICONST(in_, frame)
+        if type(typ) is FloatType:
+            return self.emitPUSHFCONST(in_, frame)
         elif type(typ) is StringType:
             frame.push()
             return self.jvm.emitLDC("\"" + in_ + "\"")
@@ -101,6 +108,8 @@ class Emitter():
         frame.pop()
         if type(in_) is IntegerType:
             return self.jvm.emitIALOAD()
+        if type(in_) is FloatType:
+            return self.jvm.emitFALOAD()
         elif type(in_) is cgen.ArrayPointerType or type(in_) is cgen.ClassType or type(in_) is StringType:
             return self.jvm.emitAALOAD()
         else:
@@ -116,6 +125,8 @@ class Emitter():
         frame.pop()
         if type(in_) is IntegerType:
             return self.jvm.emitIASTORE()
+        if type(in_) is FloatType:
+            return self.jvm.emitFASTORE()
         elif type(in_) is cgen.ArrayPointerType or type(in_) is cgen.ClassType or type(in_) is StringType:
             return self.jvm.emitAASTORE()
         else:
@@ -539,9 +550,34 @@ class Emitter():
     *   @param in the type of the local array variable.
     '''
 
+    def emitInitNewStaticArray(self, name, size, eleType, initCode, frame):
+        result = []
+        result.append(self.emitPUSHICONST(size, frame))
+        frame.pop()
+        if type(eleType) is StringType:
+            result.append(self.jvm.emitANEWARRAY(self.getFullType(eleType)))
+        else:
+            result.append(self.jvm.emitNEWARRAY(self.getFullType(eleType)))
+        result.append(initCode)
+        result.append(self.jvm.emitPUTSTATIC(
+            name, self.getJVMType(cgen.ArrayPointerType(eleType))))
+        return ''.join(result)
+
     '''   generate code to initialize local array variables.
     *   @param in the list of symbol entries corresponding to local array variable.    
     '''
+
+    def emitInitNewLocalArray(self, addressIndex, size, eleType, initCode, frame):
+        result = []
+        result.append(self.emitPUSHICONST(size, frame))
+        frame.pop()
+        if type(eleType) is StringType:
+            result.append(self.jvm.emitANEWARRAY(self.getFullType(eleType)))
+        else:
+            result.append(self.jvm.emitNEWARRAY(self.getFullType(eleType)))
+        result.append(initCode)
+        result.append(self.jvm.emitASTORE(addressIndex))
+        return ''.join(result)
 
     '''   generate code to jump to label if the value on top of operand stack is true.<p>
     *   ifgt label
