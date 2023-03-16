@@ -1,0 +1,7 @@
+
+        x: string;
+        main: function void() {
+            x = "hello";
+            printString(x);
+        }
+        

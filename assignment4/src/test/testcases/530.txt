@@ -1,0 +1,7 @@
+
+        x: boolean;
+        main: function void() {
+            x = true;
+            printBoolean(x);
+        }
+        

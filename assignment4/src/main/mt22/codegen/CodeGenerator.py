@@ -5,6 +5,7 @@ from Utils import *
 from StaticCheck import *
 from StaticError import *
 from AST import *
+import AST as ast
 from Visitor import *
 from Emitter import Emitter
 from Frame import Frame
@@ -33,15 +34,37 @@ class MyUtils:
         return str(op) == "::"
 
     @staticmethod
-    def mergeNumberType(lType, rType):
-        return FloatType() if FloatType in [type(x) for x in [lType, rType]] else IntegerType()
+    def mergeNumberType(op, lType, rType):
+        mTyp = None
+        if type(lType) is IntegerType and type(rType) is IntegerType:
+            if op == '+':
+                mTyp = IntegerType(lType.val + rType.val)
+            elif op == '-':
+                mTyp = IntegerType(lType.val - rType.val)
+            elif op == '*':
+                mTyp = IntegerType(lType.val * rType.val)
+            else:
+                mTyp = IntegerType(lType.val % rType.val)
+        else:
+            mTyp = FloatType()
+        return mTyp
 
     @staticmethod
-    def retrieveType(originType, func):
+    def retrieveType(originType, func=lambda x: x):
+        if type(originType) is ast.IntegerType:
+            return IntegerType()
         if type(originType) is ArrayType:
             arraySize, automicTyp = func(originType)
-            return ArrayPointerType(originType.typ, arraySize)
+            originType.typ = MyUtils.retrieveType(
+                originType.typ)  # ast.IntegerType
+            return ArrayPointerType(originType.typ, arraySize, originType.dimensions)
         return originType
+
+    @staticmethod
+    def checkArrayType(code):
+        if type(code) is list:
+            return True
+        return False
 
 
 class CodeGenerator(Utils):
@@ -78,13 +101,14 @@ class CodeGenerator(Utils):
 
 
 class ArrayPointerType(Type):
-    def __init__(self, ctype, size=0):
+    def __init__(self, ctype, size=0, dimensions: List[int] = []):
         # cname: String
         self.eleType = ctype
         self.arraySize = size
+        self.dimensions = dimensions
 
     def __str__(self):
-        return "ArrayPointerType({0},{1})".format(str(self.arraySize), str(self.eleType))
+        return "ArrayPointerType({0}, [{1}], {2})".format(str(self.arraySize), ", ".join([str(dimen) for dimen in self.dimensions]), str(self.eleType))
 
     def accept(self, v, param):
         return None
@@ -110,6 +134,14 @@ class SubBody():
         self.sym = sym
         self.alreadyBlock = alreadyBlock
         self.isGlobal = isGlobal
+
+
+class IntegerType:
+    def __init__(self, val: int = 0):
+        self.val = val
+
+    def __str__(self) -> str:
+        return "IntegerType({0})".format(self.val)
 
 
 class Dimensions():
@@ -249,8 +281,9 @@ class CodeGenVisitor(BaseVisitor, Utils):
                     self.emit.printout(self.emit.emitInitNewStaticArray(
                         self.className + "." + name, typ.arraySize, typ.eleType, initCode, frame))
                 else:
-                    self.emit.printout(
-                        initCode + self.emit.emitPUTSTATIC(self.className + "." + name, typ, frame))
+                    if initCode != "":
+                        self.emit.printout(
+                            initCode + self.emit.emitPUTSTATIC(self.className + "." + name, typ, frame))
 
         self.visit(body, SubBody(frame, glenv, alreadyBlock=True))
 
@@ -277,6 +310,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
             else:
                 access = Access(frame, subctxt.sym, False, False)
             initCode, initTyp = self.visit(init, access)
+            initTyp = MyUtils.retrieveType(initTyp)
             if type(initTyp) is IntegerType and type(typ) is FloatType:
                 initCode += self.emit.emitI2F(frame)
 
@@ -366,7 +400,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         frame = o.frame
 
         if MyUtils.isOpForNumber(op):
-            mTyp = MyUtils.mergeNumberType(leftTyp, rightTyp)
+            mTyp = MyUtils.mergeNumberType(op, leftTyp, rightTyp)
             if op == '/':
                 mTyp = FloatType()
             if type(leftTyp) is IntegerType and type(mTyp) != type(leftTyp):
@@ -405,20 +439,34 @@ class CodeGenVisitor(BaseVisitor, Utils):
         print("=========================== ArrayCell", ast)
         frame = o.frame
         sym = o.sym
+        isLeft = o.isLeft
         cell = ast.cell
         nameCode, nameTyp = self.visit(
-            ast.name, Access(frame, sym, False, False))
-        cellCode = reduce(lambda x, y: x + self.visit(y, o)
-                          [0], cell[1:], self.visit(cell[0], o)[0])
-        print("=========================== End ArrayCell")
-        return nameCode + cellCode + self.emit.emitALOAD(nameTyp.eleType, frame), nameTyp.eleType
+            ast.name, Access(frame, sym, isLeft, False))
+        dimensions = nameTyp.dimensions
+        idxDimensions = [self.visit(x, o)[1].val for x in cell]
+        idx = 0
+        # dimensions:    [4, 3, 4]
+        # idxDimensions: [1, 2, 5] -> idx = (1 * 3 * 4) + (2 * 3) + 5
+        for i, idxDimen in enumerate(idxDimensions):
+            idx += reduce(lambda x, y: x * y,
+                          dimensions[i+1:], idxDimen)
 
-    def visitAssignStmt(self, ast, o):
-        frame = o.frame
-        sym = o.sym
-        rhs_j, rhs_typ = self.visit(ast.rhs, Access(frame, sym, False, False))
-        lsh_j, lsh_typ = self.visit(ast.lhs, Access(frame, sym, True, False))
-        self.emit.printout(rhs_j + lsh_j)
+        print("=========================== End ArrayCell")
+        if isLeft:
+            return [nameCode + self.emit.emitPUSHICONST(idx, frame), self.emit.emitASTORE(nameTyp.eleType, frame)], nameTyp.eleType
+        return nameCode + self.emit.emitPUSHICONST(idx, frame) + self.emit.emitALOAD(nameTyp.eleType, frame), nameTyp.eleType
+
+    def visitAssignStmt(self, ast: AssignStmt, o: SubBody):
+        subctxt = o
+        frame = subctxt.frame
+        sym = subctxt.sym
+        rhsCode, _ = self.visit(ast.rhs, Access(frame, sym, False, False))
+        lshCode, _ = self.visit(ast.lhs, Access(frame, sym, True, False))
+        if MyUtils.checkArrayType(lshCode):
+            self.emit.printout(lshCode[0] + rhsCode + lshCode[1])
+        else:
+            self.emit.printout(rhsCode + lshCode)
 
     def visitIfStmt(self, ast, o):
         frame = o.frame
@@ -491,7 +539,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         print("========================= End CallStmt")
 
     def visitIntegerLit(self, ast: IntegerLit, o: Access):
-        return self.emit.emitPUSHICONST(ast.val, o.frame), IntegerType()
+        return self.emit.emitPUSHICONST(ast.val, o.frame), IntegerType(ast.val)
 
     def visitFloatLit(self, ast: FloatLit, o: Access):
         return self.emit.emitPUSHFCONST(str(ast.val), o.frame), FloatType()
@@ -510,7 +558,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         expTyp = None
         for i, x in enumerate(explist):
             # dimensions:    [4, 3, 4]
-            # idxDimensions: [1, 2, 2] -> idx = (1 * 3 * 4) + (2 * 3) + 2
+            # idxDimensions: [1, 2, 5] -> idx = (1 * 3 * 4) + (2 * 3) + 5
             dimen.idxDimensions.append(i)
             if type(x) is ArrayLit:
                 dimen.curDimen += 1
@@ -537,10 +585,11 @@ class CodeGenVisitor(BaseVisitor, Utils):
         frame = o.frame
         for s in o.sym:
             if ast.name == s.name:
+                isArrayType = type(s.mtype) is ArrayPointerType
                 if type(s.value) is CName:
-                    if o.isLeft == True:
+                    if o.isLeft == True and not isArrayType:
                         return self.emit.emitPUTSTATIC(s.value.value + '.' + ast.name, s.mtype, frame), s.mtype
                     return self.emit.emitGETSTATIC(s.value.value + '.' + ast.name, s.mtype, frame), s.mtype
-                if o.isLeft == True:
+                if o.isLeft == True and not isArrayType:
                     return self.emit.emitWRITEVAR(ast.name, s.mtype, s.value.value, frame), s.mtype
                 return self.emit.emitREADVAR(ast.name, s.mtype, s.value.value, frame), s.mtype

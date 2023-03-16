@@ -1,9 +1,12 @@
 
-        // a: array[4, 3] of integer = {{12, 13}, {3}, {6}, {7}};
-        arr1 : array [1, 2] of integer = {{1, 3}, {123, 1238}};
-        // arr2 : array [3, 2] of integer = {{1}, {123, 1238}, {5, 0}};
-        // arr3 : array [2, 3, 2] of integer = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
+        arr1 : array [1, 2] of integer = {{1, 3}};
+        arr2 : array [3, 2] of integer = {{1}, {123, 1238, 6}, {5, 0}};
         main: function void() {
-            printInteger(arr1[1 + 2, 1]);
+            arr3 : array [2, 3, 2] of integer = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
+            printInteger(arr1[0+0, 1]);
+            printInteger(arr2[0+2, 1]);
+            printInteger(arr2[1-(-1), 1]);
+            printInteger(arr2[4%4, 1]);
+            printInteger(arr3[1, 1, 1]);
         }
         

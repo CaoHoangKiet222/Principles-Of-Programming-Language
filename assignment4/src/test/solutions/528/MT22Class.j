@@ -6,6 +6,8 @@
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
+	iconst_1
+	putstatic MT22Class.x I
 	getstatic MT22Class.x I
 	invokestatic io/printInteger(I)V
 Label1:
@@ -27,10 +29,8 @@ Label1:
 
 .method public static <clinit>()V
 Label0:
-	iconst_1
-	putstatic MT22Class.x I
 Label1:
 	return
-.limit stack 1
+.limit stack 0
 .limit locals 0
 .end method

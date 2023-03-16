@@ -1,0 +1,7 @@
+
+        x: array[10, 10] of float = {{2, 3}, {1}, {5}};
+        main: function void() {
+            x[0, 2] = 99;
+            // printFloat(x[0, 2] + x[0, 0]);
+        }
+        

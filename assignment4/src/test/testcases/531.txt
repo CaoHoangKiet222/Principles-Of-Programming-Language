@@ -1,0 +1,8 @@
+
+        x: array[10] of integer;
+        main: function void() {
+            x[0] = 1;
+            x[2] = 100;
+            printInteger(x[0] + x[2]);
+        }
+        

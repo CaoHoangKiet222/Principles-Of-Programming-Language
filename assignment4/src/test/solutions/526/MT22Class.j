@@ -65,7 +65,7 @@ Label0:
 	invokestatic io/printInteger(I)V
 Label1:
 	return
-.limit stack 5
+.limit stack 9
 .limit locals 3
 .end method
 

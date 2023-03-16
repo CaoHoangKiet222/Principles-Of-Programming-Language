@@ -5,16 +5,17 @@
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-	iconst_2
+	ldc 2.0
 	iconst_1
-	if_icmple Label2
+	i2f
+	fcmpl
+	ifle Label2
 	iconst_1
 	goto Label3
 Label2:
 	iconst_0
 Label3:
 	iconst_3
-	iand
 	iconst_4
 	if_icmpge Label4
 	iconst_1
@@ -22,30 +23,11 @@ Label3:
 Label4:
 	iconst_0
 Label5:
-	invokestatic io/printBoolean(Z)V
-	ldc 2.0
-	iconst_1
-	i2f
-	fcmpl
-	ifle Label6
-	iconst_1
-	goto Label7
-Label6:
-	iconst_0
-Label7:
-	iconst_3
 	iand
-	iconst_4
-	if_icmpge Label8
-	iconst_1
-	goto Label9
-Label8:
-	iconst_0
-Label9:
 	invokestatic io/printBoolean(Z)V
 Label1:
 	return
-.limit stack 9
+.limit stack 6
 .limit locals 1
 .end method
 

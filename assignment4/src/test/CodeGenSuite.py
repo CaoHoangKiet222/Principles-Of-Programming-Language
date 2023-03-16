@@ -216,11 +216,10 @@ class CheckCodeGenSuite(unittest.TestCase):
     # def test_22(self):
     #     input = """
     #     main: function void() {
-    #         printBoolean((2 > 1) && 3 < 4);
-    #         printBoolean((2.0 > 1) && 3 < 4);
+    #         printBoolean((2.0 > 1) && (3 < 4));
     #     }
     #     """
-    #     expect = "truetrue"
+    #     expect = "true"
     #     self.assertTrue(TestCodeGen.test(input, expect, 522))
 
     # def test_23(self):
@@ -270,15 +269,85 @@ class CheckCodeGenSuite(unittest.TestCase):
     #     expect = "4"
     #     self.assertTrue(TestCodeGen.test(input, expect, 526))
 
-    def test_27(self):
+    # def test_27(self):
+    #     input = """
+    #     arr1 : array [1, 2] of integer = {{1, 3}};
+    #     arr2 : array [3, 2] of integer = {{1}, {123, 1238, 6}, {5, 0}};
+    #     main: function void() {
+    #         arr3 : array [2, 3, 2] of integer = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
+    #         printInteger(arr1[0+0, 1]);
+    #         printInteger(arr2[0+2, 1]);
+    #         printInteger(arr2[1-(-1), 1]);
+    #         printInteger(arr2[4%4, 1]);
+    #         printInteger(arr3[1, 1, 1]);
+    #     }
+    #     """
+    #     expect = "3000123"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 527))
+
+    # def test_28(self):
+    #     input = """
+    #     x: integer;
+    #     main: function void() {
+    #         x = 1;
+    #         printInteger(x);
+    #     }
+    #     """
+    #     expect = "1"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 528))
+
+    # def test_29(self):
+    #     input = """
+    #     x: string;
+    #     main: function void() {
+    #         x = "hello";
+    #         printString(x);
+    #     }
+    #     """
+    #     expect = "hello"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 529))
+
+    # def test_30(self):
+    #     input = """
+    #     x: boolean;
+    #     main: function void() {
+    #         x = true;
+    #         printBoolean(x);
+    #     }
+    #     """
+    #     expect = "true"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 530))
+
+    # def test_31(self):
+    #     input = """
+    #     x: array[10] of integer;
+    #     main: function void() {
+    #         x[0] = 1;
+    #         x[2] = 100;
+    #         printInteger(x[0] + x[2]);
+    #     }
+    #     """
+    #     expect = "101"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 531))
+
+    # def test_32(self):
+    #     input = """
+    #     x: array[10, 10] of integer = {{2, 3}, {1}, {5}};
+    #     main: function void() {
+    #         x[0, 2] = 99;
+    #         printInteger(x[0, 2] + x[0, 0]);
+    #     }
+    #     """
+    #     expect = "101"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 532))
+
+    def test_32(self):
         input = """
-        // a: array[4, 3] of integer = {{12, 13}, {3}, {6}, {7}};
-        arr1 : array [1, 2] of integer = {{1, 3}, {123, 1238}};
-        // arr2 : array [3, 2] of integer = {{1}, {123, 1238}, {5, 0}};
-        // arr3 : array [2, 3, 2] of integer = {{{1, 3}, {12, 13}, {123, 321}}, {{2, 41}, {123, 123}, {923, 32}}};
+        x: array[10, 10] of float = {{2, 3}, {1}, {5}};
         main: function void() {
-            printInteger(arr1[1 + 2, 1]);
+            x[0, 2] = 99;
+            // printFloat(x[0, 2] + x[0, 0]);
         }
         """
-        expect = ""
-        self.assertTrue(TestCodeGen.test(input, expect, 527))
+        expect = "101"
+        self.assertTrue(TestCodeGen.test(input, expect, 532))

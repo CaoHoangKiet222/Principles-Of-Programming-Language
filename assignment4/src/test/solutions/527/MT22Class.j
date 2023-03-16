@@ -2,21 +2,87 @@
 .class public MT22Class
 .super java.lang.Object
 .field static arr1 [I
+.field static arr2 [I
 
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
+.var 1 is arr3 [I from Label0 to Label1
+	bipush 12
+	newarray int
+	dup
+	iconst_0
+	iconst_1
+	iastore
+	dup
+	iconst_1
+	iconst_3
+	iastore
+	dup
+	iconst_2
+	bipush 12
+	iastore
+	dup
+	iconst_3
+	bipush 13
+	iastore
+	dup
+	iconst_4
+	bipush 123
+	iastore
+	dup
+	iconst_5
+	sipush 321
+	iastore
+	dup
+	bipush 6
+	iconst_2
+	iastore
+	dup
+	bipush 7
+	bipush 41
+	iastore
+	dup
+	bipush 8
+	bipush 123
+	iastore
+	dup
+	bipush 9
+	bipush 123
+	iastore
+	dup
+	bipush 10
+	sipush 923
+	iastore
+	dup
+	bipush 11
+	bipush 32
+	iastore
+	astore_1
 	getstatic MT22Class.arr1 [I
 	iconst_1
-	iconst_2
-	iadd
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr2 [I
+	iconst_5
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr2 [I
 	iconst_1
+	iaload
+	invokestatic io/printInteger(I)V
+	getstatic MT22Class.arr2 [I
+	iconst_1
+	iaload
+	invokestatic io/printInteger(I)V
+	aload_1
+	bipush 9
 	iaload
 	invokestatic io/printInteger(I)V
 Label1:
 	return
-.limit stack 3
-.limit locals 1
+.limit stack 14
+.limit locals 2
 .end method
 
 .method public <init>()V
@@ -42,6 +108,13 @@ Label0:
 	iconst_1
 	iconst_3
 	iastore
+	putstatic MT22Class.arr1 [I
+	bipush 6
+	newarray int
+	dup
+	iconst_0
+	iconst_1
+	iastore
 	dup
 	iconst_2
 	bipush 123
@@ -50,9 +123,21 @@ Label0:
 	iconst_3
 	sipush 1238
 	iastore
-	putstatic MT22Class.arr1 [I
+	dup
+	iconst_4
+	bipush 6
+	iastore
+	dup
+	iconst_4
+	iconst_5
+	iastore
+	dup
+	iconst_5
+	iconst_0
+	iastore
+	putstatic MT22Class.arr2 [I
 Label1:
 	return
-.limit stack 4
+.limit stack 5
 .limit locals 0
 .end method
