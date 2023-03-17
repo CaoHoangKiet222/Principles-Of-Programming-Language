@@ -81,7 +81,7 @@ Label0:
 	invokestatic io/printInteger(I)V
 Label1:
 	return
-.limit stack 14
+.limit stack 26
 .limit locals 2
 .end method
 
@@ -138,6 +138,6 @@ Label0:
 	putstatic MT22Class.arr2 [I
 Label1:
 	return
-.limit stack 5
+.limit stack 13
 .limit locals 0
 .end method

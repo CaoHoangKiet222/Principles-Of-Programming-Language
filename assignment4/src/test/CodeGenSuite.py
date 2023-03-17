@@ -341,13 +341,42 @@ class CheckCodeGenSuite(unittest.TestCase):
     #     expect = "101"
     #     self.assertTrue(TestCodeGen.test(input, expect, 532))
 
-    def test_32(self):
+    # def test_32(self):
+    #     input = """
+    #     x: array[10, 10] of float = {{2, 3}, {1}, {5}};
+    #     main: function void() {
+    #         x[0, 2] = 99;
+    #         writeFloat(x[0, 2]);
+    #     }
+    #     """
+    #     expect = "99.0"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 532))
+
+    # def test_33(self):
+    #     input = """
+    #     main: function void() {
+    #         if (1 < 2) {
+    #             printBoolean(true);
+    #         } else {
+    #             printBoolean(false);
+    #         }
+    #     }
+    #     """
+    #     expect = "true"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 533))
+
+    def test_34(self):
         input = """
-        x: array[10, 10] of float = {{2, 3}, {1}, {5}};
         main: function void() {
-            x[0, 2] = 99;
-            // printFloat(x[0, 2] + x[0, 0]);
+            if (1 > 2) {
+                printBoolean(true);
+                // return;
+            } else {
+                printBoolean(false);
+                return;
+            }
+            printBoolean(false);
         }
         """
-        expect = "101"
-        self.assertTrue(TestCodeGen.test(input, expect, 532))
+        expect = "false"
+        self.assertTrue(TestCodeGen.test(input, expect, 534))

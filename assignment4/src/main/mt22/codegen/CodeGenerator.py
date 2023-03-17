@@ -157,17 +157,17 @@ class Dimensions():
 
 
 class Access():
-    def __init__(self, frame, sym, isLeft, isFirst, dimen=Dimensions([])):
+    def __init__(self, frame, sym, isLeft, elTypOfArray=None, dimen=Dimensions([])):
         # frame: Frame
         # sym: List[Symbol]
         # isLeft: Boolean
-        # isFirst: Boolean
+        # elTypOfArray: Typ
         # dimen: Dimensions
 
         self.frame = frame
         self.sym = sym
         self.isLeft = isLeft
-        self.isFirst = isFirst
+        self.elTypOfArray = elTypOfArray
         self.dimen = dimen
 
 
@@ -306,9 +306,9 @@ class CodeGenVisitor(BaseVisitor, Utils):
             if type(init) is ArrayLit:
                 frame.push()  # need to push due to first initCode
                 access = Access(frame, subctxt.sym, False,
-                                False, Dimensions(ast.typ.dimensions))
+                                elTypOfArray=typ.eleType, dimen=Dimensions(ast.typ.dimensions))
             else:
-                access = Access(frame, subctxt.sym, False, False)
+                access = Access(frame, subctxt.sym, False)
             initCode, initTyp = self.visit(init, access)
             initTyp = MyUtils.retrieveType(initTyp)
             if type(initTyp) is IntegerType and type(typ) is FloatType:
@@ -376,7 +376,8 @@ class CodeGenVisitor(BaseVisitor, Utils):
         frame = o.frame
         sym = o.sym
         alreadyBlock = o.alreadyBlock
-        if not alreadyBlock:
+        hasReturnStmt = False
+        if not alreadyBlock:  # for FuncDecl
             frame.enterScope(False)
             self.emit.printout(self.emit.emitLABEL(
                 frame.getStartLabel(), frame))
@@ -386,12 +387,13 @@ class CodeGenVisitor(BaseVisitor, Utils):
             if type(x) is VarDecl:
                 newSubBd = self.visit(x, newSubBd)
             else:
-                self.visit(x, newSubBd)
+                hasReturnStmt = self.visit(x, newSubBd) or hasReturnStmt
 
         if not alreadyBlock:
             self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
             frame.exitScope()
         print("================================= End BlockStmt")
+        return hasReturnStmt
 
     def visitBinExpr(self, ast: BinExpr, o: Access):
         leftCode, leftTyp = self.visit(ast.left, o)
@@ -442,7 +444,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         isLeft = o.isLeft
         cell = ast.cell
         nameCode, nameTyp = self.visit(
-            ast.name, Access(frame, sym, isLeft, False))
+            ast.name, Access(frame, sym, isLeft))
         dimensions = nameTyp.dimensions
         idxDimensions = [self.visit(x, o)[1].val for x in cell]
         idx = 0
@@ -461,33 +463,37 @@ class CodeGenVisitor(BaseVisitor, Utils):
         subctxt = o
         frame = subctxt.frame
         sym = subctxt.sym
-        rhsCode, _ = self.visit(ast.rhs, Access(frame, sym, False, False))
-        lshCode, _ = self.visit(ast.lhs, Access(frame, sym, True, False))
-        if MyUtils.checkArrayType(lshCode):
-            self.emit.printout(lshCode[0] + rhsCode + lshCode[1])
+        rhsCode, rhsTyp = self.visit(ast.rhs, Access(frame, sym, False))
+        lhsCode, lhsTyp = self.visit(ast.lhs, Access(frame, sym, True))
+        if type(rhsTyp) is IntegerType and type(lhsTyp) is FloatType:
+            rhsCode += self.emit.emitI2F(frame)
+        if MyUtils.checkArrayType(lhsCode):
+            self.emit.printout(lhsCode[0] + rhsCode + lhsCode[1])
         else:
-            self.emit.printout(rhsCode + lshCode)
+            self.emit.printout(rhsCode + lhsCode)
 
-    def visitIfStmt(self, ast, o):
+    def visitIfStmt(self, ast: IfStmt, o: SubBody):
         frame = o.frame
         sym = o.sym
-        exp_j, exp_typ = self.visit(
-            ast.expr, Access(frame, sym, False, False))
-        self.emit.printout(exp_j)
+        condCode, _ = self.visit(
+            ast.cond, Access(frame, sym, False))
+        self.emit.printout(condCode)
 
         labelF = frame.getNewLabel()  # eval is false
         labelE = frame.getNewLabel()  # label end
 
         self.emit.printout(self.emit.emitIFFALSE(labelF, frame))
 
-        self.visit(ast.tstmt, o)
-        self.emit.printout(self.emit.emitGOTO(labelE, frame))
+        hasReturnStmt = self.visit(ast.tstmt, o) is True
+        if not hasReturnStmt:
+            self.emit.printout(self.emit.emitGOTO(labelE, frame))
 
         self.emit.printout(self.emit.emitLABEL(labelF, frame))
-        if ast.estmt:
-            self.visit(ast.estmt, o)
+        if ast.fstmt:
+            print(self.visit(ast.fstmt, o))
 
         self.emit.printout(self.emit.emitLABEL(labelE, frame))
+        return hasReturnStmt
 
     def visitForStmt(self, ast, o):
         pass
@@ -499,7 +505,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         labelE = frame.getNewLabel()  # label end
         frame.enterLoop()
         self.emit.printout(self.emit.emitLABEL(labelW, frame))
-        exp_j, exp_typ = self.visit(ast.expr, Access(frame, sym, False, False))
+        exp_j, exp_typ = self.visit(ast.expr, Access(frame, sym, False))
         self.emit.printout(exp_j + self.emit.emitIFFALSE(labelE, frame))
         self.visit(ast.stmt, o)
         self.emit.printout(self.emit.emitLABEL(
@@ -519,8 +525,10 @@ class CodeGenVisitor(BaseVisitor, Utils):
     def visitBreakStmt(self, ast, o):
         pass
 
-    def visitReturnStmt(self, ast, o):
-        pass
+    def visitReturnStmt(self, ast: ReturnStmt, o: SubBody):
+        print("========================= ReturnStmt", ast)
+        print("========================= End ReturnStmt")
+        return True
 
     def visitCallStmt(self, ast: CallStmt, o: SubBody):
         print("========================= CallStmt", ast)
@@ -532,7 +540,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         paramsCode = ""
         for x in ast.args:
             exprCode, exprTyp = self.visit(
-                x, Access(frame, o.sym, False, True))
+                x, Access(frame, o.sym, False))
             paramsCode += exprCode
         self.emit.printout(paramsCode + self.emit.emitINVOKESTATIC(
             cName + "/" + sym.name, cTyp, frame))
@@ -555,8 +563,9 @@ class CodeGenVisitor(BaseVisitor, Utils):
         dimen = o.dimen
         explist = ast.explist
         expCode = ""
-        expTyp = None
+        expTyp = o.elTypOfArray
         for i, x in enumerate(explist):
+            # change multidimensions into single dimension
             # dimensions:    [4, 3, 4]
             # idxDimensions: [1, 2, 5] -> idx = (1 * 3 * 4) + (2 * 3) + 5
             dimen.idxDimensions.append(i)
@@ -568,13 +577,15 @@ class CodeGenVisitor(BaseVisitor, Utils):
                 val = dimen.idxDimensions[dimen.curDimen]
             dimen.idx += val
 
-            eC, expTyp = self.visit(x, o)
+            eC, eT = self.visit(x, o)
 
             if type(x) is ArrayLit:
                 dimen.curDimen -= 1
             if type(x) is not ArrayLit:
+                if type(eT) is IntegerType and type(expTyp) is FloatType:
+                    eC += self.emit.emitI2F(frame)
                 expCode += self.emit.emitDUP(
-                    frame) + self.emit.emitPUSHICONST(dimen.idx, frame) + eC + self.emit.emitASTORE(expTyp, frame)
+                    frame) + self.emit.emitPUSHCONST(str(dimen.idx), expTyp, frame) + eC + self.emit.emitASTORE(expTyp, frame)
             else:
                 expCode += eC
             dimen.idx -= val

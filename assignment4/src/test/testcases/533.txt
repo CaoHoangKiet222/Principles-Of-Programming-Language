@@ -1,0 +1,7 @@
+
+        main: function void() {
+            if (1 < 2) {
+                printBoolean(true);
+            }
+        }
+        
