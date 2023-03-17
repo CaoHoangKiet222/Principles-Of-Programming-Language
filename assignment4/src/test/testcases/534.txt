@@ -4,7 +4,6 @@
                 printBoolean(true);
             } else {
                 printBoolean(false);
-                return;
             }
             printBoolean(false);
         }

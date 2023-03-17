@@ -466,12 +466,12 @@ class Emitter():
                 result.append(self.jvm.emitIFGT(labelF))
             else:
                 result.append(self.jvm.emitIFICMPGT(labelF))
-        elif op == "<>":
+        elif op == "!=":
             if isFloat:
                 result.append(self.jvm.emitIFEQ(labelF))
             else:
                 result.append(self.jvm.emitIFICMPEQ(labelF))
-        elif op == "=":
+        elif op == "==":
             if isFloat:
                 result.append(self.jvm.emitIFNE(labelF))
             else:

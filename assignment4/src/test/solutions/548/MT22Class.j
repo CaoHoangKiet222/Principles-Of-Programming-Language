@@ -5,24 +5,50 @@
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-	iconst_1
-	iconst_2
-	if_icmple Label2
-	iconst_1
-	goto Label3
+.var 1 is i I from Label0 to Label1
+	iconst_0
+	istore_1
 Label2:
-	iconst_0
-Label3:
+	iload_1
+	bipush 20
+	if_icmpeq Label6
 	iconst_1
-	invokestatic io/printBoolean(Z)V
+	goto Label7
+Label6:
 	iconst_0
-	invokestatic io/printBoolean(Z)V
+Label7:
+	ifle Label3
+Label8:
+	iload_1
+	bipush 10
+	if_icmpne Label10
+	iconst_1
+	goto Label11
+Label10:
 	iconst_0
-	invokestatic io/printBoolean(Z)V
+Label11:
+	ifle Label12
+	bipush 100
+	istore_1
+	goto Label5
+	goto Label13
+Label12:
+Label13:
+	iload_1
+	iconst_1
+	iadd
+	istore_1
+Label9:
+Label4:
+	goto Label2
+Label3:
+Label5:
+	iload_1
+	invokestatic io/printInteger(I)V
 Label1:
 	return
-.limit stack 7
-.limit locals 1
+.limit stack 6
+.limit locals 2
 .end method
 
 .method public <init>()V

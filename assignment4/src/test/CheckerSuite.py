@@ -1156,8 +1156,8 @@ class CheckerSuite(unittest.TestCase):
         expect = "Type Mismatch In Expression: BinExpr(==, Id(a), BooleanLit(True))"
         self.assertTrue(TestChecker.test(input, expect, 483))
 
-        def test_84(self):
-            input = """
+    def test_84(self):
+        input = """
         x: float = 3.0;
         a : array [2] of integer;
         foo: function auto(){}
@@ -1169,11 +1169,11 @@ class CheckerSuite(unittest.TestCase):
         }
     """
 
-            expect = "Invalid Statement In Function: main"
-            self.assertTrue(TestChecker.test(input, expect, 484))
+        expect = "Invalid Statement In Function: main"
+        self.assertTrue(TestChecker.test(input, expect, 484))
 
-        def test_85(self):
-            input = """
+    def test_85(self):
+        input = """
         fact : function integer (n : integer) {
             a : array [2] of integer;
             i: float = 3;
@@ -1181,8 +1181,8 @@ class CheckerSuite(unittest.TestCase):
         }
         main: function void(){}
     """
-            expect = "Type Mismatch In Statement: ForStmt(AssignStmt(Id(i), IntegerLit(123)), BinExpr(>, IntegerLit(9), IntegerLit(8)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([]))"
-            self.assertTrue(TestChecker.test(input, expect, 485))
+        expect = "Type Mismatch In Statement: ForStmt(AssignStmt(Id(i), IntegerLit(123)), BinExpr(>, IntegerLit(9), IntegerLit(8)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([]))"
+        self.assertTrue(TestChecker.test(input, expect, 485))
 
     def test_86(self):
         input = """

@@ -1,0 +1,17 @@
+
+        main: function void() {
+            i: integer = 0;
+            do{
+                j : integer = 0;
+                while (j < 20) {
+                    if (i + j >= 20) {
+                        break;
+                    } else {
+                        j = j + 1;
+                    }
+                }
+                printInteger(j);
+                i = i + 1;
+            }while(i < 10);
+        }
+            

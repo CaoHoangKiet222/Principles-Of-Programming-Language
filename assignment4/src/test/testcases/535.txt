@@ -1,9 +1,10 @@
 
         main: function void() {
-            if (1 < 2) {
+            if (!(1 > 2)) {
                 printBoolean(true);
             } else {
                 printBoolean(false);
             }
+            printBoolean(false);
         }
         

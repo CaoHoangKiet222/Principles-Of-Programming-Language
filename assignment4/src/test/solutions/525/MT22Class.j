@@ -124,6 +124,7 @@ Label5:
 	i2f
 	fadd
 	fcmpl
+	ifne Label6
 	iconst_1
 	goto Label7
 Label6:
@@ -249,6 +250,7 @@ Label11:
 	i2f
 	fadd
 	fcmpl
+	ifeq Label12
 	iconst_1
 	goto Label13
 Label12:

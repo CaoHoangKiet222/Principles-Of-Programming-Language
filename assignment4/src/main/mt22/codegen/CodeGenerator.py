@@ -43,8 +43,10 @@ class MyUtils:
                 mTyp = IntegerType(lType.val - rType.val)
             elif op == '*':
                 mTyp = IntegerType(lType.val * rType.val)
-            else:
+            elif op == '%':
                 mTyp = IntegerType(lType.val % rType.val)
+            else:
+                mTyp = IntegerType()
         else:
             mTyp = FloatType()
         return mTyp
@@ -311,8 +313,12 @@ class CodeGenVisitor(BaseVisitor, Utils):
                 access = Access(frame, subctxt.sym, False)
             initCode, initTyp = self.visit(init, access)
             initTyp = MyUtils.retrieveType(initTyp)
-            if type(initTyp) is IntegerType and type(typ) is FloatType:
-                initCode += self.emit.emitI2F(frame)
+            if type(initTyp) is IntegerType:
+                if type(typ) is FloatType:
+                    initCode += self.emit.emitI2F(frame)
+                # Update IntegerType for variable
+                if type(typ) is IntegerType:
+                    typ = IntegerType(initTyp.val)
 
         if subctxt.isGlobal:
             self.emit.printout(self.emit.emitATTRIBUTE(
@@ -328,10 +334,10 @@ class CodeGenVisitor(BaseVisitor, Utils):
         if type(typ) is ArrayPointerType:
             self.emit.printout(self.emit.emitInitNewLocalArray(
                 idx, typ.arraySize, typ.eleType, initCode, frame))
-        else:
+        elif init:
             self.emit.printout(
                 initCode + self.emit.emitWRITEVAR(name, typ, idx, frame))
-        print("============================ End VarDecl", ast)
+        print("============================ End VarDecl", ast, typ)
         return SubBody(frame, [Symbol(name, typ, Index(idx))] + subctxt.sym)
 
     def visitParamDecl(self, ast: ParamDecl, o: Access):
@@ -377,7 +383,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         sym = o.sym
         alreadyBlock = o.alreadyBlock
         hasReturnStmt = False
-        if not alreadyBlock:  # for FuncDecl
+        if not alreadyBlock:
             frame.enterScope(False)
             self.emit.printout(self.emit.emitLABEL(
                 frame.getStartLabel(), frame))
@@ -396,6 +402,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         return hasReturnStmt
 
     def visitBinExpr(self, ast: BinExpr, o: Access):
+        print("======================== BinExpr", ast)
         leftCode, leftTyp = self.visit(ast.left, o)
         rightCode, rightTyp = self.visit(ast.right, o)
         op = ast.op
@@ -460,6 +467,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         return nameCode + self.emit.emitPUSHICONST(idx, frame) + self.emit.emitALOAD(nameTyp.eleType, frame), nameTyp.eleType
 
     def visitAssignStmt(self, ast: AssignStmt, o: SubBody):
+        print("========================== AssignStmt", ast)
         subctxt = o
         frame = subctxt.frame
         sym = subctxt.sym
@@ -471,8 +479,10 @@ class CodeGenVisitor(BaseVisitor, Utils):
             self.emit.printout(lhsCode[0] + rhsCode + lhsCode[1])
         else:
             self.emit.printout(rhsCode + lhsCode)
+        print("========================== End AssignStmt", ast)
 
     def visitIfStmt(self, ast: IfStmt, o: SubBody):
+        print("=========================== IfStmt", ast)
         frame = o.frame
         sym = o.sym
         condCode, _ = self.visit(
@@ -484,49 +494,127 @@ class CodeGenVisitor(BaseVisitor, Utils):
 
         self.emit.printout(self.emit.emitIFFALSE(labelF, frame))
 
-        hasReturnStmt = self.visit(ast.tstmt, o) is True
+        hasReturnStmt = self.visit(ast.tstmt, SubBody(
+            frame, sym, alreadyBlock=True)) is True
+
         if not hasReturnStmt:
             self.emit.printout(self.emit.emitGOTO(labelE, frame))
 
         self.emit.printout(self.emit.emitLABEL(labelF, frame))
         if ast.fstmt:
-            print(self.visit(ast.fstmt, o))
+            self.visit(ast.fstmt, SubBody(frame, sym, alreadyBlock=True))
 
         self.emit.printout(self.emit.emitLABEL(labelE, frame))
+        print("=========================== End IfStmt", ast)
         return hasReturnStmt
 
-    def visitForStmt(self, ast, o):
-        pass
-
-    def visitWhileStmt(self, ast, o):
+    def visitForStmt(self, ast: ForStmt, o: SubBody):
+        print("=========================== ForStmt", ast)
         frame = o.frame
-        sym = o.sym
-        labelW = frame.getNewLabel()  # label while
-        labelE = frame.getNewLabel()  # label end
+        # change this if error
+        sym = self.lookup(ast.init.lhs.name, o.sym, lambda x: x.name)
+        # Initialize the loop counter variable
+        if sym is None:
+            newSubBd = self.visit(
+                VarDecl(ast.init.lhs, IntegerType(), ast.init.rhs), o)
+            o.sym = newSubBd.sym
+            o.frame = newSubBd.frame
+            sym = o.sym[0]
+        else:
+            self.visit(ast.init, o)
+
+        labelS = frame.getNewLabel()  # label start
+        labelE = frame.getNewLabel()  # label End
+
+        self.emit.printout(self.emit.emitLABEL(labelS, frame))
+
         frame.enterLoop()
-        self.emit.printout(self.emit.emitLABEL(labelW, frame))
-        exp_j, exp_typ = self.visit(ast.expr, Access(frame, sym, False))
-        self.emit.printout(exp_j + self.emit.emitIFFALSE(labelE, frame))
-        self.visit(ast.stmt, o)
+        condCode, _ = self.visit(ast.cond, Access(frame, o.sym, False))
+        # check condition
+        self.emit.printout(condCode + self.emit.emitIFFALSE(labelE, frame))
+
+        self.visit(ast.stmt, SubBody(
+            frame, o.sym, alreadyBlock=False))
+
         self.emit.printout(self.emit.emitLABEL(
             frame.getContinueLabel(), frame))
-        self.emit.printout(self.emit.emitGOTO(
-            labelW, frame) + self.emit.emitLABEL(labelE, frame))
+        # increment the loop counter variable
+        updCode, _ = self.visit(ast.upd, Access(frame, o.sym, False))
+        self.emit.printout(
+            updCode + self.emit.emitWRITEVAR(sym.name, sym.mtype, sym.value.value, frame))
+
+        self.emit.printout(self.emit.emitGOTO(labelS, frame))
+
+        self.emit.printout(self.emit.emitLABEL(labelE, frame))
+        self.emit.printout(self.emit.emitLABEL(frame.getBreakLabel(), frame))
+        print("=========================== End ForStmt", ast)
+        frame.exitLoop()
+
+    def visitWhileStmt(self, ast: WhileStmt, o: SubBody):
+        print("=========================== WhileStmt", ast)
+        frame = o.frame
+        sym = o.sym
+        labelS = frame.getNewLabel()  # label start
+        labelE = frame.getNewLabel()  # label end
+        frame.enterLoop()
+
+        # check condition
+        self.emit.printout(self.emit.emitLABEL(labelS, frame))
+        condCode, _ = self.visit(ast.cond, Access(frame, sym, False))
+        self.emit.printout(condCode + self.emit.emitIFFALSE(labelE, frame))
+
+        self.visit(ast.stmt, o)
+
+        self.emit.printout(self.emit.emitLABEL(
+            frame.getContinueLabel(), frame))
+        self.emit.printout(self.emit.emitGOTO(labelS, frame))
+        self.emit.printout(self.emit.emitLABEL(labelE, frame))
+        self.emit.printout(self.emit.emitLABEL(frame.getBreakLabel(), frame))
+        frame.exitLoop()
+        print("=========================== End WhileStmt", ast)
+
+    def visitDoWhileStmt(self, ast: DoWhileStmt, o: SubBody):
+        print("=========================== DoWhileStmt", ast)
+        frame = o.frame
+        sym = o.sym
+        labelS = frame.getNewLabel()  # label start
+        labelE = frame.getNewLabel()  # label end
+        frame.enterLoop()
+        self.emit.printout(self.emit.emitLABEL(labelS, frame))
+
+        self.visit(ast.stmt, o)
+
+        self.emit.printout(self.emit.emitLABEL(
+            frame.getContinueLabel(), frame))
+
+        # check condition
+        condCode, _ = self.visit(ast.cond, Access(frame, sym, False))
+        self.emit.printout(condCode + self.emit.emitIFFALSE(labelE, frame))
+
+        self.emit.printout(self.emit.emitGOTO(labelS, frame))
+        self.emit.printout(self.emit.emitLABEL(labelE, frame))
         self.emit.printout(self.emit.emitLABEL(
             frame.getBreakLabel(), frame))
         frame.exitLoop()
+        print("=========================== End DoWhileStmt", ast)
 
-    def visitDoWhileStmt(self, ast, o):
-        pass
+    def visitContinueStmt(self, ast: ContinueStmt, o: SubBody):
+        print("========================= ContinueStmt", ast)
+        self.emit.printout(self.emit.emitGOTO(
+            o.frame.getContinueLabel(), o.frame))
+        print("========================= End ContinueStmt", ast)
 
-    def visitContinueStmt(self, ast, o):
-        pass
-
-    def visitBreakStmt(self, ast, o):
-        pass
+    def visitBreakStmt(self, ast: BreakStmt, o: SubBody):
+        print("========================= BreakStmt", ast)
+        self.emit.printout(self.emit.emitGOTO(
+            o.frame.getBreakLabel(), o.frame))
+        print("========================= End BreakStmt", ast)
 
     def visitReturnStmt(self, ast: ReturnStmt, o: SubBody):
         print("========================= ReturnStmt", ast)
+        frame = o.frame
+        returnTyp = frame.returnType
+        self.emit.printout(self.emit.emitRETURN(returnTyp, frame))
         print("========================= End ReturnStmt")
         return True
 
@@ -604,3 +692,4 @@ class CodeGenVisitor(BaseVisitor, Utils):
                 if o.isLeft == True and not isArrayType:
                     return self.emit.emitWRITEVAR(ast.name, s.mtype, s.value.value, frame), s.mtype
                 return self.emit.emitREADVAR(ast.name, s.mtype, s.value.value, frame), s.mtype
+        return "", None

@@ -5,24 +5,57 @@
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
+.var 1 is i I from Label0 to Label1
+	iconst_5
+	istore_1
+.var 2 is x [I from Label0 to Label1
+	bipush 100
+	newarray int
+	dup
+	iconst_0
+	bipush 101
+	iastore
+	dup
 	iconst_1
+	sipush 202
+	iastore
+	dup
+	bipush 10
+	iload_1
+	iastore
+	astore_2
+	aload_2
+	bipush 10
+	iaload
+	invokestatic io/printInteger(I)V
+	iload_1
 	iconst_2
-	if_icmple Label2
+	irem
+	iconst_0
+	if_icmpeq Label2
 	iconst_1
 	goto Label3
 Label2:
 	iconst_0
 Label3:
+	aload_2
+	bipush 50
+	iload_1
+	iastore
+	aload_2
+	iconst_5
+	iload_1
 	iconst_1
-	invokestatic io/printBoolean(Z)V
-	iconst_0
-	invokestatic io/printBoolean(Z)V
-	iconst_0
-	invokestatic io/printBoolean(Z)V
+	iadd
+	iastore
+	aload_2
+	bipush 50
+	iaload
+	invokestatic io/printInteger(I)V
 Label1:
 	return
-.limit stack 7
-.limit locals 1
+.limit stack 13
+.limit locals 3
 .end method
 
 .method public <init>()V

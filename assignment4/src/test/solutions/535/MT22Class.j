@@ -13,6 +13,12 @@ Label0:
 Label2:
 	iconst_0
 Label3:
+	ifgt Label5
+	iconst_1
+	goto Label4
+Label5:
+	iconst_0
+Label4:
 	iconst_1
 	invokestatic io/printBoolean(Z)V
 	iconst_0
@@ -21,7 +27,7 @@ Label3:
 	invokestatic io/printBoolean(Z)V
 Label1:
 	return
-.limit stack 7
+.limit stack 10
 .limit locals 1
 .end method
 
