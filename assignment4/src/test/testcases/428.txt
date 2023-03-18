@@ -1,0 +1,11 @@
+
+        inc: function void(out n: integer, delta: integer) {
+            if (n > delta) {
+                if (true) {}
+                else {}
+            } else {
+                if (n % 2.0 == 0) {}
+            }
+        }
+        main: function void() {}
+        

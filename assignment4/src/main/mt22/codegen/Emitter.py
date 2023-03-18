@@ -540,11 +540,6 @@ class Emitter():
         buffer.append(self.jvm.emitENDMETHOD())
         return ''.join(buffer)
 
-    def getConst(self, ast):
-        # ast: Literal
-        if type(ast) is IntLiteral:
-            return (str(ast.value), cgen.IntegerType())
-
     '''   generate code to initialize a local array variable.<p>
     *   @param index the index of the local variable.
     *   @param in the type of the local array variable.
@@ -647,7 +642,7 @@ class Emitter():
     ''' generate code to return.
     *   <ul>
     *   <li>ireturn if the type is IntegerType or BooleanType
-    *   <li>freturn if the type is RealType
+    *   <li>freturn if the type is FloatType
     *   <li>return if the type is null
     *   </ul>
     *   @param in the type of the returned expression.
@@ -657,11 +652,15 @@ class Emitter():
         # in_: Type
         # frame: Frame
 
-        if type(in_) is cgen.IntegerType:
-            frame.pop()
-            return self.jvm.emitIRETURN()
-        elif type(in_) is VoidType:
+        if type(in_) is VoidType:
             return self.jvm.emitRETURN()
+
+        frame.pop()
+        if type(in_) in [cgen.IntegerType, BooleanType]:
+            return self.jvm.emitIRETURN()
+        if type(in_) is FloatType:
+            return self.jvm.emitFRETURN()
+        return self.jvm.emitARETURN()
 
     ''' generate code that represents a label	
     *   @param label the label

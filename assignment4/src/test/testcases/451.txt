@@ -1,0 +1,12 @@
+
+        foo2: function auto() {}
+        foo1: function integer(inherit c: float) inherit foo2 {
+            printInteger(super(1.0, 1.0));
+            i: integer = 2;
+            return 1;
+        }
+
+        main: function void(){
+            foo2(foo1(1.0), 1);
+        }
+        

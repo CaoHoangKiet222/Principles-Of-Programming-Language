@@ -1,0 +1,4 @@
+
+        b: auto = "hello";
+        c: auto = b == "hello1";
+        

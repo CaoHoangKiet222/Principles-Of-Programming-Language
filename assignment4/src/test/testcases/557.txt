@@ -1,0 +1,18 @@
+
+        inc: function float(n: integer, delta: integer) {
+            n = n + delta;
+            for (i = 1, i < n, i+1) {
+                for (j = 1, j < n, j+1) {
+                    if (i + j >= 2) {
+                        return i + j;
+                    } else {
+                        printInteger(i-j);
+                    }
+                }
+            }
+            return 0;
+        }
+        main: function void() {
+            writeFloat(inc(2, 2));
+        }
+        

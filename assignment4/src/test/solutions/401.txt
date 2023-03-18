@@ -1,0 +1,1 @@
+Type Mismatch In Statement: VarDecl(Id(x), IntegerType, BinExpr(+, Id(a), IntegerLit(2)))

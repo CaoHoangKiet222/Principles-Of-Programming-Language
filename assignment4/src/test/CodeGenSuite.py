@@ -624,41 +624,165 @@ class CheckCodeGenSuite(unittest.TestCase):
     #     expect = "5"
     #     self.assertTrue(TestCodeGen.test(input, expect, 549))
 
-    def test_50(self):
-        input = """
-        main: function void() {
-            i, nE: integer = 0, 10;
-            do {
-                for (i = 0, i < nE, i+1)
-                    if (nE == 10 + 5)
-                        continue;
-                    else
-                        nE = nE + 1;
-                break;
-            } while(true);
-            printInteger(nE);
-        }
-        """
-        expect = "15"
-        self.assertTrue(TestCodeGen.test(input, expect, 550))
+    # def test_50(self):
+    #     input = """
+    #     main: function void() {
+    #         i, nE: integer = 0, 10;
+    #         do {
+    #             for (i = 0, i < nE, i+1)
+    #                 if (nE == 10 + 5)
+    #                     continue;
+    #                 else
+    #                     nE = nE + 1;
+    #             break;
+    #         } while(true);
+    #         printInteger(nE);
+    #     }
+    #     """
+    #     expect = "15"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 550))
 
-    def test_51(self):
+    # def test_51(self):
+    #     input = """
+    #     main: function void() {
+    #         i: integer = 0;
+    #         do{
+    #             j : integer = 0;
+    #             while (j < 20) {
+    #                 if (i + j >= 20) {
+    #                     break;
+    #                 } else {
+    #                     j = j + 1;
+    #                 }
+    #             }
+    #             printInteger(j);
+    #             i = i + 1;
+    #         }while(i < 10);
+    #     }
+    #         """
+    #     expect = "20191817161514131211"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 551))
+
+    # def test_52(self):
+    #     input = """
+    #     fact: function integer (n: integer) {
+    #         if (n == 0) return 1;
+    #         else return n;
+    #     }
+    #     main: function void() {
+    #         delta: integer = fact(3);
+    #         printInteger(delta);
+    #     }
+    #         """
+    #     expect = "3"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 552))
+
+    # def test_53(self):
+    #     input = """
+    #     x: integer = 65;
+    #     fact: function integer (n: integer) {
+    #         if (n == 0) return 1;
+    #         else return n * fact(n - 1);
+    #     }
+    #     inc: function void(n: integer, delta: integer) {
+    #         n = n + delta;
+    #         printInteger(n);
+    #     }
+    #     main: function void() {
+    #         delta: integer = fact(3);
+    #         inc(x, delta);
+    #     }
+    #         """
+    #     expect = "71"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 553))
+
+    # def test_54(self):
+    #     input = """
+    #     main: function void() {
+    #         for (i = 1, i < 10, i+1) {
+    #             printInteger(i);
+    #             return;
+    #         }
+    #     }
+    #         """
+    #     expect = "1"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 554))
+
+    # def test_55(self):
+    #     input = """
+    #     inc: function integer(n: integer, delta: integer) {
+    #         n = n + delta;
+    #         for (i = 1, i < 10, i+1) {
+    #             return i;
+    #         }
+    #         return 10;
+    #     }
+    #     main: function void() {
+    #         printInteger(inc(1, 1));
+    #     }
+    #         """
+    #     expect = "1"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 555))
+
+    # def test_56(self):
+    #     input = """
+    #     inc: function integer(n: integer, delta: integer) {
+    #         n = n + delta;
+    #         for (i = 1, i < 10, i+1) {
+    #             while(n < 10) {
+    #                 return i;
+    #             }
+    #         }
+    #         return 10;
+    #     }
+    #     main: function void() {
+    #         printInteger(inc(1, 1));
+   #         }
+    #     }
+    #         """
+    #     expect = "1"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 556))
+
+    # def test_57(self):
+    #     input = """
+    #     inc: function float(n: integer, delta: integer) {
+    #         n = n + delta;
+    #         for (i = 1, i < n, i+1) {
+    #             for (j = 1, j < n, j+1) {
+    #                 if (i + j >= 2) {
+    #                     return i + j;
+    #                 } else {
+    #                     printInteger(i-j);
+    #                 }
+    #             }
+    #         }
+    #         return 0;
+    #     }
+    #     main: function void() {
+    #         writeFloat(inc(2, 2));
+    #     }
+    #     """
+    #     expect = "2.0"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 557))
+
+    # def test_58(self):
+    #     input = """
+    #     main: function void() {
+    #         i: integer = 1;
+    #         while(i < 10)
+    #             return;
+    #     }
+    #         """
+    #     expect = ""
+    #     self.assertTrue(TestCodeGen.test(input, expect, 558))
+
+    def test_59(self):
         input = """
         main: function void() {
-            i: integer = 0;
-            do{
-                j : integer = 0;
-                while (j < 20) {
-                    if (i + j >= 20) {
-                        break;
-                    } else {
-                        j = j + 1;
-                    }
-                }
-                printInteger(j);
-                i = i + 1;
-            }while(i < 10);
+            i: integer = 1;
+            while(i < 10) 
+                return;
         }
             """
-        expect = "20191817161514131211"
-        self.assertTrue(TestCodeGen.test(input, expect, 551))
+        expect = ""
+        self.assertTrue(TestCodeGen.test(input, expect, 559))

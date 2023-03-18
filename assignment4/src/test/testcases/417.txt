@@ -1,0 +1,5 @@
+
+        a: array[3] of integer = {1};
+        b: integer = a[0] + 2;
+        b: integer = -a[0, 1] + 2;
+        

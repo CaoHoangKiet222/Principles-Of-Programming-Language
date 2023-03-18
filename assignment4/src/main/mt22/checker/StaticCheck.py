@@ -60,7 +60,7 @@ class CheckUtils:
 
     @staticmethod
     def inLoop(ob):
-        if len(ob["for"]) != 0 and len(ob["while"]) != 0 and len(ob["dowhile"]) != 0:
+        if len(ob["for"]) != 0 or len(ob["while"]) != 0 or len(ob["dowhile"]) != 0:
             return True
         return False
 

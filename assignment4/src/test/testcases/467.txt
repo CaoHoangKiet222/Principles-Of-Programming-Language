@@ -1,0 +1,19 @@
+
+        checkElementsUniqueness: function auto (arr: array[100] of integer, n: integer) {
+          if ((n > 1000) || (n < 0))
+            return false;
+          for (i = 0, i < n - 1, i+1) {
+            for (j = i + 1, j < n, j+1) {
+              if (arr[i] == arr[j])
+                return false;
+            }
+          }
+          return true;
+        }
+
+        main: function void() {
+            arr   : array [6] of integer = {1, 91, 0, -100, 100, 200};
+            if (checkElementsUniqueness(arr, 6)) printString("Correct!");
+            else printString("Wrong!");
+        }
+        

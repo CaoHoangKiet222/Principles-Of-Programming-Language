@@ -1,0 +1,21 @@
+
+        foo: function string (a: string, b: float) {
+            c : integer = 2;
+            d: float = c + 1;
+            f : array [5] of string;
+            return f[1];
+        }
+        bar: function void (inherit out a: integer, inherit out b: string) inherit foo {
+            super("Hello", 123);
+            for (i = 1, i < 10, i + 1)
+            {
+                printFloat(a);
+            }
+            if (a==2)
+                return;
+            else
+                break;
+        }
+        main : function void () {
+        }
+        

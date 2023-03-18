@@ -1,0 +1,3 @@
+
+        main: function void(out x: array[0, 100] of integer) {}
+        

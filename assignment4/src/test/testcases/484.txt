@@ -1,0 +1,11 @@
+
+        x: float = 3.0;
+        a : array [2] of integer;
+        foo: function auto(){}
+        fact : function integer (n : integer) {
+            b: float;
+            n = foo() + 1;
+        }
+        main: function void() inherit fact {
+        }
+    

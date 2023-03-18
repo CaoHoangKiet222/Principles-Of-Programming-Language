@@ -1,0 +1,10 @@
+
+        x: integer;
+        inc: function auto(out n: integer, delta: integer) {
+            n = n + delta;
+        }
+        main: function void() {
+            delta: integer = inc(inc(x, x), x);
+            y: boolean = -inc(x, 1);
+        }
+        

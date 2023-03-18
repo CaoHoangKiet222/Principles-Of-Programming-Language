@@ -1,0 +1,17 @@
+
+        s : string;
+        random: function string(n: integer)
+        {
+            i: integer;
+            s = "";
+            for (i = 0,i < n,i+1)
+                s = s::random(i);
+            return s;
+        }
+        main: function void() {
+            n : integer;
+            printString("Input n:");
+            n = readInteger();
+            printString("The random string length n is "::random(n));
+        }
+        

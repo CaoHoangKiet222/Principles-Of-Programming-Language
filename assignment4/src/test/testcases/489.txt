@@ -1,0 +1,14 @@
+
+        x: integer;
+        haha: function integer(){}
+
+        haha1: function float(inherit y: float) inherit haha{
+            z: float = 10_999_222_1.1;
+            return 1;
+        }
+        main: function void() inherit haha {
+            preventDefault();
+            x: integer = readInteger();
+            printInteger(x);
+        }
+    

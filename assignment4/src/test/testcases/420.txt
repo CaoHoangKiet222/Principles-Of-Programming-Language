@@ -1,0 +1,4 @@
+
+        inc: function void(delta: integer, delta: float) {}
+        main: function void() {}
+        

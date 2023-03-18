@@ -1,0 +1,11 @@
+
+        swap: function void(x: float,y: float) {
+          k: integer = x;
+          x = y;
+          y = k;
+        }
+
+        main: function void() {
+            swap(1, 2);
+        }
+        

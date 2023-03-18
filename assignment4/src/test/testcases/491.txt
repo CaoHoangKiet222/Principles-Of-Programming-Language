@@ -1,0 +1,16 @@
+
+        x: integer;
+        jump: function integer(inherit nums: array[100] of integer, size: integer){
+          minjump: integer = size - 1;
+          return minjump;
+        }
+
+        jump_: function float(inherit z: float) inherit jump {
+            preventDefault();
+            y: float = 10.1;
+            return nums[0];
+        }
+
+        main: function void(){
+        }
+    

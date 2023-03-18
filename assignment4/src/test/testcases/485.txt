@@ -1,0 +1,8 @@
+
+        fact : function integer (n : integer) {
+            a : array [2] of integer;
+            i: float = 3;
+            for (i = 123, 9 > 8, i + 1){}
+        }
+        main: function void(){}
+    

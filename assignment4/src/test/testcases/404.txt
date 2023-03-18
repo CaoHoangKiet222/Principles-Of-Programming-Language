@@ -1,0 +1,5 @@
+
+        a: auto = 10;
+        c: auto = !(a < 100);
+        c: auto = c;
+        

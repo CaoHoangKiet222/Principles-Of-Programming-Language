@@ -1,0 +1,17 @@
+
+        x: integer = 65;
+        fact: function integer (n: integer) {
+            if (n == 0) return 1;
+            else return n;
+        }
+        /* inc: function void(n: integer, delta: integer) {
+            n = n + delta;
+            printInteger(n);
+        }
+        */
+        main: function void() {
+            delta: integer = fact(3);
+            printInteger(delta);
+            // inc(x, 1);
+        }
+            

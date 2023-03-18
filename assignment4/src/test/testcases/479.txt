@@ -1,0 +1,8 @@
+
+        foo: function boolean () {
+            return true;
+        }
+        main: function void (out m : float, out a: float) inherit foo {
+            return true;
+        }
+        
