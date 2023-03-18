@@ -1,1 +1,1 @@
-Type Mismatch In Statement: CallStmt(Id(super), [IntegerLit(10)])
+Type Mismatch In Statement: CallStmt(super, [IntegerLit(10)])

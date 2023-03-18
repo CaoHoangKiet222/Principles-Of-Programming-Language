@@ -1,1 +1,1 @@
-Type Mismatch In Statement: VarDecl(Id(a), ArrayType([2, 3, 2], IntegerType), ArrayLit([ArrayLit([ArrayLit([]), ArrayLit([]), ArrayLit([]), ArrayLit([])]), ArrayLit([ArrayLit([]), ArrayLit([]), ArrayLit([])])]))
+Type Mismatch In Statement: VarDecl(a, ArrayType([2, 3, 2], IntegerType), ArrayLit([ArrayLit([ArrayLit([]), ArrayLit([]), ArrayLit([]), ArrayLit([])]), ArrayLit([ArrayLit([]), ArrayLit([]), ArrayLit([])])]))

@@ -215,11 +215,11 @@ class StaticChecker(BaseVisitor, Utils):
         for decl in ast.decls:
             if type(decl) is FuncDecl:
                 # change this if error
-                if decl.name.name == "main" and type(decl.return_type) is VoidType and len(decl.params) == 0:
+                if decl.name == "main" and type(decl.return_type) is VoidType and len(decl.params) == 0:
                     flag = True
             elif type(decl) is ParamDecl:
                 # change this if error
-                raise Invalid(Parameter(), decl.name.name)
+                raise Invalid(Parameter(), decl.name)
             self.visit(decl, c)
 
         if flag == False:
@@ -228,7 +228,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     def visitVarDecl(self, ast: VarDecl, c):
         print("========================== VarDecl", ast)
-        name = ast.name.name  # change this if error
+        name = ast.name  # change this if error
         typ = self.visit(ast.typ, c)
         init = ast.init
         if name in c[0]:
@@ -264,7 +264,7 @@ class StaticChecker(BaseVisitor, Utils):
     def visitParamDecl(self, ast: ParamDecl, c):
         print("========================== ParamDecl", ast)
         global_env = c
-        name = ast.name.name  # change this if error
+        name = ast.name  # change this if error
         typ = ast.typ
         out = ast.out
         inherit = ast.inherit
@@ -284,7 +284,7 @@ class StaticChecker(BaseVisitor, Utils):
     def visitFuncDecl(self, ast: FuncDecl, c):
         print("=========================== FuncDecl", ast)
         # name: str, return_type: Type, params: List[ParamDecl], inherit: str or None, body: BlockStmt
-        name = ast.name.name  # change this if error
+        name = ast.name  # change this if error
         return_type = ast.return_type
         params = ast.params
         inherit = ast.inherit  # change this if error
@@ -294,11 +294,10 @@ class StaticChecker(BaseVisitor, Utils):
             raise Redeclared(Function(), name)
         env = [{}] + c
         self.current_method = c[0][name] = {
-            "kind": Function(), "typ": return_type, "params": [], "params_inherit": {}, "inherit": inherit.name if inherit else None, "inherit_checked": False
+            "kind": Function(), "typ": return_type, "params": [], "params_inherit": {}, "inherit": inherit if inherit else None, "inherit_checked": False
         }
         reduce(lambda _, p: self.visit(p, env), params, [])
         if inherit is not None:
-            inherit = inherit.name  # change this if error
             parent_func = retriveElWithCond(
                 inherit, env, lambda el: isinstance(el[name]["kind"], Function), lambda: self.__raise(
                     Undeclared(Function(), inherit))
@@ -309,7 +308,7 @@ class StaticChecker(BaseVisitor, Utils):
             first_stmt = body.body[0]
             if type(first_stmt) is CallStmt:
                 # change this if error
-                sym = self.lookup(first_stmt.name.name,
+                sym = self.lookup(first_stmt.name,
                                   StaticChecker.global_envi, lambda x: x.name)
                 # check first_stmt is preventDefault or super
                 if sym.name != "preventDefault" and sym.name != "super":
@@ -372,8 +371,8 @@ class StaticChecker(BaseVisitor, Utils):
         left = ast.left
         right = ast.right
         if type(left) is FuncCall and type(right) is FuncCall:
-            left_name = left.name.name  # change this if error
-            right_name = right.name.name  # change this if error
+            left_name = left.name  # change this if error
+            right_name = right.name  # change this if error
             func_left = retriveEl(left_name, global_env, lambda: self.__raise(
                 Undeclared(Function(), left_name)))
             func_right = retriveEl(right_name, global_env, lambda: self.__raise(
@@ -454,8 +453,7 @@ class StaticChecker(BaseVisitor, Utils):
     def visitArrayCell(self, ast: ArrayCell, c):
         # change this if error
         print("======================= ArrayCell", ast)
-        print(c)
-        typ = self.visit(ast.name, c)
+        typ = self.visit(Id(ast.name), c)
         # check index operator E1[E2] (E1 must be in array type)
         if type(typ) is not ArrayType:
             raise TypeMismatchInExpression(ast)
@@ -468,7 +466,7 @@ class StaticChecker(BaseVisitor, Utils):
     def visitFuncCall(self, ast: FuncCall, c):
         print("====================== FuncCall", ast)
         (global_env, infer_typ) = c
-        name = ast.name.name  # change this if error
+        name = ast.name  # change this if error
         args = ast.args
         el = None
         for env in global_env:
@@ -639,7 +637,7 @@ class StaticChecker(BaseVisitor, Utils):
     def visitCallStmt(self, ast: CallStmt, c):
         print("====================== CallStmt", ast)
         global_env = c
-        name = ast.name.name  # change this if error
+        name = ast.name  # change this if error
         args = ast.args
         el = None
 

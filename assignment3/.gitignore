@@ -8,3 +8,4 @@ src/main/mt22/*/.DS_Store
 src/main/mt22/*/.antlr/
 src/test/__pycache__/
 src/test/.DS_Store
+target/main/mt22/*/__pycache__/
