@@ -1,4 +1,4 @@
 Program([
 	FuncDecl(checkElementsUniqueness, BooleanType, [Param(arr, ArrayType([100], IntegerType)), Param(n, IntegerType)], None, BlockStmt([]))
-	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(nums, ArrayType([100], IntegerType), ArrayLit([IntegerLit(100), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), VarDecl(nE, IntegerType, IntegerLit(100)), IfStmt(BinExpr(==, FuncCall(checkElementsUniqueness, [nums, nE]), BooleanLit(False)), BlockStmt([CallStmt(print, StringLit(element is unique))]), BlockStmt([CallStmt(print, StringLit(element is not unique))]))]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(nums, ArrayType([100], IntegerType), ArrayLit([IntegerLit(100), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), VarDecl(nE, IntegerType, IntegerLit(100)), IfStmt(BinExpr(==, FuncCall(checkElementsUniqueness, [Id(nums), Id(nE)]), BooleanLit(False)), BlockStmt([CallStmt(print, StringLit(element is unique))]), BlockStmt([CallStmt(print, StringLit(element is not unique))]))]))
 ])

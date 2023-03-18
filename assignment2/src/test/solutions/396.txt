@@ -3,5 +3,5 @@ Program([
 	FuncDecl(LEFT, IntegerType, [Param(i, IntegerType)], None, BlockStmt([]))
 	FuncDecl(RIGHT, IntegerType, [Param(i, IntegerType)], None, BlockStmt([]))
 	FuncDecl(reheapDown, VoidType, [Param(maxHeap, ArrayType([100], IntegerType)), Param(numberOfElements, IntegerType), Param(index, IntegerType)], None, BlockStmt([]))
-	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(index, IntegerType, IntegerLit(1)), VarDecl(maxHeap, ArrayType([100], IntegerType), ArrayLit([IntegerLit(1001), IntegerLit(20), IntegerLit(30), IntegerLit(40)])), CallStmt(reheapDown, maxHeap, IntegerLit(100), index)]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(index, IntegerType, IntegerLit(1)), VarDecl(maxHeap, ArrayType([100], IntegerType), ArrayLit([IntegerLit(1001), IntegerLit(20), IntegerLit(30), IntegerLit(40)])), CallStmt(reheapDown, Id(maxHeap), IntegerLit(100), Id(index))]))
 ])

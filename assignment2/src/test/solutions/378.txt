@@ -1,4 +1,4 @@
 Program([
 	FuncDecl(lengthOfLastWord, IntegerType, [Param(s, ArrayType([100], StringType)), Param(size, IntegerType)], None, BlockStmt([]))
-	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(s, ArrayType([100], StringType), ArrayLit([StringLit(Hello World!), StringLit(s1), StringLit(s2)])), CallStmt(lengthOfLastWord, s, IntegerLit(100))]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(s, ArrayType([100], StringType), ArrayLit([StringLit(Hello World!), StringLit(s1), StringLit(s2)])), CallStmt(lengthOfLastWord, Id(s), IntegerLit(100))]))
 ])

@@ -5,5 +5,5 @@ Program([
 	VarDecl(y, IntegerType, IntegerLit(1))
 	VarDecl(z, IntegerType, IntegerLit(1))
 	VarDecl(x, ArrayType([0, 100], IntegerType))
-	FuncDecl(main, VoidType, [], None, BlockStmt([ForStmt(AssignStmt(i, IntegerLit(0)), BinExpr(<, i, IntegerLit(100)), BinExpr(+, i, IntegerLit(1)), BlockStmt([AssignStmt(a, BinExpr(+, b, c)), AssignStmt(ArrayCell(x, [IntegerLit(0), i]), BinExpr(%, y, z))]))]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), IntegerLit(100)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([AssignStmt(Id(a), BinExpr(+, Id(b), Id(c))), AssignStmt(ArrayCell(x, [IntegerLit(0), Id(i)]), BinExpr(%, Id(y), Id(z)))]))]))
 ])

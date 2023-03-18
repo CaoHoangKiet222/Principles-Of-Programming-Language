@@ -163,7 +163,7 @@ class ASTGeneration(MT22Visitor):
 
     # scalar_var : ID;
     def visitScalar_var(self, ctx: MT22Parser.Scalar_varContext):
-        return ctx.ID().getText()
+        return Id(ctx.ID().getText())
 
     # init_expr : expr;
     def visitInit_expr(self, ctx: MT22Parser.Init_exprContext):
@@ -323,12 +323,15 @@ class ASTGeneration(MT22Visitor):
         if ctx.INT_LIT():
             return IntegerLit(int(ctx.getChild(0).getText()))
         if ctx.FLOAT_LIT():
-            return FloatLit(float(ctx.getChild(0).getText()))
+            float_text = ctx.getChild(0).getText()
+            if float_text[0] == '.':
+                float_text = '0' + float_text
+            return FloatLit(float(float_text))
         if ctx.BOOLEAN_LIT():
             return BooleanLit(True if ctx.getChild(0).getText() == 'true' else False)
         if ctx.STRING_LIT():
             return StringLit(str(ctx.getChild(0).getText()))
-        return ctx.getChild(0).getText()
+        return Id(ctx.getChild(0).getText())
 
     # index_op: LSB expr_list RSB;
     def visitIndex_op(self, ctx: MT22Parser.Index_opContext):

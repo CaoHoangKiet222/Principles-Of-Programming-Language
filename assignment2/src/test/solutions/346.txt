@@ -1,5 +1,5 @@
 Program([
-	FuncDecl(PARENT, IntegerType, [Param(i, IntegerType)], None, BlockStmt([ReturnStmt(BinExpr(/, BinExpr(-, i, IntegerLit(1)), IntegerLit(2)))]))
-	FuncDecl(LEFT, IntegerType, [Param(i, IntegerType)], None, BlockStmt([ReturnStmt(BinExpr(+, BinExpr(*, IntegerLit(2), i), IntegerLit(1)))]))
-	FuncDecl(RIGHT, IntegerType, [Param(i, IntegerType)], None, BlockStmt([ReturnStmt(BinExpr(+, BinExpr(*, IntegerLit(2), i), IntegerLit(2)))]))
+	FuncDecl(PARENT, IntegerType, [Param(i, IntegerType)], None, BlockStmt([ReturnStmt(BinExpr(/, BinExpr(-, Id(i), IntegerLit(1)), IntegerLit(2)))]))
+	FuncDecl(LEFT, IntegerType, [Param(i, IntegerType)], None, BlockStmt([ReturnStmt(BinExpr(+, BinExpr(*, IntegerLit(2), Id(i)), IntegerLit(1)))]))
+	FuncDecl(RIGHT, IntegerType, [Param(i, IntegerType)], None, BlockStmt([ReturnStmt(BinExpr(+, BinExpr(*, IntegerLit(2), Id(i)), IntegerLit(2)))]))
 ])

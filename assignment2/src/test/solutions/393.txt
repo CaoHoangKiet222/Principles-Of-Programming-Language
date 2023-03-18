@@ -1,4 +1,4 @@
 Program([
 	FuncDecl(recursiveSearch, IntegerType, [OutParam(n, IntegerType), Param(m, IntegerType), Param(arr, ArrayType([100], IntegerType)), Param(index, IntegerType)], None, BlockStmt([]))
-	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(n, IntegerType, IntegerLit(0)), VarDecl(m, IntegerType, IntegerLit(0)), VarDecl(index, IntegerType, IntegerLit(0)), VarDecl(arr, ArrayType([100], IntegerType), ArrayLit([IntegerLit(100), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), CallStmt(print, FuncCall(recursiveSearch, [n, m, arr, index]))]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(n, IntegerType, IntegerLit(0)), VarDecl(m, IntegerType, IntegerLit(0)), VarDecl(index, IntegerType, IntegerLit(0)), VarDecl(arr, ArrayType([100], IntegerType), ArrayLit([IntegerLit(100), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), CallStmt(print, FuncCall(recursiveSearch, [Id(n), Id(m), Id(arr), Id(index)]))]))
 ])

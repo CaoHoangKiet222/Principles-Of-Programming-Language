@@ -1,4 +1,4 @@
 Program([
-	FuncDecl(gcdRecursion, IntegerType, [Param(p, IntegerType), Param(q, IntegerType)], None, BlockStmt([IfStmt(BinExpr(==, q, IntegerLit(0)), ReturnStmt(p)), ReturnStmt(FuncCall(gcdRecursion, [q, BinExpr(%, p, q)]))]))
-	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(p, IntegerType, IntegerLit(100)), VarDecl(q, IntegerType, IntegerLit(200)), CallStmt(print, FuncCall(gcdRecursion, [p, q]))]))
+	FuncDecl(gcdRecursion, IntegerType, [Param(p, IntegerType), Param(q, IntegerType)], None, BlockStmt([IfStmt(BinExpr(==, Id(q), IntegerLit(0)), ReturnStmt(Id(p))), ReturnStmt(FuncCall(gcdRecursion, [Id(q), BinExpr(%, Id(p), Id(q))]))]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(p, IntegerType, IntegerLit(100)), VarDecl(q, IntegerType, IntegerLit(200)), CallStmt(print, FuncCall(gcdRecursion, [Id(p), Id(q)]))]))
 ])

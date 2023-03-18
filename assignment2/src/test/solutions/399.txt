@@ -1,4 +1,4 @@
 Program([
-	FuncDecl(swap, VoidType, [OutParam(x, IntegerType), OutParam(y, IntegerType)], None, BlockStmt([VarDecl(k, IntegerType, x), AssignStmt(x, y), AssignStmt(y, k)]))
-	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(x, IntegerType, IntegerLit(1)), VarDecl(y, IntegerType, IntegerLit(3)), CallStmt(swap, x, y), CallStmt(print, BinExpr(+, BinExpr(+, x, y), StringLit()))]))
+	FuncDecl(swap, VoidType, [OutParam(x, IntegerType), OutParam(y, IntegerType)], None, BlockStmt([VarDecl(k, IntegerType, Id(x)), AssignStmt(Id(x), Id(y)), AssignStmt(Id(y), Id(k))]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(x, IntegerType, IntegerLit(1)), VarDecl(y, IntegerType, IntegerLit(3)), CallStmt(swap, Id(x), Id(y)), CallStmt(print, BinExpr(+, BinExpr(+, Id(x), Id(y)), StringLit()))]))
 ])

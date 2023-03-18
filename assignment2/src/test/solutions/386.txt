@@ -1,5 +1,5 @@
 Program([
 	FuncDecl(findMax, AutoType, [Param(vals, ArrayType([100], IntegerType)), Param(numEls, IntegerType)], None, BlockStmt([]))
 	FuncDecl(findMin, AutoType, [Param(vals, ArrayType([100], IntegerType)), Param(numEls, IntegerType)], None, BlockStmt([]))
-	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(nE, IntegerType, IntegerLit(100)), VarDecl(nums, ArrayType([100], IntegerType), ArrayLit([IntegerLit(100), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), CallStmt(print, FuncCall(findMax, [nums, nE])), CallStmt(print, FuncCall(findMin, [nums, nE]))]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(nE, IntegerType, IntegerLit(100)), VarDecl(nums, ArrayType([100], IntegerType), ArrayLit([IntegerLit(100), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), CallStmt(print, FuncCall(findMax, [Id(nums), Id(nE)])), CallStmt(print, FuncCall(findMin, [Id(nums), Id(nE)]))]))
 ])

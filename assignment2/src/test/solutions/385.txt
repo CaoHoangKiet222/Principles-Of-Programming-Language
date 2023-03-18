@@ -1,4 +1,4 @@
 Program([
 	FuncDecl(findMax, AutoType, [Param(vals, ArrayType([100], IntegerType)), Param(numEls, IntegerType)], None, BlockStmt([]))
-	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(nE, IntegerType, IntegerLit(100)), VarDecl(nums, ArrayType([100], IntegerType), ArrayLit([IntegerLit(100), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), CallStmt(printMax, FuncCall(findMax, [nums, nE]))]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(nE, IntegerType, IntegerLit(100)), VarDecl(nums, ArrayType([100], IntegerType), ArrayLit([IntegerLit(100), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), CallStmt(printMax, FuncCall(findMax, [Id(nums), Id(nE)]))]))
 ])

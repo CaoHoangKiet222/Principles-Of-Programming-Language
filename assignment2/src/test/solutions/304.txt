@@ -11,6 +11,8 @@ Program([
 	VarDecl(a, FloatType, FloatLit(2.000001))
 	VarDecl(b, FloatType, FloatLit(3.0000001))
 	VarDecl(c, FloatType, FloatLit(401.1))
+	VarDecl(a, FloatType, FloatLit(0.0))
+	VarDecl(b, FloatType, FloatLit(100.0))
 	VarDecl(a, BooleanType, BooleanLit(False))
 	VarDecl(b, BooleanType, BooleanLit(False))
 	VarDecl(c, BooleanType, BooleanLit(False))

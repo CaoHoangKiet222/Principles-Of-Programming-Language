@@ -1,4 +1,4 @@
 Program([
 	FuncDecl(checkzero, BooleanType, [Param(nums, ArrayType([100], IntegerType)), Param(size, IntegerType)], None, BlockStmt([]))
-	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(nE, IntegerType, IntegerLit(100)), VarDecl(nums, ArrayType([100], IntegerType), ArrayLit([IntegerLit(1), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), CallStmt(checkzero, nums, nE)]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(nE, IntegerType, IntegerLit(100)), VarDecl(nums, ArrayType([100], IntegerType), ArrayLit([IntegerLit(1), IntegerLit(2), IntegerLit(3), IntegerLit(4)])), CallStmt(checkzero, Id(nums), Id(nE))]))
 ])
