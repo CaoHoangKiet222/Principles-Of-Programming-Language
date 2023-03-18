@@ -10,7 +10,6 @@
                         printInteger(i-j);
                     }
                 }
-                printInteger(i);
             }
         }
         

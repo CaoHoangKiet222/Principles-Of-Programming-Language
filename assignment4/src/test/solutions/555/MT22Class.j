@@ -34,6 +34,8 @@ Label4:
 	istore_2
 Label3:
 Label5:
+	bipush 10
+	ireturn
 Label1:
 .limit stack 4
 .limit locals 3

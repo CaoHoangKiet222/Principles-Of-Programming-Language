@@ -64,8 +64,6 @@ Label12:
 	goto Label10
 Label11:
 Label13:
-	iload_1
-	invokestatic io/printInteger(I)V
 Label9:
 Label4:
 	iload_1

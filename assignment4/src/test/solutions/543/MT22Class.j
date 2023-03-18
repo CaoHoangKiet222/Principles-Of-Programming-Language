@@ -23,6 +23,7 @@ Label8:
 	invokestatic io/printInteger(I)V
 	goto Label5
 Label9:
+Label4:
 	iload_1
 	iconst_1
 	iadd

@@ -57,6 +57,7 @@ Label20:
 	invokestatic io/printInteger(I)V
 Label21:
 Label17:
+Label12:
 	iload_2
 	iconst_1
 	iadd
@@ -65,6 +66,7 @@ Label17:
 Label11:
 Label13:
 Label9:
+Label4:
 	iload_1
 	iconst_1
 	iadd

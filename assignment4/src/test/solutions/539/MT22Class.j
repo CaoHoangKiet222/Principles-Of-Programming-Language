@@ -11,23 +11,25 @@ Label0:
 Label2:
 	iload_1
 	bipush 10
-	if_icmpge Label4
+	if_icmpge Label6
 	iconst_1
-	goto Label5
-Label4:
-	iconst_0
-Label5:
-	ifle Label3
+	goto Label7
 Label6:
+	iconst_0
+Label7:
+	ifle Label3
+Label8:
 	iload_1
 	invokestatic io/printInteger(I)V
-Label7:
+Label9:
+Label4:
 	iload_1
 	iconst_1
 	iadd
 	istore_1
 	goto Label2
 Label3:
+Label5:
 Label1:
 	return
 .limit stack 4

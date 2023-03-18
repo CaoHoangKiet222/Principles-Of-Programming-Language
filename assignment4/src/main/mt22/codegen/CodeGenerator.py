@@ -226,10 +226,10 @@ class CodeGenVisitor(BaseVisitor, Utils):
                 globalEnv = [varSym] + globalEnv
 
         # generate default constructor
-        self.genMETHOD(FuncDecl(Id("<init>"), None, list(), None,
+        self.genMETHOD(FuncDecl("<init>", None, list(), None,
                        BlockStmt(list())), globalEnv, Frame("<init>", VoidType))
 
-        self.genMETHOD(FuncDecl(Id("<clinit>"), None, list(),
+        self.genMETHOD(FuncDecl("<clinit>", None, list(),
                        None, BlockStmt(list())), globalEnv, glFrame)
 
         self.emit.emitEPILOG()
@@ -240,7 +240,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         # o: Any
         # frame: Frame
         glenv = o
-        methodName = decl.name.name  # change this if error
+        methodName = decl.name  # change this if error
         body = decl.body
 
         isInit = decl.return_type is None and methodName == "<init>"
@@ -307,7 +307,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         subctxt = o
         frame = subctxt.frame
         typ = MyUtils.retrieveType(ast.typ, lambda x: self.visit(x, None))
-        name = ast.name.name  # change this if error
+        name = ast.name  # change this if error
         init = ast.init
         initCode = ""
 
@@ -352,7 +352,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         subctxt = o
         frame = subctxt.frame
         typ = MyUtils.retrieveType(ast.typ, lambda x: self.visit(x, None))
-        name = ast.name.name  # change this if error
+        name = ast.name  # change this if error
         alreadyBlock = subctxt.alreadyBlock
 
         idx = frame.getNewIndex()
@@ -368,31 +368,13 @@ class CodeGenVisitor(BaseVisitor, Utils):
     def visitFuncDecl(self, ast: FuncDecl, o: SubBody):
         print("============================ FuncDecl", ast)
         subctxt = o
-        name = ast.name.name
+        # change this if error
+        name = ast.name
         return_type = MyUtils.retrieveType(
             ast.return_type, lambda x: self.visit(x, None))
         frame = Frame(name, return_type)
-        return self.genMETHOD(ast, subctxt.sym, frame)
         print("============================ End FuncDecl")
-        # return Symbol(name, MType(paramTyps, return_type), CName(self.className))
-
-    def visitIntegerType(self, ast, o):
-        pass
-
-    def visitFloatType(self, ast, o):
-        pass
-
-    def visitBooleanType(self, ast, o):
-        pass
-
-    def visitStringType(self, ast, o):
-        pass
-
-    def visitVoidType(self, ast, o):
-        pass
-
-    def visitAutoType(self, ast, o):
-        pass
+        return self.genMETHOD(ast, subctxt.sym, frame)
 
     def visitArrayType(self, ast: ArrayType, o: Access or None):
         dimensions = ast.dimensions
@@ -470,12 +452,12 @@ class CodeGenVisitor(BaseVisitor, Utils):
         print("========================== FuncCall", ast)
         frame = o.frame
         sym = o.sym
-        return self.callHandler(ast, frame, sym, False)
         print("========================== End FuncCall", ast)
+        return self.callHandler(ast, frame, sym, False)
 
     def callHandler(self, ast: CallStmt or FuncCall, frame: Frame, symbols, isStmt=False):
         # change this if error
-        sym = self.lookup(ast.name.name, symbols, lambda x: x.name)
+        sym = self.lookup(ast.name, symbols, lambda x: x.name)
         cName = sym.value.value
         cTyp = sym.mtype
         paramsCode = ""
@@ -501,7 +483,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         isLeft = o.isLeft
         cell = ast.cell
         nameCode, nameTyp = self.visit(
-            ast.name, Access(frame, sym, isLeft))
+            Id(ast.name), Access(frame, sym, isLeft))
         dimensions = nameTyp.dimensions
         idxDimensions = [self.visit(x, o)[1].val for x in cell]
         idx = 0
@@ -567,7 +549,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         # Initialize the loop counter variable
         if sym is None:
             newSubBd = self.visit(
-                VarDecl(ast.init.lhs, IntegerType(), ast.init.rhs), o)
+                VarDecl(ast.init.lhs.name, IntegerType(), ast.init.rhs), o)
             o.sym = newSubBd.sym
             o.frame = newSubBd.frame
             sym = o.sym[0]

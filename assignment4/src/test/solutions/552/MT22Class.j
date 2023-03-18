@@ -1,7 +1,6 @@
 .source MT22Class.java
 .class public MT22Class
 .super java.lang.Object
-.field static x I
 
 .method public static fact(I)I
 .var 0 is n I from Label0 to Label1
@@ -54,10 +53,8 @@ Label1:
 
 .method public static <clinit>()V
 Label0:
-	bipush 65
-	putstatic MT22Class.x I
 Label1:
 	return
-.limit stack 1
+.limit stack 0
 .limit locals 0
 .end method

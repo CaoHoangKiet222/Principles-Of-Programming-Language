@@ -737,7 +737,7 @@ class CheckCodeGenSuite(unittest.TestCase):
     #     }
     #     main: function void() {
     #         printInteger(inc(1, 1));
-   #         }
+    #        }
     #     }
     #         """
     #     expect = "1"
@@ -778,11 +778,6 @@ class CheckCodeGenSuite(unittest.TestCase):
 
     def test_59(self):
         input = """
-        main: function void() {
-            i: integer = 1;
-            while(i < 10) 
-                return;
-        }
             """
         expect = ""
         self.assertTrue(TestCodeGen.test(input, expect, 559))

@@ -10,14 +10,14 @@ class CheckerSuite(unittest.TestCase):
         a: float;
         x: integer = a + 2;
         """
-        expect = "Type Mismatch In Statement: VarDecl(Id(x), IntegerType, BinExpr(+, Id(a), IntegerLit(2)))"
+        expect = "Type Mismatch In Statement: VarDecl(x, IntegerType, BinExpr(+, Id(a), IntegerLit(2)))"
         self.assertTrue(TestChecker.test(input, expect, 401))
 
     def test_2(self):
         input = """
         c: integer = 2.3;
         """
-        expect = "Type Mismatch In Statement: VarDecl(Id(c), IntegerType, FloatLit(2.3))"
+        expect = "Type Mismatch In Statement: VarDecl(c, IntegerType, FloatLit(2.3))"
         self.assertTrue(TestChecker.test(input, expect, 402))
 
     def test_3(self):
@@ -67,7 +67,7 @@ class CheckerSuite(unittest.TestCase):
         x: integer = 9_9999_999;
         y: integer = x == 1;
         """
-        expect = "Type Mismatch In Statement: VarDecl(Id(y), IntegerType, BinExpr(==, Id(x), IntegerLit(1)))"
+        expect = "Type Mismatch In Statement: VarDecl(y, IntegerType, BinExpr(==, Id(x), IntegerLit(1)))"
         self.assertTrue(TestChecker.test(input, expect, 408))
 
     def test_9(self):
@@ -79,7 +79,7 @@ class CheckerSuite(unittest.TestCase):
         e: array [2, 3] of integer = {{1.0}, {1, 2, 3}};
         f: array [2, 3] of integer = {{1, 1}, {1.0, 2, 3}};
         """
-        expect = "Type Mismatch In Statement: VarDecl(Id(e), ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([FloatLit(1.0)]), ArrayLit([IntegerLit(1), IntegerLit(2), IntegerLit(3)])]))"
+        expect = "Type Mismatch In Statement: VarDecl(e, ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([FloatLit(1.0)]), ArrayLit([IntegerLit(1), IntegerLit(2), IntegerLit(3)])]))"
         self.assertTrue(TestChecker.test(input, expect, 409))
 
     def test_10(self):
@@ -96,7 +96,7 @@ class CheckerSuite(unittest.TestCase):
         a: array [2, 3] of float = {{1}, {1, 3, 4}};
         b: array [2, 3] of integer = {{1.0}, {1.0, 3.0, 4.0}};
         """
-        expect = "Type Mismatch In Statement: VarDecl(Id(b), ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([FloatLit(1.0)]), ArrayLit([FloatLit(1.0), FloatLit(3.0), FloatLit(4.0)])]))"
+        expect = "Type Mismatch In Statement: VarDecl(b, ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([FloatLit(1.0)]), ArrayLit([FloatLit(1.0), FloatLit(3.0), FloatLit(4.0)])]))"
         self.assertTrue(TestChecker.test(input, expect, 411))
 
     def test_12(self):
@@ -105,21 +105,21 @@ class CheckerSuite(unittest.TestCase):
         b: array [2, 3] of integer = {{}};
         c: array [2, 3] of integer = {{}, {}, {}};
         """
-        expect = "Type Mismatch In Statement: VarDecl(Id(c), ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([]), ArrayLit([]), ArrayLit([])]))"
+        expect = "Type Mismatch In Statement: VarDecl(c, ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([]), ArrayLit([]), ArrayLit([])]))"
         self.assertTrue(TestChecker.test(input, expect, 412))
 
     def test_13(self):
         input = """
         a: array [2, 3] of integer = {{1}, {1, 3, 4, 5}};
         """
-        expect = "Type Mismatch In Statement: VarDecl(Id(a), ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([IntegerLit(1)]), ArrayLit([IntegerLit(1), IntegerLit(3), IntegerLit(4), IntegerLit(5)])]))"
+        expect = "Type Mismatch In Statement: VarDecl(a, ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([IntegerLit(1)]), ArrayLit([IntegerLit(1), IntegerLit(3), IntegerLit(4), IntegerLit(5)])]))"
         self.assertTrue(TestChecker.test(input, expect, 413))
 
     def test_14(self):
         input = """
         a: array [2, 3, 2] of integer = {{{}, {}, {}, {}}, {{}, {}, {}}};
         """
-        expect = "Type Mismatch In Statement: VarDecl(Id(a), ArrayType([2, 3, 2], IntegerType), ArrayLit([ArrayLit([ArrayLit([]), ArrayLit([]), ArrayLit([]), ArrayLit([])]), ArrayLit([ArrayLit([]), ArrayLit([]), ArrayLit([])])]))"
+        expect = "Type Mismatch In Statement: VarDecl(a, ArrayType([2, 3, 2], IntegerType), ArrayLit([ArrayLit([ArrayLit([]), ArrayLit([]), ArrayLit([]), ArrayLit([])]), ArrayLit([ArrayLit([]), ArrayLit([]), ArrayLit([])])]))"
         self.assertTrue(TestChecker.test(input, expect, 414))
 
     def test_15(self):
@@ -129,14 +129,14 @@ class CheckerSuite(unittest.TestCase):
         c: array [2, 3] of boolean = {{true}, {false}};
         d: array [2, 3] of boolean = {{false, false}, {1}};
         """
-        expect = "Type Mismatch In Statement: VarDecl(Id(d), ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([BooleanLit(False), BooleanLit(False)]), ArrayLit([IntegerLit(1)])]))"
+        expect = "Type Mismatch In Statement: VarDecl(d, ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([BooleanLit(False), BooleanLit(False)]), ArrayLit([IntegerLit(1)])]))"
         self.assertTrue(TestChecker.test(input, expect, 415))
 
     def test_16(self):
         input = """
         e: array [2, 3] of boolean = {false, true, true}; // -> dont know ask teacher
         """
-        expect = "Type Mismatch In Statement: VarDecl(Id(e), ArrayType([2, 3], BooleanType), ArrayLit([BooleanLit(False), BooleanLit(True), BooleanLit(True)]))"
+        expect = "Type Mismatch In Statement: VarDecl(e, ArrayType([2, 3], BooleanType), ArrayLit([BooleanLit(False), BooleanLit(True), BooleanLit(True)]))"
         self.assertTrue(TestChecker.test(input, expect, 416))
 
     def test_17(self):
@@ -412,7 +412,7 @@ class CheckerSuite(unittest.TestCase):
             }
         }
         """
-        expect = "Type Mismatch In Expression: FuncCall(Id(inc), [ArrayCell(Id(x), [IntegerLit(0), Id(i)])])"
+        expect = "Type Mismatch In Expression: FuncCall(inc, [ArrayCell(x, [IntegerLit(0), Id(i)])])"
         self.assertTrue(TestChecker.test(input, expect, 439))
 
     def test_40(self):
@@ -427,7 +427,7 @@ class CheckerSuite(unittest.TestCase):
             }
         }
         """
-        expect = "Type Mismatch In Expression: FuncCall(Id(foo), [BinExpr(+, Id(i), IntegerLit(1)), FuncCall(Id(foo), [BinExpr(+, Id(x), IntegerLit(2)), IntegerLit(1)])])"
+        expect = "Type Mismatch In Expression: FuncCall(foo, [BinExpr(+, Id(i), IntegerLit(1)), FuncCall(foo, [BinExpr(+, Id(x), IntegerLit(2)), IntegerLit(1)])])"
         self.assertTrue(TestChecker.test(input, expect, 440))
 
     def test_41(self):
@@ -469,7 +469,7 @@ class CheckerSuite(unittest.TestCase):
             foo2(foo1());
         }
         """
-        expect = "Type Mismatch In Statement: CallStmt(Id(super), [IntegerLit(1), FloatLit(1.0)])"
+        expect = "Type Mismatch In Statement: CallStmt(super, [IntegerLit(1), FloatLit(1.0)])"
         self.assertTrue(TestChecker.test(input, expect, 443))
 
     def test_44(self):
@@ -605,7 +605,7 @@ class CheckerSuite(unittest.TestCase):
             foo2(foo1(1.0), 1);
         }
         """
-        expect = "Type Mismatch In Expression: FuncCall(Id(super), [FloatLit(1.0), FloatLit(1.0)])"
+        expect = "Type Mismatch In Expression: FuncCall(super, [FloatLit(1.0), FloatLit(1.0)])"
         self.assertTrue(TestChecker.test(input, expect, 451))
 
     def test_52(self):
@@ -621,7 +621,7 @@ class CheckerSuite(unittest.TestCase):
             foo2();
         }
         """
-        expect = "Type Mismatch In Statement: CallStmt(Id(foo2), [])"
+        expect = "Type Mismatch In Statement: CallStmt(foo2, [])"
         self.assertTrue(TestChecker.test(input, expect, 452))
 
     def test_53(self):
@@ -684,6 +684,19 @@ class CheckerSuite(unittest.TestCase):
         """
         expect = "Type Mismatch In Statement: WhileStmt(IntegerLit(200), BlockStmt([AssignStmt(Id(j), BinExpr(+, Id(j), IntegerLit(1)))]))"
         self.assertTrue(TestChecker.test(input, expect, 457))
+
+    def test_58(self):
+        input = """
+        main: function void() {
+            for (i = 1, i < 100, i+1) {
+                j : integer = 0;
+                while (!200) {j = j+1;}
+                while (i != 20) {}
+            }
+        }
+        """
+        expect = "Type Mismatch In Expression: UnExpr(!, IntegerLit(200))"
+        self.assertTrue(TestChecker.test(input, expect, 458))
 
     def test_59(self):
         input = """
@@ -750,7 +763,7 @@ class CheckerSuite(unittest.TestCase):
             printString(reverseStr("123", 3));
         }
         """
-        expect = "Type Mismatch In Expression: ArrayCell(Id(str), [Id(i)])"
+        expect = "Type Mismatch In Expression: ArrayCell(str, [Id(i)])"
         self.assertTrue(TestChecker.test(input, expect, 462))
 
     def test_63(self):
@@ -768,7 +781,7 @@ class CheckerSuite(unittest.TestCase):
             printString(test("123", 3));
         }
         """
-        expect = "Type Mismatch In Statement: ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(/, Id(size), IntegerLit(2))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([VarDecl(Id(i), IntegerType, IntegerLit(1)), AssignStmt(Id(i), BooleanLit(False))]))"
+        expect = "Type Mismatch In Statement: ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(/, Id(size), IntegerLit(2))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([VarDecl(i, IntegerType, IntegerLit(1)), AssignStmt(Id(i), BooleanLit(False))]))"
         self.assertTrue(TestChecker.test(input, expect, 463))
 
     def test_64(self):
@@ -818,7 +831,7 @@ class CheckerSuite(unittest.TestCase):
         main: function void() {
         }
         """
-        expect = "Type Mismatch In Expression: BinExpr(+, FuncCall(Id(checkDuplicate), [Id(less), Id(less_size)]), FuncCall(Id(checkDuplicate), [Id(greater), Id(greater_size)]))"
+        expect = "Type Mismatch In Expression: BinExpr(+, FuncCall(checkDuplicate, [Id(less), Id(less_size)]), FuncCall(checkDuplicate, [Id(greater), Id(greater_size)]))"
         self.assertTrue(TestChecker.test(input, expect, 465))
 
     def test_66(self):
@@ -891,7 +904,7 @@ class CheckerSuite(unittest.TestCase):
             swap(1, 2);
         }
         """
-        expect = "Type Mismatch In Statement: VarDecl(Id(k), IntegerType, Id(x))"
+        expect = "Type Mismatch In Statement: VarDecl(k, IntegerType, Id(x))"
         self.assertTrue(TestChecker.test(input, expect, 469))
 
     def test_70(self):
@@ -972,7 +985,7 @@ class CheckerSuite(unittest.TestCase):
             printString("The sum is" + sum(n));
         }
         """
-        expect = "Type Mismatch In Expression: BinExpr(+, StringLit(The sum is), FuncCall(Id(sum), [Id(n)]))"
+        expect = "Type Mismatch In Expression: BinExpr(+, StringLit(The sum is), FuncCall(sum, [Id(n)]))"
         self.assertTrue(TestChecker.test(input, expect, 473))
 
     def test_74(self):
@@ -1010,7 +1023,7 @@ class CheckerSuite(unittest.TestCase):
         main: function void() {
         }
         """
-        expect = "Type Mismatch In Expression: BinExpr(+, Id(s), FuncCall(Id(random), [Id(i)]))"
+        expect = "Type Mismatch In Expression: BinExpr(+, Id(s), FuncCall(random, [Id(i)]))"
         self.assertTrue(TestChecker.test(input, expect, 475))
 
     def test_76(self):
@@ -1158,29 +1171,29 @@ class CheckerSuite(unittest.TestCase):
 
     def test_84(self):
         input = """
-        x: float = 3.0;
-        a : array [2] of integer;
-        foo: function auto(){}
-        fact : function integer (n : integer) {
-            b: float;
-            n = foo() + 1;
-        }
-        main: function void() inherit fact {
-        }
-    """
+    x: float = 3.0;
+    a : array [2] of integer;
+    foo: function auto(){}
+    fact : function integer (n : integer) {
+        b: float;
+        n = foo() + 1;
+    }
+    main: function void() inherit fact {
+    }
+"""
 
         expect = "Invalid Statement In Function: main"
         self.assertTrue(TestChecker.test(input, expect, 484))
 
     def test_85(self):
         input = """
-        fact : function integer (n : integer) {
-            a : array [2] of integer;
-            i: float = 3;
-            for (i = 123, 9 > 8, i + 1){}
-        }
-        main: function void(){}
-    """
+    fact : function integer (n : integer) {
+        a : array [2] of integer;
+        i: float = 3;
+        for (i = 123, 9 > 8, i + 1){}
+    }
+    main: function void(){}
+"""
         expect = "Type Mismatch In Statement: ForStmt(AssignStmt(Id(i), IntegerLit(123)), BinExpr(>, IntegerLit(9), IntegerLit(8)), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([]))"
         self.assertTrue(TestChecker.test(input, expect, 485))
 
@@ -1193,7 +1206,7 @@ class CheckerSuite(unittest.TestCase):
         }
     """
 
-        expect = "Type Mismatch In Statement: ForStmt(AssignStmt(Id(i), IntegerLit(123)), BinExpr(>, Id(i), IntegerLit(8)), FuncCall(Id(foo2), [IntegerLit(1)]), BlockStmt([]))"
+        expect = "Type Mismatch In Statement: ForStmt(AssignStmt(Id(i), IntegerLit(123)), BinExpr(>, Id(i), IntegerLit(8)), FuncCall(foo2, [IntegerLit(1)]), BlockStmt([]))"
         self.assertTrue(TestChecker.test(input, expect, 486))
 
     def test_87(self):
@@ -1205,7 +1218,7 @@ class CheckerSuite(unittest.TestCase):
         }
     """
 
-        expect = "Type Mismatch In Statement: ForStmt(AssignStmt(Id(i), IntegerLit(123)), BinExpr(>, Id(i), IntegerLit(8)), FuncCall(Id(foo2), [BooleanLit(True)]), BlockStmt([]))"
+        expect = "Type Mismatch In Statement: ForStmt(AssignStmt(Id(i), IntegerLit(123)), BinExpr(>, Id(i), IntegerLit(8)), FuncCall(foo2, [BooleanLit(True)]), BlockStmt([]))"
         self.assertTrue(TestChecker.test(input, expect, 487))
 
     def test_88(self):
@@ -1222,7 +1235,7 @@ class CheckerSuite(unittest.TestCase):
         }
     """
 
-        expect = "Type Mismatch In Statement: CallStmt(Id(super), [IntegerLit(10)])"
+        expect = "Type Mismatch In Statement: CallStmt(super, [IntegerLit(10)])"
         self.assertTrue(TestChecker.test(input, expect, 488))
 
     def test_89(self):
@@ -1308,66 +1321,66 @@ class CheckerSuite(unittest.TestCase):
         expect = "[]"
         self.assertTrue(TestChecker.test(input, expect, 492))
 
-        def test_93(self):
-            input = """
+    def test_93(self):
+        input = """
 
-        foo1: function integer(){}
+    foo1: function integer(){}
 
-        foo2: function float(inherit x: boolean) inherit foo1{
-            return 1;
-        }
-        foo3: function float() inherit foo2{
-            super(false);
-            preventDefault();
-            x: float = 10.2;
-            return 1.123;
-        }
+    foo2: function float(inherit x: boolean) inherit foo1{
+        return 1;
+    }
+    foo3: function float() inherit foo2{
+        super(false);
+        preventDefault();
+        x: float = 10.2;
+        return 1.123;
+    }
 
-        main: function void(){
-            x: integer = readInteger();
-        }
-    """
-            expect = "Redeclared Variable: x"
-            self.assertTrue(TestChecker.test(input, expect, 493))
+    main: function void(){
+        x: integer = readInteger();
+    }
+"""
+        expect = "Redeclared Variable: x"
+        self.assertTrue(TestChecker.test(input, expect, 493))
 
-        def test_94(self):
-            input = """
-        isPalindrome: function boolean(strs: array[100] of string, strSize: integer) {
-          for (i = 0, i < strSize / 2, i+1) {
-            if (strs[i] != strs[strSize-i-1]) {
-              return false;
-            }
-          }
-          return true;
+    def test_94(self):
+        input = """
+    isPalindrome: function boolean(strs: array[100] of string, strSize: integer) {
+      for (i = 0, i < strSize / 2, i+1) {
+        if (strs[i] != strs[strSize-i-1]) {
+          return false;
         }
-        main: function void() {
-            strs   : array [5] of string = {"hello", "world", "!!!", "", "test\\n"};
+      }
+      return true;
+    }
+    main: function void() {
+        strs   : array [5] of string = {"hello", "world", "!!!", "", "test\\n"};
 
-            if(isPalindrome(strs, 5)) printString("Correct!!!");
-            else printString("Wrong!!!");
-        }
-    """
-            expect = "Type Mismatch In Expression: BinExpr(!=, ArrayCell(Id(strs), [Id(i)]), ArrayCell(Id(strs), [BinExpr(-, BinExpr(-, Id(strSize), Id(i)), IntegerLit(1))]))"
-            self.assertTrue(TestChecker.test(input, expect, 494))
+        if(isPalindrome(strs, 5)) printString("Correct!!!");
+        else printString("Wrong!!!");
+    }
+"""
+        expect = "Type Mismatch In Expression: BinExpr(!=, ArrayCell(strs, [Id(i)]), ArrayCell(strs, [BinExpr(-, BinExpr(-, Id(strSize), Id(i)), IntegerLit(1))]))"
+        self.assertTrue(TestChecker.test(input, expect, 494))
 
-        def test_95(self):
-            input = """
-        isPalindrome: function boolean(strs: array[100] of string, strSize: integer) {
-          for (i = 0, i < strSize / 2, i+1) {
-            if (strs[i] != strs[strSize-i-1]) {
-              return false;
-            }
-          }
-          return true;
+    def test_95(self):
+        input = """
+    isPalindrome: function boolean(strs: array[100] of string, strSize: integer) {
+      for (i = 0, i < strSize / 2, i+1) {
+        if (strs[i] != strs[strSize-i-1]) {
+          return false;
         }
-        main: function void() {
-            strs   : array [5] of string = {"hello", "world", "!!!", "", "test\\n"};
-            if(isPalindrome(strs, 5)) printString("Correct!!!");
-            else printString("Wrong!!!");
-        }
-    """
-            expect = "Type Mismatch In Expression: BinExpr(!=, ArrayCell(Id(strs), [Id(i)]), ArrayCell(Id(strs), [BinExpr(-, BinExpr(-, Id(strSize), Id(i)), IntegerLit(1))]))"
-            self.assertTrue(TestChecker.test(input, expect, 495))
+      }
+      return true;
+    }
+    main: function void() {
+        strs   : array [5] of string = {"hello", "world", "!!!", "", "test\\n"};
+        if(isPalindrome(strs, 5)) printString("Correct!!!");
+        else printString("Wrong!!!");
+    }
+"""
+        expect = "Type Mismatch In Expression: BinExpr(!=, ArrayCell(strs, [Id(i)]), ArrayCell(strs, [BinExpr(-, BinExpr(-, Id(strSize), Id(i)), IntegerLit(1))]))"
+        self.assertTrue(TestChecker.test(input, expect, 495))
 
     def test_96(self):
         input = """
@@ -1407,7 +1420,7 @@ class CheckerSuite(unittest.TestCase):
         main: function void(){
         }
     """
-        expect = "Type Mismatch In Expression: ArrayCell(Id(S2), [Id(i)])"
+        expect = "Type Mismatch In Expression: ArrayCell(S2, [Id(i)])"
         self.assertTrue(TestChecker.test(input, expect, 497))
 
     def test_98(self):
@@ -1462,7 +1475,7 @@ class CheckerSuite(unittest.TestCase):
             max_two_nums(1, 1);
         }
     """
-        expect = "Type Mismatch In Statement: CallStmt(Id(max_two_nums), [IntegerLit(1), IntegerLit(1)])"
+        expect = "Type Mismatch In Statement: CallStmt(max_two_nums, [IntegerLit(1), IntegerLit(1)])"
         self.assertTrue(TestChecker.test(input, expect, 499))
 
     def test_100(self):

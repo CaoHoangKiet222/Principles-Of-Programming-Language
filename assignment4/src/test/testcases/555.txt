@@ -4,6 +4,7 @@
             for (i = 1, i < 10, i+1) {
                 return i;
             }
+            return 10;
         }
         main: function void() {
             printInteger(inc(1, 1));

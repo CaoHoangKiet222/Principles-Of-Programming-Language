@@ -28,7 +28,6 @@ Label4:
 	iconst_1
 	iadd
 	istore_1
-	goto Label2
 Label3:
 Label5:
 Label1:

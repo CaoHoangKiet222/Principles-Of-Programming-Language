@@ -11,28 +11,28 @@ Label0:
 Label2:
 	iload_1
 	iconst_2
-	if_icmpge Label4
+	if_icmpge Label6
 	iconst_1
-	goto Label5
-Label4:
-	iconst_0
-Label5:
-	ifle Label3
+	goto Label7
 Label6:
-.var 2 is j I from Label6 to Label7
+	iconst_0
+Label7:
+	ifle Label3
+Label8:
+.var 2 is j I from Label8 to Label9
 	iconst_1
 	istore_2
 Label10:
 	iload_2
 	iconst_2
-	if_icmpge Label12
+	if_icmpge Label14
 	iconst_1
-	goto Label13
-Label12:
-	iconst_0
-Label13:
-	ifle Label11
+	goto Label15
 Label14:
+	iconst_0
+Label15:
+	ifle Label11
+Label16:
 	iload_1
 	iload_2
 	iadd
@@ -55,20 +55,24 @@ Label20:
 	isub
 	invokestatic io/printInteger(I)V
 Label21:
-Label15:
+Label17:
+Label12:
 	iload_2
 	iconst_1
 	iadd
 	istore_2
 	goto Label10
 Label11:
-Label7:
+Label13:
+Label9:
+Label4:
 	iload_1
 	iconst_1
 	iadd
 	istore_1
 	goto Label2
 Label3:
+Label5:
 Label1:
 	return
 .limit stack 8
