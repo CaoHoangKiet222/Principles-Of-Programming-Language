@@ -703,11 +703,11 @@ class CheckerSuite(unittest.TestCase):
                     x[0, i] = i + 1;
                 }
                 for(j = 1, j < 100, j+1) {
-                    continue;
                 }
                 while(true) {continue;}
                 break;
             }
+            continue;
         }
         """
         expect = "ContinueStmt() Not In Loop"
