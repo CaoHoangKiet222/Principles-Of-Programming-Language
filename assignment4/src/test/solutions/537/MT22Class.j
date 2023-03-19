@@ -24,25 +24,37 @@ Label2:
 Label3:
 	ifle Label4
 	aload_2
+	iload_1
 	bipush 10
+	imul
+	iconst_0
+	iadd
 	iload_1
 	iastore
 	goto Label5
 Label4:
 	aload_2
-	iconst_1
+	iconst_0
+	bipush 10
+	imul
+	iload_1
+	iadd
 	iload_1
 	iconst_1
 	iadd
 	iastore
 Label5:
 	aload_2
+	iload_1
 	bipush 10
+	imul
+	iconst_0
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 Label1:
 	return
-.limit stack 6
+.limit stack 9
 .limit locals 3
 .end method
 

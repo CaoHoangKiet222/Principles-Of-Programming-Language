@@ -60,28 +60,63 @@ Label0:
 	iastore
 	astore_1
 	getstatic MT22Class.arr1 [I
+	iconst_0
+	iconst_0
+	iadd
+	iconst_2
+	imul
 	iconst_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	getstatic MT22Class.arr2 [I
-	iconst_5
+	iconst_0
+	iconst_2
+	iadd
+	iconst_2
+	imul
+	iconst_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	getstatic MT22Class.arr2 [I
 	iconst_1
+	iconst_1
+	ineg
+	isub
+	iconst_2
+	imul
+	iconst_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	getstatic MT22Class.arr2 [I
+	iconst_4
+	iconst_4
+	irem
+	iconst_2
+	imul
 	iconst_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 	aload_1
-	bipush 9
+	iconst_1
+	iconst_3
+	imul
+	iconst_2
+	imul
+	iconst_1
+	iconst_2
+	imul
+	iadd
+	iconst_1
+	iadd
 	iaload
 	invokestatic io/printInteger(I)V
 Label1:
 	return
-.limit stack 26
+.limit stack 24
 .limit locals 2
 .end method
 

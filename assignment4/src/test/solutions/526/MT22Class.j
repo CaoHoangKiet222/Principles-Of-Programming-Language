@@ -1,6 +1,7 @@
 .source MT22Class.java
 .class public MT22Class
 .super java.lang.Object
+.field static i I
 .field static a [I
 .field static b [I
 
@@ -82,6 +83,8 @@ Label1:
 
 .method public static <clinit>()V
 Label0:
+	iconst_1
+	putstatic MT22Class.i I
 	bipush 10
 	newarray int
 	dup
@@ -106,6 +109,6 @@ Label0:
 	putstatic MT22Class.b [I
 Label1:
 	return
-.limit stack 8
+.limit stack 9
 .limit locals 0
 .end method

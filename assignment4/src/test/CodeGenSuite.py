@@ -258,6 +258,7 @@ class CheckCodeGenSuite(unittest.TestCase):
 
     # def test_26(self):
     #     input = """
+    #     i: integer = 1;
     #     a: array[10] of integer = {1, 2, 3, 4};
     #     b: array[10] of integer;
     #     main: function void() {
@@ -333,23 +334,15 @@ class CheckCodeGenSuite(unittest.TestCase):
     # def test_32(self):
     #     input = """
     #     x: array[10, 10] of integer = {{2, 3}, {1}, {5}};
+    #     y: array[10, 10] of float = {{2, 3}, {1}, {5}};
     #     main: function void() {
     #         x[0, 2] = 99;
+    #         y[0, 2] = 99;
     #         printInteger(x[0, 2] + x[0, 0]);
+    #         writeFloat(y[0, 2]);
     #     }
     #     """
-    #     expect = "101"
-    #     self.assertTrue(TestCodeGen.test(input, expect, 532))
-
-    # def test_32(self):
-    #     input = """
-    #     x: array[10, 10] of float = {{2, 3}, {1}, {5}};
-    #     main: function void() {
-    #         x[0, 2] = 99;
-    #         writeFloat(x[0, 2]);
-    #     }
-    #     """
-    #     expect = "99.0"
+    #     expect = "10199.0"
     #     self.assertTrue(TestCodeGen.test(input, expect, 532))
 
     # def test_33(self):
@@ -776,8 +769,139 @@ class CheckCodeGenSuite(unittest.TestCase):
     #     expect = ""
     #     self.assertTrue(TestCodeGen.test(input, expect, 558))
 
-    def test_59(self):
+    # def test_59(self):
+    #     input = """
+    #     arr: array[100] of integer;
+    #     checkDuplicate: function boolean(ar: array[100] of integer, size: integer) {
+    #       if (size <= 1)
+    #         return true;
+    #       less, greater: array[100] of integer;
+    #       greater_size, less_size: integer  = 0, 0;
+
+    #       for (i = 1, i < size, i+1) {
+    #         if (ar[i] == ar[0]) {
+    #           return false;
+    #         }
+
+    #         if (ar[i] < ar[0]) {
+    #           less[less_size] = ar[i];
+    #           less_size = less_size + 1;
+    #         } else {
+    #           greater[greater_size] = ar[i];
+    #           greater_size = greater_size + 1;
+    #         }
+    #       }
+
+    #       return checkDuplicate(less, less_size) && checkDuplicate(greater, greater_size);
+    #     }
+
+    #     main: function void() {
+    #         printBoolean(checkDuplicate(arr, 100));
+    #     }
+    #         """
+    #     expect = "false"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 559))
+
+    # def test_60(self):
+    #     input = """
+    #     less_zero: boolean = false;
+    #     c: integer = 0;
+
+    #     printPattern: function void(n: integer) {
+    #       if (n <= 0) {
+    #         less_zero = true;
+    #       }
+
+    #       if (less_zero) {
+    #         c = c - 1;
+    #         if (c == -1) {
+    #             printInteger(n);
+    #             return;
+    #         }
+    #         printPattern(n + 5);
+    #       } else {
+    #         c = c + 1;
+    #         printPattern(n - 5);
+    #       }
+    #     }
+    #     main: function void() {
+    #         printPattern(5);
+    #     }
+    #         """
+    #     expect = "5"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 560))
+
+    # def test_61(self):
+    #     input = """
+    #     checkElementsUniqueness: function boolean (arr: array[100] of integer, n: integer) {
+    #       if ((n > 1000) || (n < 0))
+    #         return false;
+    #       for (i = 0, i < n - 1, i+1) {
+    #         for (j = i + 1, j < n, j+1) {
+    #           if (arr[i] == arr[j])  {
+    #             return false;
+    #           }
+    #
+    #         }
+    #       }
+    #       return true;
+    #     }
+
+    #     main: function void() {
+    #         arr: array [6] of integer = {1, 91, 0, -100, 100, 200};
+    #         if (checkElementsUniqueness(arr, 6)) printString("Correct!");
+    #         else printString("Wrong!");
+    #     }
+    #         """
+    #     expect = "Correct!"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 561))
+
+    # def test_62(self):
+    #     input = """
+    #     checkElementsUniqueness: function boolean (arr: array[100] of integer, n: integer) {
+    #       if ((n > 1000) || (n < 0))
+    #         return false;
+    #       for (i = 0, i < n - 1, i+1) {
+    #         for (j = i + 1, j < n, j+1) {
+    #           if (arr[i] == arr[j])  {
+    #             return false;
+    #           }
+
+    #         }
+    #       }
+    #       return true;
+    #     }
+
+    #     main: function void() {
+    #         arr: array [6] of integer = {1, 91, 0, -100, 100, 1};
+    #         if (checkElementsUniqueness(arr, 6)) printString("Correct!");
+    #         else printString("Wrong!");
+    #     }
+    #         """
+    #     expect = "Wrong!"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 562))
+
+    def test_63(self):
         input = """
+        checkElementsUniqueness: function boolean (arr: array[100] of integer, n: integer) {
+          if ((n > 1000) || (n < 0))
+            return false;
+          for (i = 0, i < n - 1, i+1) {
+            for (j = i + 1, j < n, j+1) {
+              if (arr[i] == arr[j])  {
+                return false;
+              }
+
+            }
+          }
+          return true;
+        }
+
+        main: function void() {
+            arr: array [6] of integer = {1, 91, 0, -100, 100, 1};
+            if (checkElementsUniqueness(arr, 6)) printString("Correct!");
+            else printString("Wrong!");
+        }
             """
-        expect = ""
-        self.assertTrue(TestCodeGen.test(input, expect, 559))
+        expect = "Wrong!"
+        self.assertTrue(TestCodeGen.test(input, expect, 563))

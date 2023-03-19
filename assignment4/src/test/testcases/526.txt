@@ -1,4 +1,5 @@
 
+        i: integer = 1;
         a: array[10] of integer = {1, 2, 3, 4};
         b: array[10] of integer;
         main: function void() {

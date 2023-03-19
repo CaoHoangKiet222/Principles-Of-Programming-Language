@@ -1,7 +1,10 @@
 
-        x: array[10, 10] of float = {{2, 3}, {1}, {5}};
+        x: array[10, 10] of integer = {{2, 3}, {1}, {5}};
+        y: array[10, 10] of float = {{2, 3}, {1}, {5}};
         main: function void() {
             x[0, 2] = 99;
-            writeFloat(x[0, 2]);
+            y[0, 2] = 99;
+            printInteger(x[0, 2] + x[0, 0]);
+            writeFloat(y[0, 2]);
         }
         

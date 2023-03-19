@@ -13,7 +13,7 @@ class Emitter():
 
     def getJVMType(self, inType):
         typeIn = type(inType)
-        if typeIn is cgen.IntegerType:
+        if typeIn is IntegerType:
             return "I"
         elif typeIn is FloatType:
             return "F"
@@ -32,7 +32,7 @@ class Emitter():
 
     def getFullType(self, inType):
         typeIn = type(inType)
-        if typeIn is cgen.IntegerType:
+        if typeIn is IntegerType:
             return "int"
         elif typeIn is FloatType:
             return "float"
@@ -88,7 +88,7 @@ class Emitter():
         # typ: Type
         # frame: Frame
 
-        if type(typ) is cgen.IntegerType:
+        if type(typ) is IntegerType:
             return self.emitPUSHICONST(in_, frame)
         if type(typ) is FloatType:
             return self.emitPUSHFCONST(in_, frame)
@@ -106,7 +106,7 @@ class Emitter():
         # ..., arrayref, index, value -> ...
 
         frame.pop()
-        if type(in_) is cgen.IntegerType:
+        if type(in_) is IntegerType:
             return self.jvm.emitIALOAD()
         if type(in_) is FloatType:
             return self.jvm.emitFALOAD()
@@ -123,7 +123,7 @@ class Emitter():
         frame.pop()
         frame.pop()
         frame.pop()
-        if type(in_) is cgen.IntegerType:
+        if type(in_) is IntegerType:
             return self.jvm.emitIASTORE()
         if type(in_) is FloatType:
             return self.jvm.emitFASTORE()
@@ -158,7 +158,7 @@ class Emitter():
         # ... -> ..., value
 
         frame.push()
-        if type(inType) is cgen.IntegerType:
+        if type(inType) is IntegerType:
             return self.jvm.emitILOAD(index)
         if type(inType) is FloatType:
             return self.jvm.emitFLOAD(index)
@@ -194,7 +194,7 @@ class Emitter():
 
         frame.pop()
 
-        if type(inType) is cgen.IntegerType:
+        if type(inType) is IntegerType:
             return self.jvm.emitISTORE(index)
         if type(inType) is FloatType:
             return self.jvm.emitFSTORE(index)
@@ -326,7 +326,7 @@ class Emitter():
         # frame: Frame
         # ..., value -> ..., result
 
-        if type(in_) is cgen.IntegerType:
+        if type(in_) is IntegerType:
             return self.jvm.emitINEG()
         else:
             return self.jvm.emitFNEG()
@@ -362,12 +362,12 @@ class Emitter():
 
         frame.pop()
         if lexeme == "+":
-            if type(in_) is cgen.IntegerType:
+            if type(in_) is IntegerType:
                 return self.jvm.emitIADD()
             else:
                 return self.jvm.emitFADD()
         else:
-            if type(in_) is cgen.IntegerType:
+            if type(in_) is IntegerType:
                 return self.jvm.emitISUB()
             else:
                 return self.jvm.emitFSUB()
@@ -386,12 +386,12 @@ class Emitter():
 
         frame.pop()
         if lexeme == "*":
-            if type(in_) is cgen.IntegerType:
+            if type(in_) is IntegerType:
                 return self.jvm.emitIMUL()
             else:
                 return self.jvm.emitFMUL()
         else:
-            if type(in_) is cgen.IntegerType:
+            if type(in_) is IntegerType:
                 return self.jvm.emitIDIV()
             else:
                 return self.jvm.emitFDIV()
@@ -477,12 +477,12 @@ class Emitter():
             else:
                 result.append(self.jvm.emitIFICMPNE(labelF))
 
-        result.append(self.emitPUSHCONST("1", cgen.IntegerType(), frame))
+        result.append(self.emitPUSHCONST("1", IntegerType(), frame))
 
         frame.pop()
         result.append(self.emitGOTO(labelO, frame))
         result.append(self.emitLABEL(labelF, frame))
-        result.append(self.emitPUSHCONST("0", cgen.IntegerType(), frame))
+        result.append(self.emitPUSHCONST("0", IntegerType(), frame))
         result.append(self.emitLABEL(labelO, frame))
         return ''.join(result)
 
@@ -500,7 +500,7 @@ class Emitter():
         frame.pop()
         if op == ">":
             result.append(self.jvm.emitIFICMPLE(falseLabel))
-            result.append(self.emitGOTO(trueLabel))
+            result.append(self.jvm.emitGOTO(trueLabel))
         elif op == ">=":
             result.append(self.jvm.emitIFICMPLT(falseLabel))
         elif op == "<":
@@ -558,10 +558,6 @@ class Emitter():
             name, self.getJVMType(cgen.ArrayPointerType(eleType))))
         return ''.join(result)
 
-    '''   generate code to initialize local array variables.
-    *   @param in the list of symbol entries corresponding to local array variable.    
-    '''
-
     def emitInitNewLocalArray(self, addressIndex, size, eleType, initCode, frame):
         result = []
         result.append(self.emitPUSHICONST(size, frame))
@@ -573,6 +569,10 @@ class Emitter():
         result.append(initCode)
         result.append(self.jvm.emitASTORE(addressIndex))
         return ''.join(result)
+
+    '''   generate code to initialize local array variables.
+    *   @param in the list of symbol entries corresponding to local array variable.    
+    '''
 
     '''   generate code to jump to label if the value on top of operand stack is true.<p>
     *   ifgt label
@@ -656,7 +656,7 @@ class Emitter():
             return self.jvm.emitRETURN()
 
         frame.pop()
-        if type(in_) in [cgen.IntegerType, BooleanType]:
+        if type(in_) in [IntegerType, BooleanType]:
             return self.jvm.emitIRETURN()
         if type(in_) is FloatType:
             return self.jvm.emitFRETURN()
