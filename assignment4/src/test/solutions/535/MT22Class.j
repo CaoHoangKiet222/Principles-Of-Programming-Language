@@ -19,12 +19,12 @@ Label3:
 Label5:
 	iconst_0
 Label4:
-	ifle Label6
-	iconst_1
+	ifgt Label6
+	iconst_0
 	invokestatic io/printBoolean(Z)V
 	goto Label7
 Label6:
-	iconst_0
+	iconst_1
 	invokestatic io/printBoolean(Z)V
 Label7:
 	iconst_0

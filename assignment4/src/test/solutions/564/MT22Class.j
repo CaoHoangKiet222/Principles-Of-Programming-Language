@@ -5,14 +5,30 @@
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-	ldc "hello"
-	ldc "world"
-	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+.var 1 is f [Ljava/lang/String; from Label0 to Label1
+	iconst_5
+	anewarray java/lang/String
+	dup
+	iconst_0
+	ldc "kiet"
+	aastore
+	dup
+	iconst_1
+	ldc ""
+	aastore
+	dup
+	iconst_2
+	ldc ""
+	aastore
+	astore_1
+	aload_1
+	iconst_0
+	aaload
 	invokestatic io/printString(Ljava/lang/String;)V
 Label1:
 	return
-.limit stack 2
-.limit locals 1
+.limit stack 4
+.limit locals 2
 .end method
 
 .method public <init>()V

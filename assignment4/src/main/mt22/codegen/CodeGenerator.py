@@ -1,14 +1,25 @@
 from functools import reduce
-from os import access, pidfd_open
 from typing import List
 from Utils import *
-from StaticCheck import *
-from StaticError import *
 from AST import *
 from Visitor import *
 from Emitter import Emitter
 from Frame import Frame
-from abc import ABC, abstractmethod
+from abc import ABC
+
+
+class MType:
+    def __init__(self, partype, rettype, paraminfo=[]):
+        self.partype = partype
+        self.rettype = rettype
+        self.paraminfo = paraminfo
+
+
+class Symbol:
+    def __init__(self, name, mtype, value=None):
+        self.name = name
+        self.mtype = mtype
+        self.value = value
 
 
 class MyUtils:
@@ -109,14 +120,16 @@ class ClassType(Type):
 
 
 class SubBody():
-    def __init__(self, frame, sym, alreadyBlock=False, isGlobal=False):
+    def __init__(self, frame, sym, alreadyBlock=False, isGlobal=False, paraminfo=[]):
         # frame: Frame
         # sym: List[Symbol]
+        # paraminfo: List[(name, typ, inherit)]
 
         self.frame = frame
         self.sym = sym
         self.alreadyBlock = alreadyBlock
         self.isGlobal = isGlobal
+        self.paraminfo = paraminfo
 
 
 class Dimensions():
@@ -194,8 +207,12 @@ class CodeGenVisitor(BaseVisitor, Utils):
         # global declarations
         for decl in ast.decls:
             if type(decl) is FuncDecl:
-                funcSubBody = self.visit(decl, SubBody(None, globalEnv))
-                globalEnv = funcSubBody.sym
+                funcSymbol = self.visit(decl, SubBody(None, globalEnv))
+                print(
+                    "+++++++++++++++++++++++++======================, sdfasdf", funcSymbol.mtype.paraminfo)
+                globalEnv = [funcSymbol] + globalEnv
+                print(
+                    "++++++++++++++++++++++++++++++=========================", len(globalEnv))
             else:
                 varSym = self.visit(decl, SubBody(
                     glFrame, globalEnv, isGlobal=True))
@@ -249,8 +266,10 @@ class CodeGenVisitor(BaseVisitor, Utils):
         paramList = SubBody(frame, glenv, alreadyBlock=True)
         for p in decl.params:
             paramList = self.visit(p, paramList)
-        paramList.sym = [
-            Symbol(methodName, mtype, CName(self.className))] + paramList.sym
+            mtype.paraminfo = paramList.paraminfo
+        # need to add for recursive
+        symbolFunc = Symbol(methodName, mtype, CName(self.className))
+        paramList.sym = [symbolFunc] + paramList.sym
 
         self.emit.printout(self.emit.emitLABEL(frame.getStartLabel(), frame))
 
@@ -276,14 +295,14 @@ class CodeGenVisitor(BaseVisitor, Utils):
             self.emit.printout(self.emit.emitRETURN(VoidType(), frame))
         self.emit.printout(self.emit.emitENDMETHOD(frame))
         frame.exitScope()
-        return paramList
+        return symbolFunc
 
     def visitVarDecl(self, ast: VarDecl, o: SubBody):
         print("============================ VarDecl", ast)
         subctxt = o
         frame = subctxt.frame
         typ = MyUtils.retrieveType(ast.typ, lambda x: self.visit(x, None))
-        name = ast.name  # change this if error
+        name = ast.name
         init = ast.init
         initCode = ""
 
@@ -299,9 +318,6 @@ class CodeGenVisitor(BaseVisitor, Utils):
             if type(initTyp) is IntegerType:
                 if type(typ) is FloatType:
                     initCode += self.emit.emitI2F(frame)
-                # # Update IntegerType for variable
-                # if type(typ) is IntegerType:
-                #     typ = IntegerType(initTyp.val)
 
         if subctxt.isGlobal:
             self.emit.printout(self.emit.emitATTRIBUTE(
@@ -327,24 +343,21 @@ class CodeGenVisitor(BaseVisitor, Utils):
         print("============================ ParamDecl", ast)
         subctxt = o
         frame = subctxt.frame
+        paraminfo = subctxt.paraminfo
+        name = ast.name
         typ = MyUtils.retrieveType(ast.typ, lambda x: self.visit(x, None))
-        name = ast.name  # change this if error
+        inherit = ast.inherit
         alreadyBlock = subctxt.alreadyBlock
-
+        paraminfo.append((name, typ, inherit))
         idx = frame.getNewIndex()
         self.emit.printout(self.emit.emitVAR(
             idx, name, typ, frame.getStartLabel(), frame.getEndLabel(), frame))
-
-        # if type(typ) is ArrayPointerType:
-        #     self.emit.printout(self.emit.emitInitNewLocalArray(
-        #         idx, typ.arraySize, typ.eleType, "", frame))
         print("============================ End ParamDecl", ast, typ)
-        return SubBody(frame, [Symbol(name, typ, Index(idx))] + subctxt.sym, alreadyBlock)
+        return SubBody(frame, [Symbol(name, typ, Index(idx))] + subctxt.sym, alreadyBlock=alreadyBlock, paraminfo=paraminfo)
 
     def visitFuncDecl(self, ast: FuncDecl, o: SubBody):
         print("============================ FuncDecl", ast)
         subctxt = o
-        # change this if error
         name = ast.name
         return_type = MyUtils.retrieveType(
             ast.return_type, lambda x: self.visit(x, None))
@@ -406,14 +419,13 @@ class CodeGenVisitor(BaseVisitor, Utils):
             if MyUtils.isOpForNumberToBoolean(op):
                 return leftCode + rightCode + self.emit.emitREOP(op, mTyp, frame), BooleanType()
         if MyUtils.isOpForStringToString(op):
-            leftVal = leftCode.replace("\tldc ", "").replace(
-                "\"", "").removesuffix('\n')
-            rightVal = rightCode.replace("\tldc ", "").replace(
-                "\"", "").removesuffix('\n')
-            return self.emit.emitPUSHCONST(str(leftVal + rightVal), StringType(), frame), StringType()
+            sym = Symbol("concat", MType([StringType()], StringType()),
+                         CName("java/lang/String"))
+            cName = sym.value.value
+            cTyp = sym.mtype
+            return leftCode + rightCode + self.emit.emitINVOKEVIRTUAL(cName + "/" + sym.name, cTyp, frame), StringType()
         if MyUtils.isOpForBooleanToBoolean(op):
-            mTyp = BooleanType()
-            return leftCode + rightCode + (self.emit.emitANDOP(frame) if op == '&&' else self.emit.emitOROP(frame)), mTyp
+            return leftCode + rightCode + (self.emit.emitANDOP(frame) if op == '&&' else self.emit.emitOROP(frame)), BooleanType()
 
     def visitUnExpr(self, ast: UnExpr, o: Access):
         frame = o.frame
@@ -432,7 +444,6 @@ class CodeGenVisitor(BaseVisitor, Utils):
         return self.callHandler(ast, frame, sym, False)
 
     def callHandler(self, ast: CallStmt or FuncCall, frame: Frame, symbols, isStmt=False):
-        # change this if error
         sym = self.lookup(ast.name, symbols, lambda x: x.name)
         cName = sym.value.value
         cTyp = sym.mtype
@@ -687,7 +698,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
                 if type(eT) is IntegerType and type(expTyp) is FloatType:
                     eC += self.emit.emitI2F(frame)
                 expCode += self.emit.emitDUP(
-                    frame) + self.emit.emitPUSHCONST(str(dimen.idx), expTyp, frame) + eC + self.emit.emitASTORE(expTyp, frame)
+                    frame) + self.emit.emitPUSHICONST(dimen.idx, frame) + eC + self.emit.emitASTORE(expTyp, frame)
             else:
                 expCode += eC
             dimen.idx -= val

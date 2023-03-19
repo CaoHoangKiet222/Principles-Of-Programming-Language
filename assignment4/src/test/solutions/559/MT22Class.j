@@ -15,10 +15,11 @@ Label0:
 Label2:
 	iconst_0
 Label3:
-	ifle Label4
+	ifgt Label4
+	goto Label5
+Label4:
 	iconst_1
 	ireturn
-Label4:
 Label5:
 .var 2 is less [I from Label0 to Label1
 	bipush 100
@@ -60,10 +61,11 @@ Label12:
 Label14:
 	iconst_0
 Label15:
-	ifle Label16
+	ifgt Label16
+	goto Label17
+Label16:
 	iconst_0
 	ireturn
-Label16:
 Label17:
 	aload_0
 	iload 6
@@ -77,19 +79,7 @@ Label17:
 Label18:
 	iconst_0
 Label19:
-	ifle Label20
-	aload_2
-	iload 5
-	aload_0
-	iload 6
-	iaload
-	iastore
-	iload 5
-	iconst_1
-	iadd
-	istore 5
-	goto Label21
-Label20:
+	ifgt Label20
 	aload_3
 	iload 4
 	aload_0
@@ -100,6 +90,18 @@ Label20:
 	iconst_1
 	iadd
 	istore 4
+	goto Label21
+Label20:
+	aload_2
+	iload 5
+	aload_0
+	iload 6
+	iaload
+	iastore
+	iload 5
+	iconst_1
+	iadd
+	istore 5
 Label21:
 Label13:
 Label8:

@@ -19,13 +19,13 @@ class Emitter():
             return "F"
         elif typeIn is BooleanType:
             return "Z"
-        elif typeIn is cgen.StringType:
+        elif typeIn is StringType:
             return "Ljava/lang/String;"
         elif typeIn is VoidType:
             return "V"
         elif typeIn is cgen.ArrayPointerType:
             return "[" + self.getJVMType(inType.eleType)
-        elif typeIn is MType:
+        elif typeIn is cgen.MType:
             return "(" + "".join(list(map(lambda x: self.getJVMType(x), inType.partype))) + ")" + self.getJVMType(inType.rettype)
         elif typeIn is cgen.ClassType:
             return "L" + inType.cname + ";"
@@ -36,9 +36,9 @@ class Emitter():
             return "int"
         elif typeIn is FloatType:
             return "float"
-        elif typeIn is BoolType:
+        elif typeIn is BooleanType:
             return "boolean"
-        elif typeIn is cgen.StringType:
+        elif typeIn is StringType:
             return "java/lang/String"
         elif typeIn is VoidType:
             return "void"
@@ -88,7 +88,7 @@ class Emitter():
         # typ: Type
         # frame: Frame
 
-        if type(typ) is IntegerType:
+        if type(typ) in [IntegerType, BooleanType]:
             return self.emitPUSHICONST(in_, frame)
         if type(typ) is FloatType:
             return self.emitPUSHFCONST(in_, frame)
@@ -108,6 +108,8 @@ class Emitter():
         frame.pop()
         if type(in_) is IntegerType:
             return self.jvm.emitIALOAD()
+        elif type(in_) is BooleanType:
+            return self.jvm.emitBALOAD()
         if type(in_) is FloatType:
             return self.jvm.emitFALOAD()
         elif type(in_) is cgen.ArrayPointerType or type(in_) is cgen.ClassType or type(in_) is StringType:
@@ -125,6 +127,8 @@ class Emitter():
         frame.pop()
         if type(in_) is IntegerType:
             return self.jvm.emitIASTORE()
+        if type(in_) is BooleanType:
+            return self.jvm.emitBASTORE()
         if type(in_) is FloatType:
             return self.jvm.emitFASTORE()
         elif type(in_) is cgen.ArrayPointerType or type(in_) is cgen.ClassType or type(in_) is StringType:
@@ -194,7 +198,7 @@ class Emitter():
 
         frame.pop()
 
-        if type(inType) is IntegerType:
+        if type(inType) in [IntegerType, BooleanType]:
             return self.jvm.emitISTORE(index)
         if type(inType) is FloatType:
             return self.jvm.emitFSTORE(index)
@@ -225,7 +229,7 @@ class Emitter():
     def emitATTRIBUTE(self, lexeme, in_, isFinal):
         # lexeme: String
         # in_: Type
-        # isFinal: Boolean
+        # isFinal: BooleanType
         # value: String
 
         return self.jvm.emitSTATICFIELD(lexeme, self.getJVMType(in_), False)
@@ -523,7 +527,7 @@ class Emitter():
     def emitMETHOD(self, lexeme, in_, isStatic, frame):
         # lexeme: String
         # in_: Type
-        # isStatic: Boolean
+        # isStatic: BooleanType
         # frame: Frame
 
         return self.jvm.emitMETHOD(lexeme, self.getJVMType(in_), isStatic)

@@ -1,0 +1,6 @@
+
+        main : function void () {
+            f : array [5] of string = {"kiet", "", ""};
+            printString(f[0]);
+        }
+            

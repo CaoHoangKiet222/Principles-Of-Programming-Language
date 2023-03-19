@@ -881,27 +881,84 @@ class CheckCodeGenSuite(unittest.TestCase):
     #     expect = "Wrong!"
     #     self.assertTrue(TestCodeGen.test(input, expect, 562))
 
-    def test_63(self):
+    # def test_63(self):
+    #     input = """
+    #     checkElementsUniqueness: function boolean (arr: array[100] of integer, n: integer) {
+    #       if ((n > 1000) || (n < 0))
+    #         return false;
+    #       for (i = 0, i < n - 1, i+1) {
+    #         for (j = i + 1, j < n, j+1) {
+    #           if (arr[i] == arr[j])  {
+    #             return false;
+    #           }
+
+    #         }
+    #       }
+    #       return true;
+    #     }
+
+    #     main: function void() {
+    #         arr: array [6] of integer = {1, 91, 0, -100, 100, 1};
+    #         if (checkElementsUniqueness(arr, 6)) printString("Correct!");
+    #         else printString("Wrong!");
+    #     }
+    #         """
+    #     expect = "Wrong!"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 563))
+
+    # def test_64(self):
+    #     input = """
+    #     main : function void () {
+    #         f : array [5] of string = {"kiet", "", ""};
+    #         printString(f[0]);
+    #     }
+    #         """
+    #     expect = "kiet"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 564))
+
+    # def test_65(self):
+    #     input = """
+    #     main : function void () {
+    #         f : array [5] of boolean = {true, false, true};
+    #         printBoolean(f[0]);
+    #     }
+    #         """
+    #     expect = "true"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 565))
+
+    # def test_66(self):
+    #     input = """
+    #     main: function void() {
+    #         arr   : array [3] of string = {"Cao", "Hoang", "Kiet"};
+    #         arr[0] = (arr[0]::arr[1])::arr[2];
+    #         printString(arr[0]);
+    #     }
+    #             """
+    #     expect = "CaoHoangKiet"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 566))
+
+    # def test_67(self):
+    #     input = """
+    #     main: function void() {
+    #         f : array [5] of boolean = {true, false, true};
+    #         printBoolean(f[0] && f[1] && f[2]);
+    #     }
+    #             """
+    #     expect = "false"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 567))
+
+    def test_68(self):
         input = """
-        checkElementsUniqueness: function boolean (arr: array[100] of integer, n: integer) {
-          if ((n > 1000) || (n < 0))
-            return false;
-          for (i = 0, i < n - 1, i+1) {
-            for (j = i + 1, j < n, j+1) {
-              if (arr[i] == arr[j])  {
-                return false;
-              }
-
-            }
-          }
-          return true;
+        foo: function string (inherit a: string, b: float) {
+            return "foo";
         }
-
-        main: function void() {
-            arr: array [6] of integer = {1, 91, 0, -100, 100, 1};
-            if (checkElementsUniqueness(arr, 6)) printString("Correct!");
-            else printString("Wrong!");
+        bar: function void (inherit x: integer, inherit y: string) inherit foo {
+            super("Hello", 123);
+            printString(a);
+        }
+        main : function void () {
+            bar(1, "hello");
         }
             """
-        expect = "Wrong!"
-        self.assertTrue(TestCodeGen.test(input, expect, 563))
+        expect = "Hello"
+        self.assertTrue(TestCodeGen.test(input, expect, 568))

@@ -5,15 +5,27 @@
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-	ldc "helloworld"
+	ldc "hello"
+	ldc "world"
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	invokestatic io/printString(Ljava/lang/String;)V
-	ldc "helloworld with kiet"
+	ldc "hello"
+	ldc "world"
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	ldc " with kiet"
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	invokestatic io/printString(Ljava/lang/String;)V
-	ldc "helloworld with kiet cao hoang"
+	ldc "hello"
+	ldc "world"
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	ldc " with kiet"
+	ldc " cao hoang"
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	invokestatic io/printString(Ljava/lang/String;)V
 Label1:
 	return
-.limit stack 13
+.limit stack 3
 .limit locals 1
 .end method
 

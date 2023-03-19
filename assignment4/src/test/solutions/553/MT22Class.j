@@ -14,16 +14,16 @@ Label0:
 Label2:
 	iconst_0
 Label3:
-	ifle Label4
-	iconst_1
-	ireturn
-Label4:
+	ifgt Label4
 	iload_0
 	iload_0
 	iconst_1
 	isub
 	invokestatic MT22Class/fact(I)I
 	imul
+	ireturn
+Label4:
+	iconst_1
 	ireturn
 Label5:
 Label1:

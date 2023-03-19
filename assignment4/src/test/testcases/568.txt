@@ -1,0 +1,12 @@
+
+        foo: function string (inherit a: string, b: float) {
+            return "foo";
+        }
+        bar: function void (inherit x: integer, inherit y: string) inherit foo {
+            super("Hello", 123);
+            printString(a);
+        }
+        main : function void () {
+            bar(1, "hello");
+        }
+            

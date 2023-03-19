@@ -13,11 +13,11 @@ Label0:
 Label2:
 	iconst_0
 Label3:
-	ifle Label4
-	iconst_1
+	ifgt Label4
+	iload_0
 	ireturn
 Label4:
-	iload_0
+	iconst_1
 	ireturn
 Label5:
 Label1:

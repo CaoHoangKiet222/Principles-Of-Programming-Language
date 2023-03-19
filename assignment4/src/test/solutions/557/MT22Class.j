@@ -48,17 +48,18 @@ Label16:
 Label18:
 	iconst_0
 Label19:
-	ifle Label20
+	ifgt Label20
+	iload_2
+	iload_3
+	isub
+	invokestatic io/printInteger(I)V
+	goto Label21
+Label20:
 	iload_2
 	iload_3
 	iadd
 	i2f
 	freturn
-Label20:
-	iload_2
-	iload_3
-	isub
-	invokestatic io/printInteger(I)V
 Label21:
 Label17:
 Label12:

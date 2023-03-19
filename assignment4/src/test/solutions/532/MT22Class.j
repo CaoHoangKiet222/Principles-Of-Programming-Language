@@ -89,28 +89,28 @@ Label0:
 	bipush 100
 	newarray float
 	dup
-	ldc 0
+	iconst_0
 	iconst_2
 	i2f
 	fastore
 	dup
-	ldc 1
+	iconst_1
 	iconst_3
 	i2f
 	fastore
 	dup
-	ldc 10
+	bipush 10
 	iconst_1
 	i2f
 	fastore
 	dup
-	ldc 20
+	bipush 20
 	iconst_5
 	i2f
 	fastore
 	putstatic MT22Class.y [F
 Label1:
 	return
-.limit stack 9
+.limit stack 5
 .limit locals 0
 .end method

@@ -2,13 +2,33 @@
 .class public MT22Class
 .super java.lang.Object
 
+.method public static foo(Ljava/lang/String;F)Ljava/lang/String;
+.var 0 is a Ljava/lang/String; from Label0 to Label1
+.var 1 is b F from Label0 to Label1
+Label0:
+	ldc "foo"
+	areturn
+Label1:
+.limit stack 1
+.limit locals 2
+.end method
+
+.method public static bar(ILjava/lang/String;)V
+.var 0 is x I from Label0 to Label1
+.var 1 is y Ljava/lang/String; from Label0 to Label1
+Label0:
+Label1:
+	return
+.limit stack 0
+.limit locals 2
+.end method
+
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
+	iconst_1
 	ldc "hello"
-	ldc "world"
-	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
-	invokestatic io/printString(Ljava/lang/String;)V
+	invokestatic MT22Class/bar(ILjava/lang/String;)V
 Label1:
 	return
 .limit stack 2

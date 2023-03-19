@@ -14,7 +14,7 @@
         }
 
         main: function void() {
-            arr: array [6] of integer = {1, 91, 0, -100, 100, 200};
+            arr: array [6] of integer = {1, 91, 0, -100, 100, 1};
             if (checkElementsUniqueness(arr, 6)) printString("Correct!");
             else printString("Wrong!");
         }

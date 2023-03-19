@@ -5,59 +5,44 @@
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-.var 1 is i I from Label0 to Label1
+.var 1 is arr [Ljava/lang/String; from Label0 to Label1
+	iconst_3
+	anewarray java/lang/String
+	dup
+	iconst_0
+	ldc "Cao"
+	aastore
+	dup
 	iconst_1
-	istore_1
-.var 2 is x [I from Label0 to Label1
-	bipush 100
-	newarray int
-	astore_2
-	iload_1
+	ldc "Hoang"
+	aastore
+	dup
 	iconst_2
-	irem
+	ldc "Kiet"
+	aastore
+	astore_1
+	aload_1
 	iconst_0
-	if_icmpne Label2
+	aload_1
+	iconst_0
+	aaload
+	aload_1
 	iconst_1
-	goto Label3
-Label2:
+	aaload
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	aload_1
+	iconst_2
+	aaload
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	aastore
+	aload_1
 	iconst_0
-Label3:
-	ifgt Label4
-	aload_2
-	iconst_0
-	bipush 10
-	imul
-	iload_1
-	iadd
-	iload_1
-	iconst_1
-	iadd
-	iastore
-	goto Label5
-Label4:
-Label6:
-	aload_2
-	iload_1
-	bipush 10
-	imul
-	iconst_0
-	iadd
-	iload_1
-	iastore
-Label7:
-Label5:
-	aload_2
-	iconst_0
-	bipush 10
-	imul
-	iload_1
-	iadd
-	iaload
-	invokestatic io/printInteger(I)V
+	aaload
+	invokestatic io/printString(Ljava/lang/String;)V
 Label1:
 	return
-.limit stack 9
-.limit locals 3
+.limit stack 8
+.limit locals 2
 .end method
 
 .method public <init>()V

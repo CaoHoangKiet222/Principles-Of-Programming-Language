@@ -27,12 +27,12 @@ Label8:
 Label10:
 	iconst_0
 Label11:
-	ifle Label12
+	ifgt Label12
+	goto Label13
+Label12:
 	bipush 100
 	istore_1
 	goto Label5
-	goto Label13
-Label12:
 Label13:
 	iload_1
 	iconst_1
