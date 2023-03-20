@@ -50,12 +50,23 @@ Label0:
 	aload_2
 	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	astore 5
+.var 6 is b I from Label0 to Label1
+	iconst_3
+	istore 6
+	aload_3
 	aload 5
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+	ldc "\n"
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	invokestatic io/printString(Ljava/lang/String;)V
+	iload 6
+	iload_0
+	iadd
+	invokestatic io/printInteger(I)V
 Label1:
 	return
 .limit stack 4
-.limit locals 6
+.limit locals 7
 .end method
 
 .method public static main([Ljava/lang/String;)V

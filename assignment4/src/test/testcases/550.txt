@@ -1,14 +1,18 @@
 
-        main: function void() {
-            i, nE: integer = 0, 10;
-            do {
-                for (i = 0, i < nE, i+1)
-                    if (nE == 10 + 5)
-                        continue;
-                    else
-                        nE = nE + 1;
-                break;
-            } while(true);
-            printInteger(nE);
-        }
-        
+            inc: function float(n: integer, delta: integer) {
+                n = n + delta;
+                for (i = 1, i < n, i+1) {
+                    for (j = 1, j < n, j+1) {
+                        if (i + j >= 5) {
+                            return i + j;
+                        } else {
+                            printInteger(i-j);
+                        }
+                    }
+                }
+                return 10;
+            }
+            main: function void() {
+                writeFloat(inc(2, 2));
+            }
+            

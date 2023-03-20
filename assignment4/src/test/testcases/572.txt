@@ -1,0 +1,14 @@
+
+        haha: function integer(inherit x: integer){
+            return 1;
+        }
+
+        haha1: function float() inherit haha{
+            super(100);
+            return 1;
+        }
+        main: function void() inherit haha1 {
+            preventDefault();
+            // printInteger(x);
+        }
+            

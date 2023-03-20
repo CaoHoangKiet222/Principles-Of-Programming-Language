@@ -50,7 +50,9 @@ Label0:
 	aload_2
 	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	astore 5
+	aload_3
 	aload 5
+	invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 	invokestatic io/printString(Ljava/lang/String;)V
 Label1:
 	return

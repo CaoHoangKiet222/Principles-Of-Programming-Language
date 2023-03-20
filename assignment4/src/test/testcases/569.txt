@@ -8,7 +8,7 @@
         }
         bar: function void (inherit x: integer, inherit y: string) inherit foo {
             super("Hello", "Kiet");
-            printString(c);
+            printString(a::c);
         }
         main : function void () {
             bar(1, "hello");

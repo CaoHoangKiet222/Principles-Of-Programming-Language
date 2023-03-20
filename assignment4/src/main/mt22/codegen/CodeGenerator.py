@@ -9,10 +9,11 @@ from abc import ABC
 
 
 class MType:
-    def __init__(self, partype, rettype, paraminfo=[]):
+    def __init__(self, partype, rettype, paraminfo=[], inherit=""):
         self.partype = partype
         self.rettype = rettype
         self.paraminfo = paraminfo
+        self.inherit = inherit
 
 
 class Symbol:
@@ -59,6 +60,15 @@ class MyUtils:
         if type(code) is list:
             return True
         return False
+
+    @staticmethod
+    def retrieveInheritParams(inheritName, symbols):
+        if inheritName == "" or inheritName is None:
+            return []
+        for s in symbols:
+            if s.name == inheritName:
+                return MyUtils.retrieveInheritParams(s.mtype.inherit, symbols) + s.mtype.paraminfo
+        return []
 
 
 class CodeGenerator(Utils):
@@ -120,16 +130,18 @@ class ClassType(Type):
 
 
 class SubBody():
-    def __init__(self, frame, sym, alreadyBlock=False, isGlobal=False, paraminfo=[]):
+    def __init__(self, frame, sym, alreadyBlock=False, isGlobal=False, paraminfo=[], inherit=""):
         # frame: Frame
         # sym: List[Symbol]
         # paraminfo: List[(name, typ, inherit)]
+        # inherit: func_name
 
         self.frame = frame
         self.sym = sym
         self.alreadyBlock = alreadyBlock
         self.isGlobal = isGlobal
         self.paraminfo = paraminfo
+        self.inherit = inherit
 
 
 class Dimensions():
@@ -208,22 +220,20 @@ class CodeGenVisitor(BaseVisitor, Utils):
         for decl in ast.decls:
             if type(decl) is FuncDecl:
                 funcSymbol = self.visit(decl, SubBody(None, globalEnv))
-                print(
-                    "+++++++++++++++++++++++++======================, sdfasdf", funcSymbol.mtype.paraminfo)
+                print("+++++++++++++++++++++++++===================",
+                      funcSymbol.mtype.paraminfo, funcSymbol.name)
                 globalEnv = [funcSymbol] + globalEnv
-                print(
-                    "++++++++++++++++++++++++++++++=========================", len(globalEnv))
             else:
                 varSym = self.visit(decl, SubBody(
                     glFrame, globalEnv, isGlobal=True))
                 globalEnv = [varSym] + globalEnv
 
         # generate default constructor
-        self.genMETHOD(FuncDecl("<init>", None, list(), None,
+        self.genMETHOD(FuncDecl("<init>", None, list(), "",
                        BlockStmt(list())), globalEnv, Frame("<init>", VoidType))
 
         self.genMETHOD(FuncDecl("<clinit>", None, list(),
-                       None, BlockStmt(list())), globalEnv, glFrame)
+                       "", BlockStmt(list())), globalEnv, glFrame)
 
         self.emit.emitEPILOG()
         return c
@@ -235,6 +245,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         glenv = o
         methodName = decl.name  # change this if error
         body = decl.body
+        inherit = decl.inherit
 
         isInit = decl.return_type is None and methodName == "<init>"
         isStaticInit = decl.return_type is None and methodName == "<clinit>"
@@ -245,7 +256,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         isProc = type(returnType) is VoidType
         intype = [ArrayPointerType(StringType())] if isMain else [
             MyUtils.retrieveType(p.typ, lambda x: self.visit(x, None)) for p in decl.params]
-        mtype = MType(intype, returnType)
+        mtype = MType(intype, returnType, inherit=inherit)
 
         self.emit.printout(self.emit.emitMETHOD(
             methodName, mtype, not isInit, frame))
@@ -263,7 +274,8 @@ class CodeGenVisitor(BaseVisitor, Utils):
             self.emit.printout(self.emit.emitVAR(frame.getNewIndex(), "args", ArrayPointerType(
                 StringType()), frame.getStartLabel(), frame.getEndLabel(), frame))
 
-        paramList = SubBody(frame, glenv, alreadyBlock=True)
+        paramList = SubBody(frame, glenv, alreadyBlock=True,
+                            paraminfo=[], inherit=inherit)
         for p in decl.params:
             paramList = self.visit(p, paramList)
             mtype.paraminfo = paramList.paraminfo
@@ -288,7 +300,23 @@ class CodeGenVisitor(BaseVisitor, Utils):
                         self.emit.printout(
                             initCode + self.emit.emitPUTSTATIC(self.className + "." + name, typ, frame))
 
-        self.visit(body, paramList)
+        flag = False
+        if inherit is not None:
+            if len(body.body) == 0:
+                self.visit(CallStmt("super", []), paramList)
+            else:
+                firstStmt = body.body[0]
+                if type(firstStmt) is CallStmt:
+                    name = firstStmt.name
+                    if name == "preventDefault":
+                        flag = True
+                    elif name == "super":
+                        flag = False
+                    else:
+                        self.visit(CallStmt("super", []), paramList)
+                else:
+                    self.visit(CallStmt("super", []), paramList)
+        self.visit(BlockStmt(body.body[1:]) if flag else body, paramList)
 
         self.emit.printout(self.emit.emitLABEL(frame.getEndLabel(), frame))
         if isProc:
@@ -304,6 +332,9 @@ class CodeGenVisitor(BaseVisitor, Utils):
         typ = MyUtils.retrieveType(ast.typ, lambda x: self.visit(x, None))
         name = ast.name
         init = ast.init
+        inherit = subctxt.inherit
+        paraminfo = subctxt.paraminfo
+        alreadyBlock = subctxt.alreadyBlock
         initCode = ""
 
         if init:
@@ -337,7 +368,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
             self.emit.printout(
                 initCode + self.emit.emitWRITEVAR(name, typ, idx, frame))
         print("============================ End VarDecl", ast, typ)
-        return SubBody(frame, [Symbol(name, typ, Index(idx))] + subctxt.sym)
+        return SubBody(frame, [Symbol(name, typ, Index(idx))] + subctxt.sym, alreadyBlock, inherit=inherit, paraminfo=paraminfo)
 
     def visitParamDecl(self, ast: ParamDecl, o: SubBody):
         print("============================ ParamDecl", ast)
@@ -348,12 +379,14 @@ class CodeGenVisitor(BaseVisitor, Utils):
         typ = MyUtils.retrieveType(ast.typ, lambda x: self.visit(x, None))
         inherit = ast.inherit
         alreadyBlock = subctxt.alreadyBlock
-        paraminfo.append((name, typ, inherit))
+        # save param for inherit func uses
+        paraminfo.append(
+            {"name": name, "typ": typ, "hasInherit": inherit, "init": None})
         idx = frame.getNewIndex()
         self.emit.printout(self.emit.emitVAR(
             idx, name, typ, frame.getStartLabel(), frame.getEndLabel(), frame))
-        print("============================ End ParamDecl", ast, typ)
-        return SubBody(frame, [Symbol(name, typ, Index(idx))] + subctxt.sym, alreadyBlock=alreadyBlock, paraminfo=paraminfo)
+        print("============================ End ParamDecl", ast)
+        return SubBody(frame, [Symbol(name, typ, Index(idx))] + subctxt.sym, alreadyBlock=alreadyBlock, paraminfo=paraminfo, inherit=o.inherit)
 
     def visitFuncDecl(self, ast: FuncDecl, o: SubBody):
         print("============================ FuncDecl", ast)
@@ -362,7 +395,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
         return_type = MyUtils.retrieveType(
             ast.return_type, lambda x: self.visit(x, None))
         frame = Frame(name, return_type)
-        print("============================ End FuncDecl")
+        print("============================ End FuncDecl", ast)
         return self.genMETHOD(ast, subctxt.sym, frame)
 
     def visitArrayType(self, ast: ArrayType, o: Access or None):
@@ -375,13 +408,19 @@ class CodeGenVisitor(BaseVisitor, Utils):
         frame = o.frame
         sym = o.sym
         alreadyBlock = o.alreadyBlock
+        inherit = o.inherit
+        paraminfo = o.paraminfo
         hasReturnStmt = False
         if not alreadyBlock:
             frame.enterScope(False)
             self.emit.printout(self.emit.emitLABEL(
                 frame.getStartLabel(), frame))
 
-        newSubBd = SubBody(frame, sym, alreadyBlock=True)
+        newSubBd = SubBody(frame, sym, alreadyBlock=True,
+                           paraminfo=paraminfo, inherit=inherit)
+
+        print("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm ------", inherit)
+
         for x in ast.body:
             if type(x) is VarDecl:
                 newSubBd = self.visit(x, newSubBd)
@@ -438,29 +477,44 @@ class CodeGenVisitor(BaseVisitor, Utils):
 
     def visitFuncCall(self, ast: FuncCall, o: Access):
         print("========================== FuncCall", ast)
-        frame = o.frame
-        sym = o.sym
         print("========================== End FuncCall", ast)
-        return self.callHandler(ast, frame, sym, False)
+        return self.callHandler(ast, o, False)
 
-    def callHandler(self, ast: CallStmt or FuncCall, frame: Frame, symbols, isStmt=False):
-        sym = self.lookup(ast.name, symbols, lambda x: x.name)
+    def callHandler(self, ast: CallStmt or FuncCall, o, isStmt=False):
+        frame = o.frame
+        sym = self.lookup(ast.name, o.sym, lambda x: x.name)
         cName = sym.value.value
         cTyp = sym.mtype
         paramsCode = ""
         paramsTyp = cTyp.partype
-        for idx, arg in enumerate(ast.args):
-            argCode, argTyp = self.visit(
-                arg, Access(frame, symbols, False))
-            if type(argTyp) is IntegerType and type(paramsTyp[idx]) is FloatType:
-                argCode += self.emit.emitI2F(frame)
-            paramsCode += argCode
-        code = paramsCode + self.emit.emitINVOKESTATIC(
-            cName + "/" + sym.name, cTyp, frame)
-        if isStmt:
-            self.emit.printout(code)
+        if sym.name == "super":
+            allParams = MyUtils.retrieveInheritParams(o.inherit, o.sym)
+            for idx, arg in enumerate(ast.args[::-1]):
+                argCode, argTyp = self.visit(
+                    arg, Access(frame, o.sym, False))
+                param = allParams[len(allParams)-idx-1]
+                param["init"] = arg
+            newSubBd = SubBody(frame, o.sym, False)
+            for param in allParams[::-1]:
+                # declare all params from parent function into jasmin code
+                newSubBd = self.visit(VarDecl(
+                    param["name"], param["typ"], param["init"]), newSubBd)
+                if param["hasInherit"] == True:
+                    # update current symbols for not calling its symbol from jasmin code when redecalre
+                    o.sym = [newSubBd.sym[0]] + o.sym
         else:
-            return code, cTyp.rettype
+            for idx, arg in enumerate(ast.args):
+                argCode, argTyp = self.visit(
+                    arg, Access(frame, o.sym, False))
+                if type(argTyp) is IntegerType and type(paramsTyp[idx]) is FloatType:
+                    argCode += self.emit.emitI2F(frame)
+                paramsCode += argCode
+            code = paramsCode + self.emit.emitINVOKESTATIC(
+                cName + "/" + sym.name, cTyp, frame)
+            if isStmt:
+                self.emit.printout(code)
+            else:
+                return code, cTyp.rettype
 
     def visitArrayCell(self, ast: ArrayCell, o: Access):
         print("=========================== ArrayCell", ast)
@@ -646,7 +700,6 @@ class CodeGenVisitor(BaseVisitor, Utils):
             exprCode, exprTyp = self.visit(ast.expr, Access(frame, sym, False))
             if type(exprTyp) is IntegerType and type(returnTyp) is FloatType:
                 exprCode += self.emit.emitI2F(frame)
-            print("++++++++++++++++++++++++++++", exprCode)
             self.emit.printout(exprCode)
         self.emit.printout(self.emit.emitRETURN(returnTyp, frame))
         print("========================= End ReturnStmt")
@@ -654,9 +707,7 @@ class CodeGenVisitor(BaseVisitor, Utils):
 
     def visitCallStmt(self, ast: CallStmt, o: SubBody):
         print("========================= CallStmt", ast)
-        frame = o.frame
-        sym = o.sym
-        self.callHandler(ast, frame, sym, True)
+        self.callHandler(ast, o, True)
         print("========================= End CallStmt", ast)
 
     def visitIntegerLit(self, ast: IntegerLit, o: Access):
