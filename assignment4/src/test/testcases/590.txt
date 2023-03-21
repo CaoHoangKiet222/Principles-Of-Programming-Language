@@ -1,0 +1,16 @@
+
+        main: function void() {
+            printInteger(5 % 4);
+            printInteger(15 % 4);
+            printInteger(52 % 6);
+            printInteger(56 % 5);
+            printInteger(9 % 12);
+            printInteger(1998 % 46);
+            printInteger(1998 % 54);
+            printInteger(1998 % 87);
+            printInteger(1998 % 42);
+            printInteger(1998 % 16);
+            printInteger(1998 % 19);
+            printInteger(1998 % 24);
+        }
+    

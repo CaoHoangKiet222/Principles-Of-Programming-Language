@@ -1,0 +1,16 @@
+
+        gcdIteration: function integer(p: integer, q: integer) {
+          while (p * q != 0) {
+            if (p > q) {
+              p = p % q;
+            } else {
+              q = q % p;
+            }
+          }
+          return p + q;
+        }
+
+        main: function void() {
+            printInteger(gcdIteration(12, 6));
+        }
+    

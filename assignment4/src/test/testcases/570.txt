@@ -1,25 +1,18 @@
 
-        foo: function string (a: integer, b: string) {
-            f : array [5] of string = {b};
-            return f[0];
-        }
-        foo1: function string (a: string, b: integer) inherit foo{
-            super(b, a);
-            f : array [5] of string = {a};
-            return f[0];
-        }
-        bar: function void (inherit out a: integer, inherit out b: string) inherit foo1 {
-            super("Hello"::b, a);
-            for (i = 1, i < 10, i + 1)
-            {
-                writeFloat(a);
+            foo1: function string (inherit c: string, d: float) {
+                return "foo1";
             }
-            if (a==2)
-                return;
-            // printString(a);
-            //printString(foo("Hello", 1.2312));
-        }
-        main: function void() {
-            bar(10, "World!");
-        }
-    
+            foo: function string (inherit a: string, b: string) inherit foo1 {
+                super("World!"::b, 123.0);
+                return "foo";
+            }
+            bar: function void (inherit x: integer, inherit y: string) inherit foo {
+                super("Hello", "Kiet");
+                b: integer = 3;
+                printString((a::c)::"\n");
+                printInteger(b + x);
+            }
+            main : function void () {
+                bar(1, "hello");
+            }
+                

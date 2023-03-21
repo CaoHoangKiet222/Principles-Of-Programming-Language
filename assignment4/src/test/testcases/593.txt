@@ -1,0 +1,12 @@
+
+        main: function void() {
+            printInteger(--1);
+            printInteger(--100);
+            writeFloat(--1.0);
+            writeFloat(--10000.0);
+            printInteger(---1);
+            printInteger(---100);
+            writeFloat(---1.0);
+            writeFloat(---10000.0);
+        }
+    

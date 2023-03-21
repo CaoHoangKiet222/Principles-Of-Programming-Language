@@ -713,17 +713,17 @@ class CheckerSuite(unittest.TestCase):
                 if (i % 2 == 0) {
                     x[i, 0, 1] = i;
                 } else {
-                    x[0, i] = i + 1;
+                    x[0, i] = i + 1; // check again
                 }
                 for(j = 1, j < 100, j+1) {
                 }
                 while(true) {continue;}
-                break;
+                break; // check
             }
             continue;
         }
         """
-        expect = "ContinueStmt() Not In Loop"
+        expect = "check again"
         self.assertTrue(TestChecker.test(input, expect, 460))
 
     def test_61(self):

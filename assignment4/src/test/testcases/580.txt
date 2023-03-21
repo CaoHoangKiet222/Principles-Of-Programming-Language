@@ -1,0 +1,20 @@
+
+        checkzero: function boolean(nums: array[10] of integer, size: integer) {
+          found: boolean = false;
+          for (i = 0, (i < size) && (!found), i + 1) {
+            if (nums[i] == 0) {
+              found = true;
+            }
+          }
+          return found;
+        }
+
+        main: function void() {
+            n : integer = 5;
+            arr: array[5] of integer = {1, 31, 23, 4324, 234};
+            if (checkzero(arr, n))
+                printString("arr has a zero");
+            else
+                printString("zero doesn't contain in arr");
+        }
+    

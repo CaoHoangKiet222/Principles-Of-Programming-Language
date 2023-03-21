@@ -1,0 +1,14 @@
+
+        main: function void() {
+            printBoolean(!false);
+            printBoolean(!true);
+            printBoolean(!!false);
+            printBoolean(!!true);
+            printBoolean(!!!false);
+            printBoolean(!!!true);
+            printBoolean(!false && true);
+            printBoolean(!true && false);
+            printBoolean(!!false && !!!true || false && true);
+            printBoolean(!!true || false);
+        }
+    

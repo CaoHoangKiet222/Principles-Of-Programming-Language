@@ -1,0 +1,13 @@
+
+        max_two_nums: function integer (a: integer, b: integer) {
+            if (a > b) {
+                return a;
+            }
+            return b;
+        }
+
+        main: function void() {
+            n, m : integer = 10, 11;
+            printInteger(max_two_nums(n, m));
+        }
+    

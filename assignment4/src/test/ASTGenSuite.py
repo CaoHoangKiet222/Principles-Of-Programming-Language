@@ -889,7 +889,7 @@ class ASTGenSuite(unittest.TestCase):
         input = """
         binarySearch: function integer(arr: array[1000] of integer, left: integer, right: integer, x: integer) {
           if (right >= left) {
-            mid:integer = left + (right - left) / 2;
+            mid: integer = left + (right - left) / 2;
             if (arr[mid] == x)
               return mid;
 

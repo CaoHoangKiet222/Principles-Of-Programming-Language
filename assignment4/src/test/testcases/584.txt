@@ -1,0 +1,14 @@
+
+        factorial: function integer(N: integer) {
+          result: integer = 1;
+          for (i = 1, i <= N, i+1) {
+            result = result * i;
+          }
+          return result;
+        }
+
+        main: function void() {
+            n: integer = 10;
+            printInteger(factorial(n));
+        }
+    

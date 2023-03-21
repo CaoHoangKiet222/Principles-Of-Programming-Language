@@ -1,0 +1,16 @@
+
+        main: function void() {
+           writeFloat(5 / 4);
+           writeFloat(15 / 4);
+           writeFloat(52 / 6);
+           writeFloat(56 / 5);
+           writeFloat(9 / 12);
+           writeFloat(1998 / 46);
+           writeFloat(1998 / 54);
+           writeFloat(1998 / 87);
+           writeFloat(1998 / 42);
+           writeFloat(1998 / 16);
+           writeFloat(1998 / 19);
+           writeFloat(1998 / 24);
+        }
+    
