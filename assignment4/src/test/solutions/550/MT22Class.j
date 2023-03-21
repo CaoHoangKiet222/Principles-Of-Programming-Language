@@ -2,102 +2,68 @@
 .class public MT22Class
 .super java.lang.Object
 
-.method public static inc(II)F
-.var 0 is n I from Label0 to Label1
-.var 1 is delta I from Label0 to Label1
-Label0:
-	iload_0
-	iload_1
-	iadd
-	istore_0
-.var 2 is i I from Label0 to Label1
-	iconst_1
-	istore_2
-Label2:
-	iload_2
-	iload_0
-	if_icmpge Label6
-	iconst_1
-	goto Label7
-Label6:
-	iconst_0
-Label7:
-	ifle Label3
-Label8:
-.var 3 is j I from Label8 to Label9
-	iconst_1
-	istore_3
-Label10:
-	iload_3
-	iload_0
-	if_icmpge Label14
-	iconst_1
-	goto Label15
-Label14:
-	iconst_0
-Label15:
-	ifle Label11
-Label16:
-	iload_2
-	iload_3
-	iadd
-	iconst_5
-	if_icmplt Label18
-	iconst_1
-	goto Label19
-Label18:
-	iconst_0
-Label19:
-	ifgt Label20
-	iload_2
-	iload_3
-	isub
-	invokestatic io/printInteger(I)V
-	goto Label21
-Label20:
-	iload_2
-	iload_3
-	iadd
-	i2f
-	freturn
-Label21:
-Label17:
-Label12:
-	iload_3
-	iconst_1
-	iadd
-	istore_3
-	goto Label10
-Label11:
-Label13:
-Label9:
-Label4:
-	iload_2
-	iconst_1
-	iadd
-	istore_2
-	goto Label2
-Label3:
-Label5:
-	bipush 10
-	i2f
-	freturn
-Label1:
-.limit stack 8
-.limit locals 4
-.end method
-
 .method public static main([Ljava/lang/String;)V
 .var 0 is args [Ljava/lang/String; from Label0 to Label1
 Label0:
-	iconst_2
-	iconst_2
-	invokestatic MT22Class/inc(II)F
-	invokestatic io/writeFloat(F)V
+.var 1 is i I from Label0 to Label1
+	iconst_0
+	istore_1
+.var 2 is nE I from Label0 to Label1
+	bipush 10
+	istore_2
+Label2:
+	iconst_0
+	istore_1
+Label6:
+	iload_1
+	iload_2
+	if_icmpge Label10
+	iconst_1
+	goto Label11
+Label10:
+	iconst_0
+Label11:
+	ifle Label7
+	iload_2
+	bipush 10
+	iconst_5
+	iadd
+	if_icmpne Label12
+	iconst_1
+	goto Label13
+Label12:
+	iconst_0
+Label13:
+	ifgt Label14
+	iload_2
+	iconst_1
+	iadd
+	istore_2
+	goto Label15
+Label14:
+	goto Label8
+Label15:
+Label8:
+	iload_1
+	iconst_1
+	iadd
+	istore_1
+	goto Label6
+Label7:
+Label9:
+	goto Label5
+Label4:
+	iconst_1
+	ifle Label3
+	goto Label2
+Label3:
+Label5:
+	iload_2
+	invokestatic io/printInteger(I)V
 Label1:
 	return
-.limit stack 2
-.limit locals 1
+.limit stack 6
+.limit locals 3
 .end method
 
 .method public <init>()V

@@ -841,7 +841,7 @@ class CheckCodeGenSuite(unittest.TestCase):
     #           if (arr[i] == arr[j])  {
     #             return false;
     #           }
-    #
+
     #         }
     #       }
     #       return true;
@@ -1047,19 +1047,187 @@ class CheckCodeGenSuite(unittest.TestCase):
     #     expect = "14"
     #     self.assertTrue(TestCodeGen.test(input, expect, 571))
 
-    def test_72(self):
-        input = """
-        haha: function integer(inherit x: integer){
-            return 1;
-        }
+    # def test_72(self):
+    #     input = """
+    #     haha: function integer(inherit x: integer){
+    #         return 1;
+    #     }
 
-        haha1: function float() inherit haha{
-            super(100);
-            return 1;
+    #     haha1: function float() inherit haha{
+    #         super(100);
+    #         return 1;
+    #     }
+    #     main: function void() inherit haha1 {
+    #         printInteger(x);
+    #     }
+    #         """
+    #     expect = "100"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 572))
+
+    # def test_72(self):
+    #     input = """
+    #     foo: function string (a: string, b: float) {
+    #         d: string = a;
+    #         f : array [5] of string = {"Yooooo!", "Loooo"};
+    #         return (f[0]::f[1])::d;
+    #     }
+    #     bar: function void (inherit out a: float, inherit out b: string) inherit foo {
+    #         super("Hello", 123);
+    #         for (i = 1, i < 10, i + 1)
+    #         {
+    #             writeFloat(a);
+    #         }
+    #         if (a==2)
+    #             return;
+    #     }
+    #     main: function void() {
+    #         bar(5, "yep");
+    #         printString(foo("Friend", 1));
+    #     }
+    #         """
+    #     expect = "5.05.05.05.05.05.05.05.05.0Yooooo!LooooFriend"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 572))
+
+    # def test_73(self):
+    #     input = """
+    #     foo1: function integer (a: string, b: integer, c: float, d: boolean) {
+    #         return b + 1;
+    #     }
+    #     foo: function string (a: string, inherit b: integer, inherit c: float, d: boolean) inherit foo1{
+    #         super("Hello"::a, 134, 12.0, false);
+    #         f : array [5] of string = {"a"};
+    #         return f[0];
+    #     }
+    #     bar: function void (inherit a: integer, x: string) inherit foo {
+    #         super("Hello"::x, 123, 11.0, true);
+    #         writeFloat((a + b) + c);
+    #     }
+    #     main: function void() {
+    #         bar(10, "World!");
+    #     }
+    # """
+    #     expect = "144.0"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 573))
+
+    # def test_74(self):
+    #     input = """
+    #     foo1: function integer (a: string, b: integer, inherit c: float, inherit d: boolean) {
+    #         return b + 1;
+    #     }
+    #     foo: function string (a: string, inherit b: integer) inherit foo1{
+    #         super("Hello"::a, 134, 12.0, false);
+    #         f : array [5] of string = {"a"};
+    #         return f[0];
+    #     }
+    #     bar: function void (inherit a: integer, x: string) inherit foo {
+    #         super("Hello"::x, 123);
+    #         writeFloat((a + b) + c);
+    #     }
+    #     main: function void() {
+    #         bar(10, "World!");
+    #     }
+    # """
+    #     expect = "145.0"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 574))
+
+    # def test_75(self):
+    #     input = """
+    #     foo1: function integer (a: string, b: integer, inherit c: float, inherit d: boolean) {
+    #         printString(a);
+    #         return b + 1;
+    #     }
+    #     foo: function string (a: string, inherit b: integer) inherit foo1{
+    #         super("Hello"::a, 134, 12.0, false);
+    #         f : array [5] of string = {"a"};
+    #         return f[0];
+    #     }
+    #     bar: function void (inherit a: integer, x: string) inherit foo {
+    #         super("Hello"::x, 123);
+    #         writeFloat((a + b) + c);
+    #     }
+    #     main: function void() {
+    #         bar(10, "World!");
+    #         printInteger(foo1("", 1, 1.0, false));
+    #     }
+    # """
+    #     expect = "145.02"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 575))
+
+    # def test_76(self):
+    #     input = """
+    #     foo1: function integer (a: string, b: integer, inherit c: float, inherit d: boolean) {
+    #         printString(a);
+    #         return b + 1;
+    #     }
+    #     foo: function string (a: string, inherit b: integer) inherit foo1{
+    #         super("Hello"::a, 134, 12.0, false);
+    #         writeFloat(c);
+    #         f : array [5] of string = {"a"};
+    #         return f[0]::a;
+    #     }
+    #     bar: function void (inherit a: integer, x: string) inherit foo {
+    #         super("Hello"::x, 123);
+    #         writeFloat((a + b) + c);
+    #     }
+    #     main: function void() {
+    #         bar(10, "World!");
+    #         printString(foo("", 1));
+    #         printInteger(foo1("", 1, 1.0, false));
+    #     }
+    # """
+    #     expect = "145.012.0a2"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 576))
+
+    # def test_76(self):
+    #     input = """
+    #     foo1: function integer (a: string, b: integer, inherit c: float, inherit d: boolean) {
+    #         printString(a);
+    #         return b + 1;
+    #     }
+    #     foo: function string (a: string, inherit b: integer) inherit foo1{
+    #         super("Hello"::a, 134, 12.0, false);
+    #         writeFloat(c);
+    #         f : array [5] of string = {"a"};
+    #         return f[0]::a;
+    #     }
+    #     bar: function void (inherit a: integer, x: string) inherit foo {
+    #         super("Hello"::x, 123);
+    #         writeFloat((a + b) + c);
+    #     }
+    #     main: function void() {
+    #         bar(10, "World!");
+    #         printString(foo("", 1));
+    #         printInteger(foo1("", 1, 1.0, false));
+    #     }
+    # """
+    #     expect = "145.012.0a2"
+    #     self.assertTrue(TestCodeGen.test(input, expect, 576))
+
+    def test_70(self):
+        input = r"""
+        foo: function string (a: integer, b: string) {
+            f : array [5] of string = {b};
+            return f[0];
         }
-        main: function void() inherit haha1 {
-            printInteger(x);
+        foo1: function string (a: string, b: integer) inherit foo{
+            super(b, a);
+            f : array [5] of string = {a};
+            return f[0];
         }
-            """
-        expect = "100"
-        self.assertTrue(TestCodeGen.test(input, expect, 572))
+        bar: function void (inherit out a: integer, inherit out b: string) inherit foo1 {
+            super("Hello"::b, a);
+            for (i = 1, i < 10, i + 1)
+            {
+                writeFloat(a);
+            }
+            if (a==2)
+                return;
+            // printString(a);
+            //printString(foo("Hello", 1.2312));
+        }
+        main: function void() {
+            bar(10, "World!");
+        }
+    """
+        expect = "[]"
+        self.assertTrue(TestCodeGen.test(input, expect, 570))

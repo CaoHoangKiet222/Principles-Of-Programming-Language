@@ -18,12 +18,10 @@ Label6:
 	iconst_0
 Label7:
 	ifle Label3
-Label8:
 	iload_1
 	iconst_1
 	iadd
 	istore_1
-Label9:
 Label4:
 	goto Label2
 Label3:

@@ -18,27 +18,25 @@ Label6:
 	iconst_0
 Label7:
 	ifle Label3
-Label8:
 	iload_1
 	bipush 10
-	if_icmpne Label10
+	if_icmpne Label8
 	iconst_1
+	goto Label9
+Label8:
+	iconst_0
+Label9:
+	ifgt Label10
 	goto Label11
 Label10:
-	iconst_0
-Label11:
-	ifgt Label12
-	goto Label13
-Label12:
 	bipush 100
 	istore_1
 	goto Label5
-Label13:
+Label11:
 	iload_1
 	iconst_1
 	iadd
 	istore_1
-Label9:
 Label4:
 	goto Label2
 Label3:

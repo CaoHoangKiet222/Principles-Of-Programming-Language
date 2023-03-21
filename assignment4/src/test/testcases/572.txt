@@ -1,14 +1,20 @@
 
-        haha: function integer(inherit x: integer){
-            return 1;
+        foo: function string (a: string, b: float) {
+            d: string = a;
+            f : array [5] of string = {"Yooooo!", "Loooo"};
+            return (f[0]::f[1])::d;
         }
-
-        haha1: function float() inherit haha{
-            super(100);
-            return 1;
+        bar: function void (inherit out a: float, inherit out b: string) inherit foo {
+            super("Hello", 123);
+            for (i = 1, i < 10, i + 1)
+            {
+                writeFloat(a);
+            }
+            if (a==2)
+                return;
         }
-        main: function void() inherit haha1 {
-            preventDefault();
-            // printInteger(x);
+        main: function void() {
+            bar(5, "yep");
+            printString(foo("Friend", 1));
         }
             

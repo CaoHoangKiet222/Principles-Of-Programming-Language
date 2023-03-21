@@ -9,61 +9,57 @@ Label0:
 	iconst_0
 	istore_1
 Label2:
-Label6:
-.var 2 is j I from Label6 to Label7
+.var 2 is j I from Label0 to Label1
 	iconst_0
 	istore_2
-Label8:
+Label6:
 	iload_2
 	bipush 20
-	if_icmpge Label12
+	if_icmpge Label10
+	iconst_1
+	goto Label11
+Label10:
+	iconst_0
+Label11:
+	ifle Label7
+	iload_1
+	iload_2
+	iadd
+	bipush 20
+	if_icmplt Label12
 	iconst_1
 	goto Label13
 Label12:
 	iconst_0
 Label13:
-	ifle Label9
-Label14:
-	iload_1
-	iload_2
-	iadd
-	bipush 20
-	if_icmplt Label16
-	iconst_1
-	goto Label17
-Label16:
-	iconst_0
-Label17:
-	ifgt Label18
+	ifgt Label14
 	iload_2
 	iconst_1
 	iadd
 	istore_2
-	goto Label19
-Label18:
-	goto Label11
-Label19:
+	goto Label15
+Label14:
+	goto Label9
 Label15:
-Label10:
-	goto Label8
+Label8:
+	goto Label6
+Label7:
 Label9:
-Label11:
 	iload_2
 	invokestatic io/printInteger(I)V
 	iload_1
 	iconst_1
 	iadd
 	istore_1
-Label7:
 Label4:
 	iload_1
 	bipush 10
-	if_icmpge Label20
+	if_icmpge Label16
 	iconst_1
-	goto Label21
-Label20:
+	goto Label17
+Label16:
 	iconst_0
-Label21:
+Label17:
 	ifle Label3
 	goto Label2
 Label3:

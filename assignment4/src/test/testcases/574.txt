@@ -1,14 +1,14 @@
 
-        foo1: function integer (a: string, b: integer, c: float, d: boolean) {
+        foo1: function integer (a: string, b: integer, inherit c: float, inherit d: boolean) {
             return b + 1;
         }
-        foo: function string (a: string, inherit b: integer, inherit c: float, d: boolean) inherit foo1{
+        foo: function string (a: string, inherit b: integer) inherit foo1{
             super("Hello"::a, 134, 12.0, false);
             f : array [5] of string = {"a"};
             return f[0];
         }
         bar: function void (inherit a: integer, x: string) inherit foo {
-            super("Hello"::x, 123, 11.0, true);
+            super("Hello"::x, 123);
             writeFloat((a + b) + c);
         }
         main: function void() {

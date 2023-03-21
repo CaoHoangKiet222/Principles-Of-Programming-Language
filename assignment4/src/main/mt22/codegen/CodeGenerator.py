@@ -62,12 +62,12 @@ class MyUtils:
         return False
 
     @staticmethod
-    def retrieveInheritParams(inheritName, symbols):
+    def retrieveInheritParams(inheritName, symbols, func=lambda x: x):
         if inheritName == "" or inheritName is None:
             return []
         for s in symbols:
             if s.name == inheritName:
-                return MyUtils.retrieveInheritParams(s.mtype.inherit, symbols) + s.mtype.paraminfo
+                return func(MyUtils.retrieveInheritParams(s.mtype.inherit, symbols)) + func(s.mtype.paraminfo)
         return []
 
 
@@ -419,8 +419,6 @@ class CodeGenVisitor(BaseVisitor, Utils):
         newSubBd = SubBody(frame, sym, alreadyBlock=True,
                            paraminfo=paraminfo, inherit=inherit)
 
-        print("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm ------", inherit)
-
         for x in ast.body:
             if type(x) is VarDecl:
                 newSubBd = self.visit(x, newSubBd)
@@ -488,20 +486,37 @@ class CodeGenVisitor(BaseVisitor, Utils):
         paramsCode = ""
         paramsTyp = cTyp.partype
         if sym.name == "super":
+            # method: create all ParamDecl jasmin code of all inherit function into current function
+            # make it different in symbols when searching for the recognition of inherit params
             allParams = MyUtils.retrieveInheritParams(o.inherit, o.sym)
             for idx, arg in enumerate(ast.args[::-1]):
                 argCode, argTyp = self.visit(
                     arg, Access(frame, o.sym, False))
                 param = allParams[len(allParams)-idx-1]
                 param["init"] = arg
+            print("+++++++++++++++++++mmmmmmmmmmmmmmm allParams",
+                  allParams)
+            paramsSizeArr = MyUtils.retrieveInheritParams(
+                o.inherit, o.sym, lambda x: [len(x)])
+            print("+++++++++++++++++++mmmmmmmmmmmmmmm paramsSizeArr", paramsSizeArr)
             newSubBd = SubBody(frame, o.sym, False)
+            symsAdd = []
             for param in allParams[::-1]:
                 # declare all params from parent function into jasmin code
                 newSubBd = self.visit(VarDecl(
                     param["name"], param["typ"], param["init"]), newSubBd)
                 if param["hasInherit"] == True:
-                    # update current symbols for not calling its symbol from jasmin code when redecalre
+                    # update global symbols for not calling its symbol from jasmin code when redecalre
                     o.sym = [newSubBd.sym[0]] + o.sym
+                if paramsSizeArr[-1] != 0:
+                    symsAdd = [newSubBd.sym[0]] + symsAdd
+                    # remove first symbol after declaration for acurate search
+                    newSubBd.sym = newSubBd.sym[1::]
+                    paramsSizeArr[-1] -= 1
+                if paramsSizeArr[-1] == 0:
+                    # restore all symbols from deleting symbol in newSubBd
+                    newSubBd.sym = symsAdd + newSubBd.sym
+                    paramsSizeArr = paramsSizeArr[:-1]
         else:
             for idx, arg in enumerate(ast.args):
                 argCode, argTyp = self.visit(

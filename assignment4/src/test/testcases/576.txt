@@ -1,0 +1,21 @@
+
+        foo1: function integer (a: string, b: integer, inherit c: float, inherit d: boolean) {
+            printString(a);
+            return b + 1;
+        }
+        foo: function string (a: string, inherit b: integer) inherit foo1{
+            super("Hello"::a, 134, 12.0, false);
+            writeFloat(c);
+            f : array [5] of string = {"a"};
+            return f[0]::a;
+        }
+        bar: function void (inherit a: integer, x: string) inherit foo {
+            super("Hello"::x, 123);
+            writeFloat((a + b) + c);
+        }
+        main: function void() {
+            bar(10, "World!");
+            printString(foo("", 1));
+            printInteger(foo1("", 1, 1.0, false));
+        }
+    
