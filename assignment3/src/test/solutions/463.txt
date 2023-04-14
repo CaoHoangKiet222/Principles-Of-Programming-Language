@@ -1,1 +1,1 @@
-Type Mismatch In Statement: ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(/, Id(size), IntegerLit(2))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([VarDecl(i, IntegerType, IntegerLit(1)), AssignStmt(Id(i), BooleanLit(False))]))
+Type mismatch in statement: ForStmt(AssignStmt(Id(i), IntegerLit(0)), BinExpr(<, Id(i), BinExpr(/, Id(size), IntegerLit(2))), BinExpr(+, Id(i), IntegerLit(1)), BlockStmt([VarDecl(i, IntegerType, IntegerLit(1)), AssignStmt(Id(i), BooleanLit(False))]))

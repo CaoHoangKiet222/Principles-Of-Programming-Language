@@ -1,1 +1,1 @@
-Type Mismatch In Expression: FuncCall(foo, [BinExpr(+, Id(i), IntegerLit(1)), FuncCall(foo, [BinExpr(+, Id(x), IntegerLit(2)), IntegerLit(1)])])
+Type mismatch in expression: FuncCall(foo, [BinExpr(+, Id(i), IntegerLit(1)), FuncCall(foo, [BinExpr(+, Id(x), IntegerLit(2)), IntegerLit(1)])])

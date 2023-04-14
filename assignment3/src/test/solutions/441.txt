@@ -1,1 +1,1 @@
-Type Mismatch In Statement: ReturnStmt(IntegerLit(1))
+Type mismatch in statement: ReturnStmt(IntegerLit(1))

@@ -1,1 +1,1 @@
-Type Mismatch In Statement: VarDecl(y, BooleanType, UnExpr(-, FuncCall(inc, [Id(x), IntegerLit(1)])))
+Type mismatch in statement: VarDecl(y, BooleanType, UnExpr(-, FuncCall(inc, [Id(x), IntegerLit(1)])))

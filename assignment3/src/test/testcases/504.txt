@@ -1,0 +1,8 @@
+
+        main: function void() {
+            x(1, 2);
+        }
+        x: function void(a: integer) {
+
+        }
+    

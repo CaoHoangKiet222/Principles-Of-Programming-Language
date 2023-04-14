@@ -1,1 +1,1 @@
-Invalid Statement In Function: main
+Invalid statement in function: main

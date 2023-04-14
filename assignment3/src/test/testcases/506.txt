@@ -1,0 +1,6 @@
+
+        main: function void(){
+            a: array[10, 10, 10] of integer;
+            a[0] = {{1}, {}, {5}};
+        }
+    

@@ -1,1 +1,1 @@
-Type Mismatch In Expression: BinExpr(+, FuncCall(checkDuplicate, [Id(less), Id(less_size)]), FuncCall(checkDuplicate, [Id(greater), Id(greater_size)]))
+Type mismatch in expression: BinExpr(+, FuncCall(checkDuplicate, [Id(less), Id(less_size)]), FuncCall(checkDuplicate, [Id(greater), Id(greater_size)]))

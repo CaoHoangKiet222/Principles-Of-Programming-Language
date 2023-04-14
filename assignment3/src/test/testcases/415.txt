@@ -1,6 +1,6 @@
 
-        a: array [2, 3] of boolean = {};
-        b: array [2, 3] of boolean = {{}};
-        c: array [2, 3] of boolean = {{true}, {false}};
-        d: array [2, 3] of boolean = {{false, false}, {1}};
-        
+            a: array [2, 3] of boolean = {};
+            b: array [2, 3] of boolean = {{}};
+            c: array [2, 3] of boolean = {{true}, {false}};
+            d: array [2, 3] of boolean = {{false, false}, {1}};
+            

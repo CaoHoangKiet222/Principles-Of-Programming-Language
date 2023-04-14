@@ -1,1 +1,1 @@
-ContinueStmt() Not In Loop
+Type mismatch in statement: AssignStmt(ArrayCell(x, [IntegerLit(0), Id(i)]), BinExpr(+, Id(i), IntegerLit(1)))

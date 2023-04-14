@@ -1,1 +1,1 @@
-Type Mismatch In Expression: BinExpr(%, Id(seed), Id(mod))
+Type mismatch in expression: BinExpr(%, Id(seed), Id(mod))

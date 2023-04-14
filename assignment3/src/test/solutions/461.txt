@@ -1,1 +1,1 @@
-Type Mismatch In Statement: ReturnStmt(StringLit(hello))
+Type mismatch in statement: ReturnStmt(StringLit(hello))

@@ -1,1 +1,1 @@
-Type Mismatch In Statement: ReturnStmt(Id(nE))
+Type mismatch in statement: ReturnStmt(Id(nE))

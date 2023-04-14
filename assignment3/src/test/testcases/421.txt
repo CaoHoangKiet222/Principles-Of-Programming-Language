@@ -1,5 +1,5 @@
 
-        inc: function void() {}
-        inc: function void(out n: integer, delta: float) {}
-        main: function void() {}
-        
+            inc: function void() {}
+            inc: function void(out n: integer, delta: float) {}
+            main: function void() {}
+            

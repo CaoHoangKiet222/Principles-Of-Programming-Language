@@ -1,1 +1,1 @@
-Type Mismatch In Statement: VarDecl(c, IntegerType, FloatLit(2.3))
+Type mismatch in statement: VarDecl(c, IntegerType, FloatLit(2.3))

@@ -1,1 +1,1 @@
-Type Mismatch In Statement: VarDecl(d, ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([BooleanLit(False), BooleanLit(False)]), ArrayLit([IntegerLit(1)])]))
+Type mismatch in Variable Declaration: VarDecl(d, ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([BooleanLit(False), BooleanLit(False)]), ArrayLit([IntegerLit(1)])]))

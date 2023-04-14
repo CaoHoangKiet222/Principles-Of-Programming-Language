@@ -1,7 +1,7 @@
 
-        inc: function void(out n: integer, delta: integer) {
-            if (n > delta) {
-            } else {}
-        }
-        main: function void() {}
-        
+            inc: function void(out n: integer, delta: integer) {
+                if (n > delta) {
+                } else {}
+            }
+            main: function void() {}
+            

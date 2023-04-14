@@ -1,1 +1,1 @@
-Type Mismatch In Statement: VarDecl(c, ArrayType([2, 3], IntegerType), ArrayLit([ArrayLit([]), ArrayLit([]), ArrayLit([])]))
+No entry point

@@ -1,1 +1,1 @@
-Type Mismatch In Expression: BinExpr(+, StringLit(The sum is), FuncCall(sum, [Id(n)]))
+Type mismatch in expression: BinExpr(+, StringLit(The sum is), FuncCall(sum, [Id(n)]))

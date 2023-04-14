@@ -1,1 +1,1 @@
-Type Mismatch In Expression: BinExpr(&&, Id(right), UnExpr(!, Id(found)))
+Type mismatch in expression: BinExpr(&&, Id(right), UnExpr(!, Id(found)))

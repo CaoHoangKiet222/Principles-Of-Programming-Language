@@ -1,5 +1,11 @@
 
-        inherit out  x: integer
-        main: function void() {
-        }
-        
+            foo: function integer (inherit x: integer, y: integer) {
+                return 1;
+            }
+            main: function void() {
+            }
+            foo1: function integer (x: integer) inherit foo {
+                super(1, 1);
+                return 1;
+            }
+            

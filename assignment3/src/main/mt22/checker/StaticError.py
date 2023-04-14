@@ -1,104 +1,106 @@
-from abc import ABC
-from dataclasses import dataclass
-from AST import *
-
-
-class Kind(ABC):
-    pass
-
-
-class Function(Kind):
-    def __str__(self):
-        return "Function"
-
-
-class Parameter(Kind):
-    def __str__(self):
-        return "Parameter"
-
-
-class Variable(Kind):
-    def __str__(self):
-        return "Variable"
-
-
-class Identifier(Kind):
-    def __str__(self):
-        return "Identifier"
+from abc import ABC, ABCMeta
 
 
 class StaticError(Exception):
     pass
 
 
-@dataclass
+class Kind(ABC):
+    def __str__(self):
+        return self.__class__.__name__
+
+
+class Variable(Kind):
+    pass
+
+
+class Parameter(Kind):
+    pass
+
+
+class Function(Kind):
+    pass
+
+
+class Identifier(Kind):
+    pass
+
+
 class Redeclared(StaticError):
-    k: Kind
-    n: str  # name of identifier
+    def __init__(self, kind: Kind, identifier: str):
+        self.kind = kind
+        self.identifier = identifier
 
     def __str__(self):
-        return "Redeclared " + str(self.k) + ": " + self.n
+        return f"Redeclared {str(self.kind)}: {self.identifier}"
 
 
-@dataclass
 class Undeclared(StaticError):
-    k: Kind
-    n: str  # name of identifier
+    def __init__(self, kind: Kind, name: str):
+        self.kind = kind
+        self.name = name
 
     def __str__(self):
-        return "Undeclared " + str(self.k) + ": " + self.n
+        return f"Undeclared {str(self.kind)}: {self.name}"
 
 
-@dataclass
 class Invalid(StaticError):
-    k: Kind
-    n: str  # name of variable/parameter
+    def __init__(self, kind: Kind, name: str):
+        self.kind = kind
+        self.name = name
 
     def __str__(self):
-        return "Invalid " + str(self.k) + ": " + self.n
+        return f"Invalid {str(self.kind)}: {self.name}"
 
 
-@dataclass
+class TypeMismatchInVarDecl(StaticError):
+    def __init__(self, decl):
+        self.decl = decl
+
+    def __str__(self):
+        return f"Type mismatch in Variable Declaration: {str(self.decl)}"
+
+
 class TypeMismatchInExpression(StaticError):
-    exp: Expr
+    def __init__(self, expr):
+        self.expr = expr
 
     def __str__(self):
-        return "Type Mismatch In Expression: " + str(self.exp)
+        return f"Type mismatch in expression: {str(self.expr)}"
 
 
-@dataclass
 class TypeMismatchInStatement(StaticError):
-    stmt: Stmt
+    def __init__(self, stmt):
+        self.stmt = stmt
 
     def __str__(self):
-        return "Type Mismatch In Statement: " + str(self.stmt)
+        return f"Type mismatch in statement: {str(self.stmt)}"
 
 
-@dataclass
 class MustInLoop(StaticError):
-    stmt: Stmt
+    def __init__(self, stmt):
+        self.stmt = stmt
 
     def __str__(self):
-        return str(self.stmt) + " Not In Loop"
+        return f"Must in loop: {str(self.stmt)}"
 
 
-@dataclass
 class IllegalArrayLiteral(StaticError):
-    arr: ArrayLit
+    def __init__(self, literal):
+        self.literal = literal
 
     def __str__(self):
-        return "Illegal Array Literal: " + str(self.arr)
+        return f"Illegal array literal: {str(self.literal)}"
 
 
-@dataclass
 class InvalidStatementInFunction(StaticError):
-    n: str  # name of function
+    def __init__(self, function_name: str):
+        self.function_name = function_name
 
     def __str__(self):
-        return "Invalid Statement In Function: " + str(self.n)
+        return f"Invalid statement in function: {str(self.function_name)}"
 
 
-@dataclass
 class NoEntryPoint(StaticError):
-    def __str__(self) -> str:
-        return "No Entry Point"
+    def __str__(self):
+        return "No entry point"

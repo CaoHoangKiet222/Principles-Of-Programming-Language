@@ -1,1 +1,1 @@
-Type Mismatch In Expression: BinExpr(==, IntegerLit(1), BooleanLit(True))
+Type mismatch in expression: BinExpr(==, IntegerLit(1), BooleanLit(True))

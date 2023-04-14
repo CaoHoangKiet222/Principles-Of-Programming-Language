@@ -1,1 +1,1 @@
-Type Mismatch In Statement: VarDecl(y, IntegerType, BinExpr(==, Id(x), IntegerLit(1)))
+Type mismatch in statement: VarDecl(y, IntegerType, BinExpr(==, Id(x), IntegerLit(1)))

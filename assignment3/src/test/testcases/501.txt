@@ -1,0 +1,9 @@
+
+        x: integer = inc1(2);
+        main: function void() {
+            y: integer = inc1(1);
+        }
+        inc1: function integer(a: integer) {
+            return 1;
+        }
+    

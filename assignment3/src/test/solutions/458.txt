@@ -1,1 +1,1 @@
-Type Mismatch In Expression: UnExpr(!, IntegerLit(200))
+Type mismatch in expression: UnExpr(!, IntegerLit(200))

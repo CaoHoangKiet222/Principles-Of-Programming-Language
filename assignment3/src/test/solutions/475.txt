@@ -1,1 +1,1 @@
-Type Mismatch In Expression: BinExpr(+, Id(s), FuncCall(random, [Id(i)]))
+Type mismatch in expression: BinExpr(+, Id(s), FuncCall(random, [Id(i)]))

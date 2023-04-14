@@ -1,1 +1,1 @@
-Type Mismatch In Expression: BinExpr(%, Id(n), FloatLit(2.0))
+Type mismatch in expression: BinExpr(%, Id(n), FloatLit(2.0))

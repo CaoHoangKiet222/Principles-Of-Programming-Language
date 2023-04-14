@@ -1,0 +1,6 @@
+
+        main: function void() inherit inc1 {
+        }
+        inc1: function void() {
+        }
+    

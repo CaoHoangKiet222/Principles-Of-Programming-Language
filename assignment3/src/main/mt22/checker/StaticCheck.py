@@ -4,6 +4,7 @@
  * Student's ID: 2053165
 """
 
+from dataclasses import dataclass
 from typing import List, Tuple
 from AST import *
 from Utils import *
@@ -41,9 +42,9 @@ class CheckUtils:
             return True
         if len(dimensions1) != len(dimensions2):
             return False
-        for idx, i in enumerate(dimensions1):
-            if i < dimensions2[idx]:
-                return False
+        # for idx, i in enumerate(dimensions1):
+        #     if i < dimensions2[idx]:
+        #         return False
         return True
 
     @staticmethod
@@ -130,9 +131,10 @@ def retriveInheritParams(name: str, o):
     for env in o:
         if name in env and isinstance(env[name]["kind"], Function):
             inherit_name = env[name]["inherit"]
+            # Recursive to get all inherit_params in all parent_function
             params_inherit = retriveInheritParams(inherit_name, o)
             CheckUtils.redeclaredParams(
-                params_inherit, env[name]["params_inherit"], lambda e: Redeclared(
+                params_inherit, env[name]["params_inherit"], lambda e: Invalid(
                     Parameter(), e)
             )
             return {**params_inherit, **env[name]["params_inherit"]}
@@ -212,14 +214,33 @@ class StaticChecker(BaseVisitor, Utils):
                 "kind": Function(), "typ": sym.mtype.rettype, "params": sym.mtype.partype
             }
         flag = False
+        # prototype for function declaration
         for decl in ast.decls:
             if type(decl) is FuncDecl:
-                # change this if error
-                if decl.name == "main" and type(decl.return_type) is VoidType and len(decl.params) == 0:
+                func_name = decl.name
+                params = decl.params
+                return_type = decl.return_type
+                inherit = decl.inherit
+
+                if func_name in c[0]:
+                    raise Redeclared(Function(), func_name)
+                c[0][func_name] = {
+                    "kind": Function(), "typ": return_type, "params": [],
+                    "params_inherit": {}, "inherit": inherit if inherit else None, "inherit_checked": False}
+
+                params_check = []
+                for param in params:
+                    param_name = param.name
+                    typ = param.typ
+                    if param_name in params_check:
+                        raise Redeclared(Parameter(), param_name)
+                    params_check.append(param_name)
+                    c[0][func_name]["params"].append(typ)
+
+                if func_name == "main" and type(decl.return_type) is VoidType and len(decl.params) == 0:
                     flag = True
-            elif type(decl) is ParamDecl:
-                # change this if error
-                raise Invalid(Parameter(), decl.name)
+
+        for decl in ast.decls:
             self.visit(decl, c)
 
         if flag == False:
@@ -228,7 +249,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     def visitVarDecl(self, ast: VarDecl, c):
         print("========================== VarDecl", ast)
-        name = ast.name  # change this if error
+        name = ast.name
         typ = self.visit(ast.typ, c)
         init = ast.init
         if name in c[0]:
@@ -238,10 +259,12 @@ class StaticChecker(BaseVisitor, Utils):
             if type(typ) is ArrayType:
                 init_typ = self.visit(init, (c, typ))
                 if self.illegal_array_lit:
-                    raise TypeMismatchInStatement(ast)
+                    raise TypeMismatchInVarDecl(ast)
+                if type(init_typ) is not ArrayTyp:
+                    raise TypeMismatchInVarDecl(ast)
                 # Check dimensions initialization match with its array_type_dimensions
                 if not CheckUtils.dimensionsMatch(typ.dimensions, TypUtils.retriveDimensions(init_typ)):
-                    raise TypeMismatchInStatement(ast)
+                    raise TypeMismatchInVarDecl(ast)
             else:
                 init_typ = self.visit(init, (c, typ))
                 # Check error when implicit conversion --> Case: float / integer
@@ -264,38 +287,29 @@ class StaticChecker(BaseVisitor, Utils):
     def visitParamDecl(self, ast: ParamDecl, c):
         print("========================== ParamDecl", ast)
         global_env = c
-        name = ast.name  # change this if error
+        name = ast.name
         typ = ast.typ
         out = ast.out
         inherit = ast.inherit
-        if name in global_env[0]:
-            raise Redeclared(Parameter(), name)
         global_env[0][name] = {
             "kind": Parameter(), "typ": typ, "out": out, "inherit": inherit
         }
-        print(global_env)
         if inherit == True:
             self.current_method["params_inherit"][name] = {
                 "kind": Parameter(), "typ": typ, "out": out
             }
-        self.current_method["params"].append(typ)
         print("========================== End ParamDecl")
 
     def visitFuncDecl(self, ast: FuncDecl, c):
         print("=========================== FuncDecl", ast)
-        # name: str, return_type: Type, params: List[ParamDecl], inherit: str or None, body: BlockStmt
-        name = ast.name  # change this if error
+        name = ast.name
         return_type = ast.return_type
         params = ast.params
-        inherit = ast.inherit  # change this if error
+        inherit = ast.inherit
         body = ast.body
 
-        if name in c[0]:
-            raise Redeclared(Function(), name)
         env = [{}] + c
-        self.current_method = c[0][name] = {
-            "kind": Function(), "typ": return_type, "params": [], "params_inherit": {}, "inherit": inherit if inherit else None, "inherit_checked": False
-        }
+        self.current_method = c[0][name]
         reduce(lambda _, p: self.visit(p, env), params, [])
         if inherit is not None:
             parent_func = retriveElWithCond(
@@ -303,44 +317,48 @@ class StaticChecker(BaseVisitor, Utils):
                     Undeclared(Function(), inherit))
             )
             # check no stmts in funcdecl body
-            if len(body.body) == 0 and len(parent_func["params"]) != 0:
-                raise InvalidStatementInFunction(name)
-            first_stmt = body.body[0]
-            if type(first_stmt) is CallStmt:
-                # change this if error
-                sym = self.lookup(first_stmt.name,
-                                  StaticChecker.global_envi, lambda x: x.name)
-                # check first_stmt is preventDefault or super
-                if sym.name != "preventDefault" and sym.name != "super":
-                    if len(parent_func["params"]) != 0:
-                        raise InvalidStatementInFunction(name)
-                    else:
-                        self.visit(first_stmt, env)
-                else:
-                    if len(parent_func["params"]) == 0:
-                        if len(first_stmt.args) != 0:
+            # if len(body.body) == 0 and len(parent_func["params"]) != 0:
+            #     raise InvalidStatementInFunction(name)
+            if len(body.body) == 0:
+                if len(parent_func["params"]) != 0:
+                    raise InvalidStatementInFunction(name)
+            else:
+                first_stmt = body.body[0]
+                if type(first_stmt) is CallStmt:
+
+                    sym = self.lookup(first_stmt.name,
+                                      StaticChecker.global_envi, lambda x: x.name)
+                    # check first_stmt is preventDefault or super
+                    if sym.name != "preventDefault" and sym.name != "super":
+                        if len(parent_func["params"]) != 0:
                             raise InvalidStatementInFunction(name)
-                    else:
-                        # first_stmt is super
-                        if sym.name == "super":
-                            if len(first_stmt.args) != len(parent_func["params"]):
-                                raise InvalidStatementInFunction(name)
-                            self.checkParamsMatch(
-                                first_stmt.args, parent_func["params"], (env, None, InvalidStatementInFunction(name)))
                         else:
+                            self.visit(first_stmt, env)
+                    else:
+                        if len(parent_func["params"]) == 0:
                             if len(first_stmt.args) != 0:
                                 raise InvalidStatementInFunction(name)
-                    # Inherit all params from parent function including hierarchical
-                    if sym.name == "super":
-                        inherit_params = retriveInheritParams(inherit, env)
-                        CheckUtils.redeclaredParams(
-                            inherit_params, env[0], lambda e: Redeclared(
-                                Parameter(), e)
-                        )
-                        env[0] = {**env[0], **inherit_params}
-            # Check activation of parent function is implicit with super
-            elif len(parent_func["params"]) != 0:
-                raise InvalidStatementInFunction(name)
+                        else:
+                            # first_stmt is super
+                            if sym.name == "super":
+                                if len(first_stmt.args) != len(parent_func["params"]):
+                                    raise InvalidStatementInFunction(name)
+                                self.checkParamsMatch(
+                                    first_stmt.args, parent_func["params"], (env, None, InvalidStatementInFunction(name)))
+                            else:
+                                if len(first_stmt.args) != 0:
+                                    raise InvalidStatementInFunction(name)
+                        # Inherit all params from parent function including hierarchical
+                        if sym.name == "super":
+                            inherit_params = retriveInheritParams(inherit, env)
+                            CheckUtils.redeclaredParams(
+                                inherit_params, env[0], lambda e: Invalid(
+                                    Parameter(), e)
+                            )
+                            env[0] = {**env[0], **inherit_params}
+                # Check activation of parent function is implicit with super
+                elif len(parent_func["params"]) != 0:
+                    raise InvalidStatementInFunction(name)
         self.current_method["inherit_checked"] = True
         self.visit(body, (env, None))  # (global_env, infer_typ)
         print("=========================== End FuncDecl")
@@ -371,8 +389,8 @@ class StaticChecker(BaseVisitor, Utils):
         left = ast.left
         right = ast.right
         if type(left) is FuncCall and type(right) is FuncCall:
-            left_name = left.name  # change this if error
-            right_name = right.name  # change this if error
+            left_name = left.name
+            right_name = right.name
             func_left = retriveEl(left_name, global_env, lambda: self.__raise(
                 Undeclared(Function(), left_name)))
             func_right = retriveEl(right_name, global_env, lambda: self.__raise(
@@ -393,6 +411,7 @@ class StaticChecker(BaseVisitor, Utils):
             left = self.visit(left, c)
             right = self.visit(right, (global_env, left))
         else:
+            print("+++++++++++++++++++++++++++++", c)
             left = self.visit(left, c)
             right = self.visit(right, c)
 
@@ -443,15 +462,16 @@ class StaticChecker(BaseVisitor, Utils):
 
     def visitId(self, ast: Id, c):
         global_env = c
+        name = ast.name
         # check c is pass from array_lit
         if type(c) is tuple:
             global_env = c[0]
-        el = retriveEl(ast.name, global_env, lambda: self.__raise(
-            Undeclared(Identifier(), ast.name)))
+        el = retriveElWithCond(name, global_env, lambda el: isinstance(el[name]["kind"], Variable) or isinstance(el[name]["kind"], Parameter), lambda: self.__raise(
+            Undeclared(Identifier(), name)))
         return el["typ"]
 
     def visitArrayCell(self, ast: ArrayCell, c):
-        # change this if error
+
         print("======================= ArrayCell", ast)
         typ = self.visit(Id(ast.name), c)
         # check index operator E1[E2] (E1 must be in array type)
@@ -460,27 +480,28 @@ class StaticChecker(BaseVisitor, Utils):
         # check index operator E1[E2] (E2 must be in list of int type)
         reduce(lambda _, x: self.__raise(TypeMismatchInExpression(ast))
                if ExpUtils.isNotIntLit(self.visit(x, c)) else [], ast.cell, [])
+        dimensions = typ.dimensions[len(ast.cell):][::-1]
+        if len(dimensions) != 0:
+            # typ of function a: ArrayType([2, 2, 3], IntegerType)
+            # ArrayCell(a, [IntegerLit(0), IntegerLit(2)])
+            print("======================= End ArrayCell")
+            return reduce(lambda acc, el: ArrayTyp(el, acc),
+                          dimensions[1:], ArrayTyp(dimensions[0], typ.typ))
         print("======================= End ArrayCell")
         return typ.typ
 
     def visitFuncCall(self, ast: FuncCall, c):
         print("====================== FuncCall", ast)
         (global_env, infer_typ) = c
-        name = ast.name  # change this if error
+        name = ast.name
         args = ast.args
-        el = None
-        for env in global_env:
-            if name in env:
-                if isinstance(env[name]["kind"], Function):
-                    el = env[name]
-                    print("++++++++++", el)
-                    # Check function call is non_void_type + arguments and parameters need to be the same length
-                    if isinstance(el["typ"], VoidType) or len(el["params"]) != len(args):
-                        raise TypeMismatchInExpression(ast)
-                    self.checkParamsMatch(
-                        args, el["params"], (global_env, infer_typ, TypeMismatchInExpression(ast)))
-        if el is None:
-            raise Undeclared(Function(), name)
+        el = retriveElWithCond(name, global_env, lambda el: isinstance(el[name]["kind"], Function), lambda: self.__raise(
+            Undeclared(Function(), name)))
+        # Check function call is non_void_type + arguments and parameters need to be the same length
+        if isinstance(el["typ"], VoidType) or len(el["params"]) != len(args):
+            raise TypeMismatchInExpression(ast)
+        self.checkParamsMatch(
+            args, el["params"], (global_env, infer_typ, TypeMismatchInExpression(ast)))
         # Infer return of function
         if isinstance(el["typ"], AutoType):
             el["typ"] = infer_typ
@@ -546,7 +567,6 @@ class StaticChecker(BaseVisitor, Utils):
         global_env = c
         self.inloop["while"].append(True)
         cond = self.visit(ast.cond, (global_env, BooleanType()))
-        print("+++++++++++++++++++++", cond)
         # Check cond is BooleanType
         if ExpUtils.isNotBoolLit(cond):
             raise TypeMismatchInStatement(ast)
@@ -583,7 +603,6 @@ class StaticChecker(BaseVisitor, Utils):
         global_env = c
         if ast.expr is not None:
             rhs_typ = self.visit(ast.expr, (global_env, None))
-            print("++++++++++++++++++++++++++++", rhs_typ)
         else:
             rhs_typ = VoidType()
         # Check error when implicit conversion --> Case: float / integer
@@ -603,7 +622,7 @@ class StaticChecker(BaseVisitor, Utils):
         print("============== AssignStmt", ast)
         global_env = c
         if self.init["forloop"] == True:
-            name = ast.lhs.name  # change this if error
+            name = ast.lhs.name
             try:
                 el = retriveEl(name, global_env, lambda: self.__raise(
                     Undeclared(Variable(), name)))
@@ -637,39 +656,37 @@ class StaticChecker(BaseVisitor, Utils):
     def visitCallStmt(self, ast: CallStmt, c):
         print("====================== CallStmt", ast)
         global_env = c
-        name = ast.name  # change this if error
+        name = ast.name
         args = ast.args
-        el = None
+        el = retriveElWithCond(name, global_env, lambda el: isinstance(el[name]["kind"], Function), lambda: self.__raise(
+            Undeclared(Function(), name)))
 
-        for env in global_env:
-            if name in env:
-                if isinstance(env[name]["kind"], Function):
-                    el = env[name]
-                    # Check current function has super or preventDefault method with no inherit
-                    inherit = self.current_method["inherit"]
-                    if inherit is None:
-                        if name == "super" or name == "preventDefault":
-                            raise TypeMismatchInStatement(ast)
-                    else:
-                        if not self.current_method["inherit_checked"]:
-                            parent_func = retriveElWithCond(
-                                inherit, global_env, lambda el: isinstance(el[name]["kind"], Function), lambda: self.__raise(
-                                    Undeclared(Function(), inherit))
-                            )
-                            if name != "preventDefault" and name != "super":
-                                if len(parent_func["params"]) != 0:
-                                    raise TypeMismatchInStatement(ast)
-
-                    # Infer return of function
-                    if isinstance(el["typ"], AutoType):
-                        el["typ"] = VoidType()
-                    # Check callstmt is void_type + arguments and parameters need to be the same length
-                    if (not isinstance(el["typ"], VoidType)) or len(el["params"]) != len(args):
+        # Check current function has super or preventDefault method with no inherit
+        inherit = self.current_method["inherit"]
+        if inherit is None:
+            if name == "super" or name == "preventDefault":
+                raise TypeMismatchInStatement(ast)
+        else:
+            if not self.current_method["inherit_checked"]:
+                parent_func = retriveElWithCond(
+                    inherit, global_env, lambda el: isinstance(el[name]["kind"], Function), lambda: self.__raise(
+                        Undeclared(Function(), inherit))
+                )
+                if name != "preventDefault" and name != "super":
+                    if len(parent_func["params"]) != 0:
                         raise TypeMismatchInStatement(ast)
-                    self.checkParamsMatch(
-                        args, el["params"], (global_env, None, TypeMismatchInStatement(ast)))
-        if el is None:
-            raise Undeclared(Function(), name)
+
+        # Infer return of function
+        if isinstance(el["typ"], AutoType):
+            el["typ"] = VoidType()
+        # version1: Check callstmt is void_type + arguments and parameters need to be the same length
+        # if (not isinstance(el["typ"], VoidType)) or len(el["params"]) != len(args):
+        #     raise TypeMismatchInStatement(ast)
+        # version2: Only Check arguments and parameters need to be the same length
+        if len(el["params"]) != len(args):
+            raise TypeMismatchInStatement(ast)
+        self.checkParamsMatch(
+            args, el["params"], (global_env, None, TypeMismatchInStatement(ast)))
         print("====================== End CallStmt")
 
     def visitIntegerLit(self, ast: IntegerLit, c):
