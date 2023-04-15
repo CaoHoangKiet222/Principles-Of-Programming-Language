@@ -182,7 +182,7 @@ class StaticChecker(BaseVisitor, Utils):
 
     def checkParamsMatch(self, args, params, c):
         # params: LHS, args: RHS
-        (global_env, infer_typ, error) = c
+        (global_env, infer_typ) = c
         for x in zip(args, params):
             typ = None
             if type(x[0]) is FuncCall:
@@ -192,10 +192,10 @@ class StaticChecker(BaseVisitor, Utils):
                 typ = self.visit(x[0], (global_env, infer_typ))
             # Check error when implicit conversion --> Case: float / integer
             typ = TypUtils.impConversion(
-                x[1], typ, lambda: self.__raise(error))
+                x[1], typ, lambda: self.__raise(TypeMismatchInExpression(x[0])))
             # Check arguments and parameters have the same type
             if not ExpUtils.isTheSameType(typ, x[1]):
-                self.__raise(error)
+                self.__raise(TypeMismatchInExpression(x[0]))
 
     def visitProgram(self, ast: Program, c):
         # decls: List[Decl]
@@ -317,8 +317,6 @@ class StaticChecker(BaseVisitor, Utils):
                     Undeclared(Function(), inherit))
             )
             # check no stmts in funcdecl body
-            # if len(body.body) == 0 and len(parent_func["params"]) != 0:
-            #     raise InvalidStatementInFunction(name)
             if len(body.body) == 0:
                 if len(parent_func["params"]) != 0:
                     raise InvalidStatementInFunction(name)
@@ -343,8 +341,10 @@ class StaticChecker(BaseVisitor, Utils):
                             if sym.name == "super":
                                 if len(first_stmt.args) != len(parent_func["params"]):
                                     raise InvalidStatementInFunction(name)
+                                # self.checkParamsMatch(
+                                #     first_stmt.args, parent_func["params"], (env, None, InvalidStatementInFunction(name)))
                                 self.checkParamsMatch(
-                                    first_stmt.args, parent_func["params"], (env, None, InvalidStatementInFunction(name)))
+                                    first_stmt.args, parent_func["params"], (env, None))
                             else:
                                 if len(first_stmt.args) != 0:
                                     raise InvalidStatementInFunction(name)
@@ -500,8 +500,10 @@ class StaticChecker(BaseVisitor, Utils):
         # Check function call is non_void_type + arguments and parameters need to be the same length
         if isinstance(el["typ"], VoidType) or len(el["params"]) != len(args):
             raise TypeMismatchInExpression(ast)
+        # self.checkParamsMatch(
+        #     args, el["params"], (global_env, infer_typ, TypeMismatchInExpression(ast)))
         self.checkParamsMatch(
-            args, el["params"], (global_env, infer_typ, TypeMismatchInExpression(ast)))
+            args, el["params"], (global_env, infer_typ))
         # Infer return of function
         if isinstance(el["typ"], AutoType):
             el["typ"] = infer_typ
@@ -644,13 +646,24 @@ class StaticChecker(BaseVisitor, Utils):
             # Check left-hand side is void type or array type
             if type(lhs_typ) is ArrayType or type(lhs_typ) is VoidType:
                 raise TypeMismatchInStatement(ast)
+            if type(lhs_typ) is ArrayTyp:
+                lhs_typ = ArrayType(TypUtils.retriveDimensions(
+                    lhs_typ), TypUtils.retriveType(lhs_typ))
+                rhs_typ = self.visit(ast.rhs, (global_env, lhs_typ))
 
-            rhs_typ = self.visit(ast.rhs, (global_env, lhs_typ))
-            # Check element type coercion
-            rhs_typ = TypUtils.impConversion(
-                lhs_typ, rhs_typ, lambda: self.__raise(TypeMismatchInExpression(ast)))
-            if not ExpUtils.isTheSameType(lhs_typ, rhs_typ):
-                raise TypeMismatchInStatement(ast)
+                if len(lhs_typ.dimensions) > 0 and type(rhs_typ) is not ArrayTyp:
+                    raise TypeMismatchInStatement(ast)
+
+                # Check dimensions initialization match with its array_type_dimensions
+                if not CheckUtils.dimensionsMatch(lhs_typ.dimensions, TypUtils.retriveDimensions(rhs_typ)):
+                    raise TypeMismatchInStatement(ast)
+            else:
+                rhs_typ = self.visit(ast.rhs, (global_env, lhs_typ))
+                # Check element type coercion
+                rhs_typ = TypUtils.impConversion(
+                    lhs_typ, rhs_typ, lambda: self.__raise(TypeMismatchInExpression(ast)))
+                if not ExpUtils.isTheSameType(lhs_typ, rhs_typ):
+                    raise TypeMismatchInStatement(ast)
         print("============== End AssignStmt")
 
     def visitCallStmt(self, ast: CallStmt, c):
@@ -685,8 +698,7 @@ class StaticChecker(BaseVisitor, Utils):
         # version2: Only Check arguments and parameters need to be the same length
         if len(el["params"]) != len(args):
             raise TypeMismatchInStatement(ast)
-        self.checkParamsMatch(
-            args, el["params"], (global_env, None, TypeMismatchInStatement(ast)))
+        self.checkParamsMatch(args, el["params"], (global_env, None))
         print("====================== End CallStmt")
 
     def visitIntegerLit(self, ast: IntegerLit, c):
@@ -705,7 +717,7 @@ class StaticChecker(BaseVisitor, Utils):
         (global_env, array_ast) = c
         value_lst = list(map(lambda x: self.visit(
             x, (global_env, array_ast)), ast.explist))
-        # value_lst: [IntegerType(...), ArrayTyp(...)]
+        # value_lst: [IntegerType(...) or ArrayTyp(...)]
 
         if len(ast.explist) == 0:
             return ArrayTyp(0, array_ast.typ)
@@ -718,7 +730,7 @@ class StaticChecker(BaseVisitor, Utils):
                 if not ExpUtils.isTheSameType(first_el_type, i):
                     raise IllegalArrayLiteral(ast)
                 # {{1}, {1, 2, 3}} -> ArrayTyp(2,ArrayTyp(3,IntegerType))
-                if i.num_of_el > first_el_type.num_of_el:
+                if i.num_of_el > maximum_val.num_of_el:
                     maximum_val = i
             return ArrayTyp(len(value_lst), maximum_val)
 

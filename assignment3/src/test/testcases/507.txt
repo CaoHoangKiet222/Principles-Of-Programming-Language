@@ -1,0 +1,12 @@
+
+        max_two_nums: function auto (a: integer, b: integer) {
+            if (a > b) {
+                return a;
+            }
+            return b;
+        }
+
+        main: function void(){
+            a: integer = max_two_nums(1.0, 1);
+        }
+    

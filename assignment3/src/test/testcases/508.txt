@@ -1,0 +1,8 @@
+
+        max_two_nums: function auto (a: integer, a: integer) inherit foo {
+        }
+
+        main: function void(){
+            a: integer = max_two_nums(1, 1);
+        }
+    

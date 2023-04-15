@@ -484,7 +484,7 @@ class CheckerSuite(unittest.TestCase):
     #             foo2(foo1());
     #         }
     #         """
-    #         expect = "Invalid statement in function: foo1"
+    #         expect = "Type mismatch in expression: BooleanLit(True)"
     #         self.assertTrue(TestChecker.test(input, expect, 444))
 
     #     def test_45(self):
@@ -549,7 +549,7 @@ class CheckerSuite(unittest.TestCase):
     #             foo2(foo1(1.0), 1);
     #         }
     #         """
-    #         expect = "Invalid statement in function: foo2"
+    #         expect = "Type mismatch in expression: BooleanLit(True)"
     #         self.assertTrue(TestChecker.test(input, expect, 448))
 
     #     def test_49(self):
@@ -1508,70 +1508,94 @@ class CheckerSuite(unittest.TestCase):
     #         expect = "Type mismatch in expression: BinExpr(==, Id(a), IntegerLit(2))"
     #         self.assertTrue(TestChecker.test(input, expect, 500))
 
-    #     def test_101(self):
-    #         input = r"""
-    #         x: integer = inc1(2);
-    #         main: function void() {
-    #             y: integer = inc1(1);
-    #         }
-    #         inc1: function integer(a: integer) {
-    #             return 1;
-    #         }
-    #     """
-    #         expect = "[]"
-    #         self.assertTrue(TestChecker.test(input, expect, 501))
-
-    #     def test_102(self):
-    #         input = r"""
-    #         main: function void() inherit inc1 {
-    #         }
-    #         inc1: function void() {
-    #         }
-    #     """
-    #         expect = "[]"
-    #         self.assertTrue(TestChecker.test(input, expect, 502))
-
-    #     def test_103(self):
-    #         input = r"""
-    #         a: array[2, 2, 3] of integer;
-    #         b: array[2] of integer = a[1, 1];
-    #         main: function void() {
-    #             c: integer = b[0];
-    #         }
-    #     """
-    #         expect = "[]"
-    #         self.assertTrue(TestChecker.test(input, expect, 503))
-
-    #     def test_104(self):
-    #         input = r"""
-    #         main: function void() {
-    #             x(1, 2);
-    #         }
-    #         x: function void(a: integer) {
-
-    #         }
-    #     """
-    #         expect = "Type mismatch in statement: CallStmt(x, [IntegerLit(1), IntegerLit(2)])"
-    #         self.assertTrue(TestChecker.test(input, expect, 504))
-
-    #     def test_105(self):
-    #         input = r"""
-    #         foo: function integer(){}
-
-    #         main: function void(){
-    #             m: integer;
-    #             m = foo + 1;
-    #         }
-    #     """
-    #         expect = "Undeclared Identifier: foo"
-    #         self.assertTrue(TestChecker.test(input, expect, 505))
-
-    def test_106(self):
+    def test_101(self):
         input = r"""
-        main: function void(){
-            a: array[10, 10, 10] of integer;
-            a[0] = {{1}, {}, {5}};
+        x: integer = inc1(2);
+        main: function void() {
+            y: integer = inc1(1);
+        }
+        inc1: function integer(a: integer) {
+            return 1;
         }
     """
         expect = "[]"
-        self.assertTrue(TestChecker.test(input, expect, 506))
+        self.assertTrue(TestChecker.test(input, expect, 501))
+
+    def test_102(self):
+        input = r"""
+        main: function void() inherit inc1 {
+        }
+        inc1: function void() {
+        }
+    """
+        expect = "[]"
+        self.assertTrue(TestChecker.test(input, expect, 502))
+
+    def test_103(self):
+        input = r"""
+        a: array[2, 2, 3] of integer;
+        b: array[2] of integer = a[1, 1];
+        main: function void() {
+            c: integer = b[0];
+        }
+    """
+        expect = "[]"
+        self.assertTrue(TestChecker.test(input, expect, 503))
+
+    def test_104(self):
+        input = r"""
+        main: function void() {
+            x(1, 2);
+        }
+        x: function void(a: integer) {
+
+        }
+    """
+        expect = "Type mismatch in statement: CallStmt(x, [IntegerLit(1), IntegerLit(2)])"
+        self.assertTrue(TestChecker.test(input, expect, 504))
+
+    def test_105(self):
+        input = r"""
+        foo: function integer(){}
+
+        main: function void(){
+            m: integer;
+            m = foo + 1;
+        }
+    """
+        expect = "Undeclared Identifier: foo"
+        self.assertTrue(TestChecker.test(input, expect, 505))
+
+    # def test_106(self):
+    #     input = r"""
+    # """
+    #     expect = "[]"
+    #     self.assertTrue(TestChecker.test(input, expect, 506))
+
+    # def test_107(self):
+    #     input = r"""
+    #     max_two_nums: function auto (a: integer, b: integer) {
+    #         if (a > b) {
+    #             return a;
+    #         }
+    #         return b;
+    #     }
+
+    #     main: function void(){
+    #         a: integer = max_two_nums(1.0, 1);
+    #     }
+    # """
+    #     expect = "Type mismatch in expression: FloatLit(1.0)"
+    #     self.assertTrue(TestChecker.test(input, expect, 507))
+
+    def test_108(self):
+        input = r"""
+        max_two_nums: function auto (a: integer, a: integer) inherit foo {
+        }
+
+        main: function void(){
+            a: integer = max_two_nums(1, 1);
+        }
+    """
+        expect = "Undeclared Function: foo"
+        self.assertTrue(TestChecker.test(input, expect, 508))

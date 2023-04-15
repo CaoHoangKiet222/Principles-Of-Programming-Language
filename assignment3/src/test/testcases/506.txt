@@ -1,5 +1,5 @@
 
-        main: function void(){
+        main: funchàm cha không sau đótion void(){
             a: array[10, 10, 10] of integer;
             a[0] = {{1}, {}, {5}};
         }
