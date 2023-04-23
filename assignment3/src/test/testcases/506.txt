@@ -1,6 +1,8 @@
 
-        main: funchàm cha không sau đótion void(){
-            a: array[10, 10, 10] of integer;
-            a[0] = {{1}, {}, {5}};
-        }
+        foo: function void(){}
+
+        bar: function integer(){return foo();}
+
+        foo: function integer(){return 1;}
+
     

@@ -1,0 +1,18 @@
+
+        max_two_nums: function auto (a: integer, b: integer) {
+            if (a > b) {
+                return a;
+            }
+            return b;
+        }
+
+        foo: function void () inherit max_two_nums{
+            super(1, 1, 2.3); //-> Type mismatch in expression: FloatLit(2.3)
+            // super(1.0, 1); // -> Type mismatch in expression: FloatLit(1.0)
+            // super(1.0); // -> Type mismatch in expression: None
+            // super(); // -> Type mismatch in expression: None
+        }
+
+        main: function void(){
+        }
+    

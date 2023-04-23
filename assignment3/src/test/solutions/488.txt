@@ -1,1 +1,1 @@
-Type mismatch in statement: CallStmt(super, [IntegerLit(10)])
+Invalid statement in function: foo2

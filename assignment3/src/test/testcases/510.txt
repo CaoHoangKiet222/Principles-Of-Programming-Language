@@ -1,0 +1,9 @@
+
+        foo1: function integer(inherit y: integer, inherit x: float){}
+
+        main: function void(){
+            x: integer = readInteger();
+            //printInteger(foo1(10, 1));// -> Type mismatch in expression: FuncCall(foo1, [IntegerLit(10), IntegerLit(1)])
+            printInteger(foo1(1)); //-> Type mismatch in expression: FuncCall(foo1, [])
+        }
+    

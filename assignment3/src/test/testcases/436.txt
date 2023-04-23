@@ -6,8 +6,5 @@
         main: function void() {
             delta: integer = 1;
             n1: float = -inc(x, delta) + 1; // inc: float
-            n1: float = !inc(x, delta) + 1;
-            n1: float = -inc(x, delta) < 8;
-            n1: boolean = -inc(x, 1);
         }
         

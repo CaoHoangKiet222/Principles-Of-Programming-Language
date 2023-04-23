@@ -1,0 +1,19 @@
+
+        max_two_nums: function auto (a: integer, b: integer) {
+            if (a > b) {
+                return a;
+            }
+            return b;
+        }
+
+        main: function void(){
+            //max_two_nums(1, 1, 2.3); //-> Type mismatch in statement: CallStmt(max_two_nums, IntegerLit(1), IntegerLit(1), FloatLit(2.3))
+            // max_two_nums(1.0, 1); // -> Type mismatch in statement: CallStmt(max_two_nums, FloatLit(1.0), IntegerLit(1))
+            // max_two_nums(1.0); // -> Type mismatch in statement: CallStmt(max_two_nums, FloatLit(1.0))
+            // max_two_nums(); // -> Type mismatch in statement: CallStmt(max_two_nums, )
+            // a: integer = max_two_nums(1, 1, 2.3); // -> Type mismatch in expression: FuncCall(max_two_nums, [IntegerLit(1), IntegerLit(1), FloatLit(2.3)])
+            // a: integer = max_two_nums(1.0, 1); // -> Type mismatch in expression: FuncCall(max_two_nums, [FloatLit(1.0), IntegerLit(1)])
+            // a: integer = max_two_nums(1.0); // -> Type mismatch in expression: FuncCall(max_two_nums, [FloatLit(1.0)])
+            a: integer = max_two_nums(); // -> Type mismatch in expression: FuncCall(max_two_nums, [])
+        }
+        

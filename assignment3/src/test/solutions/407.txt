@@ -1,1 +1,1 @@
-Type mismatch in expression: BinExpr(==, IntegerLit(1), BooleanLit(True))
+No entry point

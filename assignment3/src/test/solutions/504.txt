@@ -1,1 +1,1 @@
-Type mismatch in statement: CallStmt(x, [IntegerLit(1), IntegerLit(2)])
+Type mismatch in statement: CallStmt(x, IntegerLit(1), IntegerLit(2))

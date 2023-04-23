@@ -1,1 +1,1 @@
-Type mismatch in expression: FloatLit(1.0)
+Type mismatch in expression: FuncCall(max_two_nums, [FloatLit(1.0), IntegerLit(1)])
